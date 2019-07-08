@@ -1,2 +1,4 @@
 .idea
 *.o
+CMakeList.txt
+a.out

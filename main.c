@@ -40,9 +40,14 @@ t_fam	*parse_map(void)
 				continue ;
 			}
 		}
-		if ((line = ft_strchr(buff, '-')))
+		else if ((line = ft_strchr(buff, '-')))
 		{
 			///parse links
+		}
+		else
+		{
+
+			///parse vertex [node coord_x coord_y]
 		}
 		ft_strdel(&buff);
 	}
