@@ -17,17 +17,22 @@ int 	check_vertex_standard(char *line)
 	int count;
 
 	count = 0;
+	printf("%s\n", line);
 	if (!line)
 	{
 		printf("b");
 		exit(0);
 	}
-	while (*line++)
+	while (*line)
 	{
 		if (*line == ' ')
 			count++;
 		else if (count > 1 && !ft_isdigit(*line))
+		{
+			printf("%c\n", *line);
 			exit(0);
+		}
+		line++;
 	}
 	if (count == 2)
 		return (1);
@@ -45,14 +50,16 @@ t_fam	*parse_map()
 		return (0);
 	get_next_line(0, &buff);
 	if (!ft_isdigit(*buff))
+	{
+		printf("S\n");
 		exit(0);
+	}
 	fam->num_ant = ft_atoi(buff);
 	if (fam->num_ant > 0)
 		fam->norm_ant++;
 	while (get_next_line(0, &buff))
 	{
-		line = buff;
-		if (ft_strchr(buff, '#'))
+		if ((line = ft_strchr(buff, '#')))
 		{
 			if (*(++line) == '#')
 			{
@@ -73,12 +80,13 @@ t_fam	*parse_map()
 				continue ;
 			}
 		}
-		else if ((line = ft_strchr(buff, '-')))
+		else if (ft_strchr(buff, '-'))
 		{
 			fam->norm_links = 1;
 			///parse links
 		}
-		else if (check_vertex_standard(line))
+
+		else if (check_vertex_standard(buff))
 		{
 			fam->norm_vertex = 1;
 			///parse vertex [node coord_x coord_y]
@@ -99,6 +107,6 @@ int		main()
 	t_fam *fam;
 
 	fam = parse_map();
-	printf("%d\n%c\n%c\n%c\n%c\n%c\n", fam->num_ant, fam->norm_start, fam->norm_end, fam->norm_links, fam->norm_vertex, fam->norm_ant);
+	printf("!%d\n%c\n%c\n%c\n%c\n%c\n", fam->num_ant, fam->norm_start, fam->norm_end, fam->norm_links, fam->norm_vertex, fam->norm_ant);
 	return (0);
 }
