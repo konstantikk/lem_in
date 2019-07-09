@@ -23,22 +23,28 @@ typedef struct	s_link
 	char	**start_name;
 	size_t	cap;
 	size_t	len;
-}typedef		t_link;
+}				t_link;
 
-struct	s_node
+typedef struct	s_node
 {
 	char	*name_vertex;
 	int		x;
 	int		y;
 	t_link	*links;
-}typedef	t_node;
+	char 	start;
+	char 	end;
+}				t_node;
 
-struct	s_fam
+typedef struct	s_fam
 {
 	int num_ant;
-	int norm_data;
+	unsigned	norm_ant:1;
+	unsigned	norm_start:1;
+	unsigned	norm_end:1;
+	unsigned	norm_vertex:1;
+	unsigned	norm_links:1;
 
-} typedef t_fam;
+}				t_fam;
 
 /*
 ** char_makevec.c

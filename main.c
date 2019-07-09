@@ -12,7 +12,27 @@
 
 #include "lem_in.h"
 
-t_fam	*parse_map(void)
+int 	check_vertex_standard(char *line)
+{
+	int count;
+
+	count = 0;
+	if (!line)
+		exit(0);
+	while (*line++)
+	{
+		if (*line == ' ')
+			count++;
+		else if (count > 1 && !ft_isdigit(*line))
+			exit(0);
+	}
+	if (count == 2)
+		return (1);
+	else
+		return (0);
+}
+
+t_fam	*parse_map()
 {
 	t_fam	*fam;
 	char 	*buff;
@@ -25,14 +45,23 @@ t_fam	*parse_map(void)
 		exit(0);
 	fam->num_ant = ft_atoi(buff);
 	if (fam->num_ant > 0)
-		fam->norm_data = 1;
+		fam->norm_ant++;
 	while (get_next_line(0, &buff))
 	{
 		if ((line = ft_strchr(buff, '#')))
 		{
-			if (++*line == '#')
+			if (*(++line) == '#')
 			{
-				///start or finish
+				///start or end
+				if (ft_strcmp(++line, "start"))
+					fam->norm_start = 1;///parse next line immediately, it's start
+				else if (ft_strcmp(++line, "end"))
+					fam->norm_end = 1 ; ///parse next line immediately, it's end
+				else
+				{
+					ft_strdel(&buff);
+					continue ;
+				}
 			}
 			else
 			{
@@ -44,17 +73,22 @@ t_fam	*parse_map(void)
 		{
 			///parse links
 		}
+		else if (check_vertex_standard(line))
+		{
+			fam->norm_vertex = 1;
+			///parse vertex [node coord_x coord_y]
+		}
 		else
 		{
-
-			///parse vertex [node coord_x coord_y]
+			ft_strdel(&buff);
+			exit(0);
 		}
 		ft_strdel(&buff);
 	}
 	return (fam);
 }
 
-int		main(void)
+int		main()
 {
 	t_fam *fam;
 
