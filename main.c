@@ -18,7 +18,10 @@ int 	check_vertex_standard(char *line)
 
 	count = 0;
 	if (!line)
+	{
+		printf("b");
 		exit(0);
+	}
 	while (*line++)
 	{
 		if (*line == ' ')
@@ -48,7 +51,8 @@ t_fam	*parse_map()
 		fam->norm_ant++;
 	while (get_next_line(0, &buff))
 	{
-		if ((line = ft_strchr(buff, '#')))
+		line = buff;
+		if (ft_strchr(buff, '#'))
 		{
 			if (*(++line) == '#')
 			{
@@ -71,6 +75,7 @@ t_fam	*parse_map()
 		}
 		else if ((line = ft_strchr(buff, '-')))
 		{
+			fam->norm_links = 1;
 			///parse links
 		}
 		else if (check_vertex_standard(line))
@@ -81,6 +86,7 @@ t_fam	*parse_map()
 		else
 		{
 			ft_strdel(&buff);
+			printf("a");
 			exit(0);
 		}
 		ft_strdel(&buff);
@@ -93,5 +99,6 @@ int		main()
 	t_fam *fam;
 
 	fam = parse_map();
+	printf("%d\n%c\n%c\n%c\n%c\n%c\n", fam->num_ant, fam->norm_start, fam->norm_end, fam->norm_links, fam->norm_vertex, fam->norm_ant);
 	return (0);
 }
