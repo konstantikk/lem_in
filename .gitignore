@@ -1,0 +1,10 @@
+#clion IDE
+.idea
+CMakeLists.txt
+cmake-build-debug
+.DS_Store
+./push_swap/push_swap
+./checker/checker
+#tests
+randomer.py
+*.o
