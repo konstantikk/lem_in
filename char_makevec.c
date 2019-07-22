@@ -12,6 +12,7 @@
 
 #include "lem_in.h"
 
+
 t_link		*ft_makevec(void)
 {
 	t_link	*r;
@@ -20,6 +21,8 @@ t_link		*ft_makevec(void)
 		return (0);
 	r->cap = 10;
 	r->len = 0;
+	r->start = 0;
+	r->end = 0;
 	if (!(r->name = (char **)malloc(sizeof(char *) * 10)))
 		return (0);
 	r->start_name = r->name;

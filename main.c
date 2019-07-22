@@ -106,7 +106,11 @@ int		main()
 {
 	t_fam *fam;
 
-	fam = parse_map();
-	printf("!%d\n%c\n%c\n%c\n%c\n%c\n", fam->num_ant, fam->norm_start, fam->norm_end, fam->norm_links, fam->norm_vertex, fam->norm_ant);
+	fam = defective_parse();//parse_map();
+	//printf("!%d\n%c\n%c\n%c\n%c\n%c\n!", fam->num_ant, fam->norm_start, fam->norm_end, fam->norm_links, fam->norm_vertex, fam->norm_ant);
+	for (int i = 0; i < fam->adjacency_list->len; i++)
+	{		//if (fam->adjacency_list->links[i].start == '1' || fam->adjacency_list->links[i].end == '1' )
+			printf("%s\t%c\t%c\n", fam->adjacency_list->name_vertex[i], fam->adjacency_list->links[i]->start, fam->adjacency_list->links[i]->end);
+	}
 	return (0);
 }
