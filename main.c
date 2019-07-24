@@ -13,17 +13,8 @@
 #include "lem_in.h"
 
 int dim = 7;
-int dim2 = 5;
+int dim2 = 7;
 const int INF = 1000000000;
-
-
-
-void	dijkstra(int g[dim2][dim2])
-{
-
-}
-
-
 
 t_ivec 	*bfs(int g[dim][dim], int source)
 {
@@ -49,47 +40,48 @@ t_ivec 	*bfs(int g[dim][dim], int source)
 	return (path);
 }
 
-
-void create_elem(t_vec *new_elem, int to, int weight)
+void	dijkstra(int w[dim2][dim2])
 {
+	int *dist = (int*)malloc(sizeof(int) * dim2);
+	int *used = (int*)malloc(sizeof(int) * dim2);
+	int min_dist = 0;
+	int start_vertex = 0;
 
-	t_pair *new = (t_pair*)malloc(sizeof(t_pair));
+	for (int i = 0; i < dim2; i++)
+	{
+		dist[i] = INF;
+		used[i] = 0;
+	}
+	dist[0] = 0;
+	while (min_dist != INF)
+	{
+		int i = start_vertex;
+		used[i] = 1;
+		for (int j = 0; j < dim2; j++)
+			if (dist[i] + w[i][j] < dist[j])
+				dist[j] = dist[i] + w[i][j];
+		min_dist = INF;
+		for (int j = 0; j < dim2; j++)
+			if (!used[j] && dist[j] < min_dist)
+			{
+				min_dist = dist[j];
+				start_vertex = j;
+			}
+	}
+	for (int i = 0; i < dim2; i++)
+		printf("%d->", dist[i]);
 
-	new->weight = weight;
-	new->node = to;
-
-	ft_ptr_vec_pushback(new_elem, new);
 }
 
 int		main(void)
 {
-	int num_of_nodes;
-	t_vec **g;
-
-	printf("num of nodes: ");
-	scanf("%d", &num_of_nodes);
-	g = (t_vec**)malloc(sizeof(t_vec*) * num_of_nodes);
-	for (int i = 0; i < num_of_nodes; i++)
-	{
-		g[i] = ft_ptr_vec_init();
-		printf("num of edges for %d node", i + 1);
-		int num_of_edges;
-		scanf("%d", &num_of_edges);
-		for (int j = 0; j < num_of_edges; j++)
-		{
-			printf("node and weight: ");
-			int node, weight;
-			scanf("%d%d", &node, &weight);
-			create_elem(g[i], node, weight);
-		}
-		printf("\n");
-	}
-	for (int i = 0; i < num_of_nodes; i++)
-	{
-		printf("for %d node\n", i + 1);
-		for (int j = 0; (size_t)j < g[i]->length; j++)
-			printf("node: %d weight: %d\n", ((t_pair*)g[i]->data)->node, ((t_pair*)g[i]->data)->weight);
-		printf("\n");
-	}
+	int mas[7][7] = { { INF, 5, 10, INF, INF, INF, 4 }, // 0 матрица смежности
+					  { 5, INF, 1, 7, INF, INF, INF }, //1
+					  { 10, 1, INF, INF, INF, INF, INF }, //2
+					  { INF, 7, INF, INF, 3, INF, INF }, //3
+					  { INF, INF, INF, 3, INF, 6, INF }, //4
+					  { INF, INF, INF, INF, 6, INF, 4 }, //5
+					  { 4, INF, INF, INF, INF, 4, INF } }; //6
+	dijkstra(mas);
 	return (0);
 }
