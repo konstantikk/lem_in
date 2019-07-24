@@ -121,6 +121,7 @@ t_fam	*defective_parse(void)
 		{
 			fam->norm_vertex = 1;
 			ft_push_back(list, ft_find_word(buff, 0, ' '), ft_makevec());
+			ft_push_back(list, ft_strjoin("new_",ft_find_word(buff, 0, ' ') ), ft_makevec());
 			//list->links->end = '0';
 			//list->links->start = '0';
 			///parse vertex [node coord_x coord_y]
