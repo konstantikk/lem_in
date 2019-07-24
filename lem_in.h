@@ -33,7 +33,7 @@ typedef struct	s_node
 	//int		x;//coord
 	//int		y;//coord
 	t_link	**links;
-
+//added index int index;
 	size_t 	cap;
 	size_t 	len;
 }				t_node;

@@ -114,6 +114,11 @@ t_fam	*defective_parse(void)
 		else if (ft_strchr(buff, '-'))
 		{
 			fam->norm_links = 1;
+			/**function : search id by vertex_name; return (id)
+			 * list[id]->links it's links for our node
+			 * ft_vec_push_back(list[id]->links, char vertex_name, start \ end & ordinary vertex)
+			 *
+			**/
 			///parse links
 		}
 
