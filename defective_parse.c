@@ -63,17 +63,13 @@ int 		ft_push_back(t_node *vec, char *name, t_link *link)
 	return (1);
 }
 
-int 	ft_vec_return(char *name, t_node *vec)
-{
-
-}
-
 t_fam	*defective_parse(void)
 {
 	t_fam *fam;
 	char *line;
 	char *buff;
 	t_node	*list;
+
 
 
 	list = make_vek();
@@ -90,14 +86,14 @@ t_fam	*defective_parse(void)
 				///start or end
 				++line;
 
-				if (ft_strcmp(line, "end"))
+				if (!ft_strcmp(line, "start"))
 				{
 					fam->norm_start = 1;///parse next line immediately, it's start
 					get_next_line(0, &buff);
 					ft_push_back(list, ft_find_word(buff, 0, ' '), ft_makevec());
 					list->links[list->len - 1]->start = '1';
 				}
-				else if (ft_strcmp(line, "start"))
+				else if (!ft_strcmp(line, "end"))
 				{
 					fam->norm_end = 1 ; ///parse next line immediately, it's end
 					get_next_line(0, &buff);
@@ -119,6 +115,7 @@ t_fam	*defective_parse(void)
 		else if (ft_strchr(buff, '-'))
 		{
 			fam->norm_links = 1;
+			defective_parse_links(buff, list);
 			/**function : search id by vertex_name; return (id)
 			 * list[id]->links it's links for our node
 			 * ft_vec_push_back(list[id]->links, char vertex_name, start \ end & ordinary vertex)
