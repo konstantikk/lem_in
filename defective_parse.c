@@ -63,6 +63,11 @@ int 		ft_push_back(t_node *vec, char *name, t_link *link)
 	return (1);
 }
 
+int 	ft_vec_return(char *name, t_node *vec)
+{
+
+}
+
 t_fam	*defective_parse(void)
 {
 	t_fam *fam;
