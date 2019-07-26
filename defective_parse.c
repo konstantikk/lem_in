@@ -24,7 +24,7 @@ t_node	*make_vek()
 		return (0);
 	r->links = (t_link **)malloc(sizeof(t_link *) * 10);
 	r->used  = (char *)ft_memalloc(10);
-	r->parent = (int *)malloc(sizeof(int) * 10);
+	r->parent = (int *)ft_memalloc(sizeof(int) * 10);
 	return (r);
 }
 
