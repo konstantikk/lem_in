@@ -54,9 +54,8 @@ void 	bfs(t_node *vec)
 		id = ft_vec_return(ft_vec_pop_front(q), vec);
 		for (int i = 0; i < (int)vec->links[id]->len; i++)
 		{
-			printf("%s\n", vec->links[id]->name[i]);
-			if (vec->links[i]->name[i])
-			{
+			//printf("%s\n", vec->links[id]->name[i]);
+
 				to = ft_vec_return(vec->links[id]->name[i], vec);
 			if (!vec->used[to])
 			{
@@ -65,7 +64,7 @@ void 	bfs(t_node *vec)
 				printf("%s\n", vec->name_vertex[to]);
 				vec->parent[to] = id;///need added d[] distanation d[to] = d[v] + 1
 			}
-		}}
+		}
 
 	}///PATCH
 	int end;
