@@ -36,8 +36,9 @@ typedef struct	s_node
 //added index int index;
 	size_t 	cap;
 	size_t 	len;
-	char 	*used;
-	int 	*parent;
+	char 	*used;///visited or not visited yet
+	int 	*parent;///
+	int 	*cost;///level vertex
 }				t_node;
 
 typedef struct	s_fam

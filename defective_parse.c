@@ -25,6 +25,7 @@ t_node	*make_vek()
 	r->links = (t_link **)malloc(sizeof(t_link *) * 10);
 	r->used  = (char *)ft_memalloc(10);
 	r->parent = (int *)ft_memalloc(sizeof(int) * 10);
+	r->cost = (int *)ft_memalloc(sizeof(int) * 10);
 	return (r);
 }
 
@@ -35,6 +36,7 @@ int 		ft_push_back(t_node *vec, char *name, t_link *link)
 	t_link	**new_links;
 	int 	*new_parent;
 	char 	*new_usage;
+	int 	*new_cost;
 
 	if (!vec)
 		return (0);
@@ -50,6 +52,8 @@ int 		ft_push_back(t_node *vec, char *name, t_link *link)
 			return (0);
 		if (!(new_usage = (char *)ft_memalloc(vec->cap)))
 			return (0);
+		if (!(new_cost = (int *)ft_memalloc(vec->cap * sizeof (int))))
+			return (0);
 		i = -1;
 		while (++i < (int)vec->len)
 		{
@@ -57,6 +61,7 @@ int 		ft_push_back(t_node *vec, char *name, t_link *link)
 			new_links[i] = vec->links[i];
 			new_parent[i] = vec->parent[i];
 			new_usage[i] = vec->used[i];
+			new_cost[i] = vec->cost[i];
 		}
 		new_links[vec->len] = link;
 		new_name[vec->len++] = name;

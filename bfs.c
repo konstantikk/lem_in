@@ -37,17 +37,6 @@ void 	bfs(t_node *vec)
 	q = ft_makevec();
 	ft_vec_push_back(q, vec->name_vertex[start]);
 	vec->parent[start] = -1;
-
-	for (int i = 0 ; i < (int)vec->len; i++)
-	{
-		printf("name: %s\n used: %c\n parent: %d\n links: ", vec->name_vertex[i], vec->used[i], vec->parent[i]);
-		for (int j = 0; j < (int)vec->links[i]->len; j++)
-		{
-			printf("[%s] ",vec->links[i]->name[j]);
-		}
-		printf("\n");
-	}
-	printf("\n\n\n");
 	while (q->len)
 	{
 		///printf("q->len: %zu\n\n", q->len);
@@ -61,8 +50,9 @@ void 	bfs(t_node *vec)
 			{
 				vec->used[to] = '1';
 				ft_vec_push_back(q, vec->name_vertex[to]);
-				printf("%s\n", vec->name_vertex[to]);
-				vec->parent[to] = id;///need added d[] distanation d[to] = d[v] + 1
+				//printf("%s\n", vec->name_vertex[to]);
+				vec->parent[to] = id;
+				vec->cost[to] = vec->cost[id] + 1;///need added d[] distanation d[to] = d[v] + 1 if is end level unnecessary
 			}
 		}
 
@@ -80,4 +70,15 @@ void 	bfs(t_node *vec)
 		printf("%s<--", vec->name_vertex[v]);
 	}
 
+	///end patch
+	for (int i = 0 ; i < (int)vec->len; i++)
+	{
+		printf("\nname: %3s\t used: %c\t parent: %d\t level: %d\tlinks: ", vec->name_vertex[i], vec->used[i], vec->parent[i], vec->cost[i]);
+		for (int j = 0; j < (int)vec->links[i]->len; j++)
+		{
+			printf("[%s] ",vec->links[i]->name[j]);
+		}
+		printf("\n");
+	}
+	printf("\n\n\n");
 }
