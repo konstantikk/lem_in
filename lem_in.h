@@ -36,6 +36,8 @@ typedef struct	s_node
 //added index int index;
 	size_t 	cap;
 	size_t 	len;
+	char 	*used;
+	int 	*parent;
 }				t_node;
 
 typedef struct	s_fam
@@ -54,10 +56,12 @@ typedef struct	s_fam
 */
 t_link			*ft_makevec(void);
 int				ft_vec_push_back(t_link *vec, char *name);
-void			ft_vec_pop_front(t_link *vec);
+char			*ft_vec_pop_front(t_link *vec);
 void			ft_free_vec(t_link **vec);
 t_fam			*defective_parse(void);
 int 			ft_vec_return(char *name, t_node *vec);
 void			defective_parse_links(char *buff, t_node *list);
 t_node	*make_vek();
+void 	bfs(t_node *vec);
+int 	ft_vec_return(char *name, t_node *vec);
 #endif

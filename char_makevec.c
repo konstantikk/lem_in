@@ -55,13 +55,16 @@ int 		ft_vec_push_back(t_link *vec, char *name)
 	return (1);
 }
 
-void 		ft_vec_pop_front(t_link *vec)
+char	*ft_vec_pop_front(t_link *vec)//need return vertex
 {
+	char 	*name;
 	if (!vec || !vec->len)
-		return ;
+		return (0);
+	name = vec->name[0];
 	vec->name++;
 	vec->cap--;
 	vec->len--;
+	return (name);
 }
 
 void	ft_free_vec(t_link **vec)

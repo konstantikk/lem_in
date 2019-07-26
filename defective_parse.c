@@ -23,6 +23,8 @@ t_node	*make_vek()
 	if (!(r->name_vertex = (char **)ft_memalloc(sizeof(char *) * 10)))
 		return (0);
 	r->links = (t_link **)malloc(sizeof(t_link *) * 10);
+	r->used  = (char *)ft_memalloc(10);
+	r->parent = (int *)malloc(sizeof(int) * 10);
 	return (r);
 }
 
@@ -31,6 +33,8 @@ int 		ft_push_back(t_node *vec, char *name, t_link *link)
 	int i;
 	char **new_name;
 	t_link	**new_links;
+	int 	*new_parent;
+	char 	*new_usage;
 
 	if (!vec)
 		return (0);
@@ -42,15 +46,20 @@ int 		ft_push_back(t_node *vec, char *name, t_link *link)
 			return (0);
 		if (!(new_links = (t_link **)malloc(vec->cap * sizeof(t_link *))))
 			return (0);
+		if (!(new_parent = (int *)ft_memalloc(vec->cap	* sizeof (int))))
+			return (0);
+		if (!(new_usage = (char *)ft_memalloc(vec->cap)))
+			return (0);
 		i = -1;
 		while (++i < (int)vec->len)
 		{
 			new_name[i] = vec->name_vertex[i];
 			new_links[i] = vec->links[i];
+			new_parent[i] = vec->parent[i];
+			new_usage[i] = vec->used[i];
 		}
 		new_links[vec->len] = link;
 		new_name[vec->len++] = name;
-		//	free(vec->start_name);
 		vec->links = new_links;
 		vec->name_vertex = new_name;
 	}
@@ -92,6 +101,7 @@ t_fam	*defective_parse(void)
 					get_next_line(0, &buff);
 					ft_push_back(list, ft_find_word(buff, 0, ' '), ft_makevec());
 					list->links[list->len - 1]->start = '1';
+					list->used[list->len - 1] = '1';
 				}
 				else if (!ft_strcmp(line, "end"))
 				{
