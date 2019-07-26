@@ -5,19 +5,45 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/12 17:24:40 by vlegros           #+#    #+#             */
-/*   Updated: 2019/07/12 17:24:40 by vlegros          ###   ########.fr       */
+/*   Created: 2019/07/26 19:57:47 by vlegros           #+#    #+#             */
+/*   Updated: 2019/07/26 19:57:47 by vlegros          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEM_IN_LEM_IN_H
-#define LEM_IN_LEM_IN_H
+#ifndef LEM_IN
+# define LEM_IN
 
-# include "./libft/includes/libft.h"
+#include "./libft/includes/libft.h"
 
-typedef	struct s_pair {
-	int node;
-	int weight;
-}				t_pair;
+typedef enum e_values
+{
+	FALSE,
+	TRUE,
+	START,
+	END
+}			t_values;
+
+typedef struct	s_node
+{
+	char	*name;
+	t_ivec	*parents;
+	t_ivec	*links;
+}				t_node;
+/*
+typedef	struct	s_node
+{
+	t_hf_node *in;
+	t_hf_node *out;
+}				t_node;
+*/
+typedef struct	s_farm
+{
+	size_t 	ant_num;
+	size_t 	start;
+	size_t	end;
+	t_vec	*nodes;
+}				t_farm;
+
+t_farm	*parse(int fd);
 
 #endif
