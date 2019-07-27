@@ -25,6 +25,8 @@ typedef enum e_values
 
 typedef struct	s_node
 {
+	int		 level;
+	unsigned usage:1;
 	char	*name;
 	t_ivec	*parents;
 	t_ivec	*links;

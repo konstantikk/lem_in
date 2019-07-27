@@ -29,6 +29,8 @@ t_node	*create_node(char *name)
 
 	if (!(node = (t_node*)malloc(sizeof(t_node))))
 		return (NULL);
+	node->usage = 0;
+	node->level = 0;
 	node->name = name;
 	node->links = ft_int_vec_init();
 	node->parents = NULL;
