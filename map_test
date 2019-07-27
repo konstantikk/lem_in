@@ -1,16 +1,15 @@
 13
-##end
-end 2 3
+##start
+start 1 1
 1 4 4
 2 6 7
 3 6 7
 4 3 2
-##start
-start 1 1
+##end
+end 2 3
 start-1
-1-end
 start-3
+1-2
+2-end
 3-4
 4-end
-start-2
-2-end
