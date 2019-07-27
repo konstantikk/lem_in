@@ -2,5 +2,6 @@
 .idea
 cmake-build-debug
 .DS_Store
+a.out
 #tests
 *.o

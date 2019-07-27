@@ -15,13 +15,16 @@
 int 	main(int argc, char **argv)
 {
 	t_farm *farm;
-	//char *hey = argv[1];
 	int fd = open(argv[1], O_RDONLY);
-	farm = parse(fd);
+	farm = parse(0);
 	for (int i = 0; (size_t)i < farm->nodes->length; i++)
 	{
-		printf("%s\n", ((t_node*)(((void**)(farm->nodes->data))[i]))->name);
+		printf("%s\t", ((t_node*)(((void**)(farm->nodes->data))[i]))->name);
+		for (int j = 0; (size_t)j < ((t_node*)(((void**)(farm->nodes->data))[i]))->links->length; j++)
+			printf("|%d| ", ((t_node*)(((void**)(farm->nodes->data))[i]))->links->data[j]);
+		printf("\n");
 	}
+
 	printf("\n%zu, %zu", farm->start, farm->end);
 	close(fd);
 	return (0);
