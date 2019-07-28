@@ -2,3 +2,5 @@
 *.o
 CMakeList.txt
 a.out
+cmake-build-debug/
+map_text
