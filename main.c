@@ -12,11 +12,8 @@
 
 #include "lem_in.h"
 
-int 	main(int argc, char **argv)
+void	debug(t_farm *farm)
 {
-	t_farm *farm;
-	int fd = open(argv[1], O_RDONLY);
-	farm = parse(0);
 	for (int i = 0; (size_t)i < farm->nodes->length; i++)
 	{
 		printf("%s\t", ((t_node*)(((void**)(farm->nodes->data))[i]))->name);
@@ -25,7 +22,17 @@ int 	main(int argc, char **argv)
 		printf("\n");
 	}
 
-	printf("\n%zu, %zu", farm->start, farm->end);
+	printf("\n%zu, %zu\n", farm->start, farm->end);
+}
+
+int 	main(int argc, char **argv)
+{
+	t_farm *farm;
+	int fd = open(argv[1], O_RDONLY);
+	farm = parse(0);
+	debug(farm);
+//	bfs(farm);
+	dfs(farm);
 	close(fd);
 	return (0);
 }
