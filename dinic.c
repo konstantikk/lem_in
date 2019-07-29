@@ -52,9 +52,9 @@ int 	bfs(t_farm *farm)
 			}
 		}
 	}
-	for (int i = 0; i < farm->nodes->length; i++)
-		printf("|%d| ", farm->levels[i]);
-	printf("\n");
+//	for (int i = 0; i < farm->nodes->length; i++)
+//		printf("|%d| ", farm->levels[i]);
+//	printf("\n");
 	return (farm->levels[farm->end] != -1);
 }
 
@@ -90,10 +90,12 @@ int 	dinic(t_farm *farm)
 	while (bfs(farm))
 	{
 		flow = dfs(farm, farm->start, INF);
+		printf("\n");
 		while (flow)
 		{
 			max_flow += flow;
 			flow = dfs(farm, farm->start, INF);
+			printf("\n");
 		}
 	}
 	for (int i = 0; i < farm->nodes->length; i++)
