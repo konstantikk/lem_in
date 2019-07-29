@@ -68,17 +68,36 @@ int 		min_fl(int val1, int val2)
 int 		dfs(t_farm *farm, int node, int min_flow)
 {
 	int flow;
+	int i;
 
 	if ((size_t)node == farm->end || min_flow == 0)
 		return min_flow;
-	for (int i = 0; i < NODE(node)->links->length; i++)
-		if (farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
+/*	for (int i = 0; i < NODE(node)->links->length; i++)
+		if (LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
 		{
 			printf("path:%d->", LINK(node, i)->index);
 			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
-			LINK(node, i)->capacity = 0;
+			if (flow)
+				LINK(node, i)->capacity = 0;
 			return flow;
+		}*/
+	i = 0;
+	while ((size_t)i < NODE(node)->links->length)
+	{
+		if (LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
+		{
+			printf("path:%d->", LINK(node, i)->index);
+			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
+			if (!flow)
+			{
+				i++;
+				continue ;
+			}
+			LINK(node, i)->capacity = 0;
+			return (flow);
 		}
+		i++;
+	}
 	return (0);
 }
 
