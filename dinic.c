@@ -13,7 +13,7 @@
 #include "lem_in.h"
 
 #define NODE(i) ((t_node*)(((void**)(farm->nodes->data))[i]))
-
+#define LINK(i, j) ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->links->data)[j])
 int			INF = 1000000000;
 
 void	recover_path(int *parents, int end)
@@ -27,13 +27,16 @@ void	recover_path(int *parents, int end)
 	for (size_t i = 0; i < path->length; i++)
 		printf("%d->", path->data[i]);
 }
-/*
+
 int 	bfs(t_farm *farm)
 {
 	t_ivec	*q = ft_int_vec_init();
 
 	for (int i = 0; (size_t)i < farm->nodes->length; i++)
-		farm->levels[i] = INF;
+	{
+		farm->levels[i] = -1;
+		farm->used[i] = FALSE;
+	}
 	farm->used[farm->start] = TRUE;
 	ft_int_vec_pushback(q, farm->start);
 	while (q->length)
@@ -41,36 +44,62 @@ int 	bfs(t_farm *farm)
 		int	check_elem = ft_int_vec_popfront(q);
 		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
 		{
-			if (!farm->used[NODE(check_elem)->links->data[i]])
+			if (!farm->used[LINK(check_elem, i)->index] && LINK(check_elem, i)->capacity)
 			{
-				farm->used[NODE(check_elem)->links->data[i]] = TRUE;
-				ft_int_vec_pushback(q,NODE(check_elem)->links->data[i]);
-				farm->levels[NODE(check_elem)->links->data[i]] = farm->levels[check_elem] + 1;
+				farm->used[LINK(check_elem, i)->index] = TRUE;
+				ft_int_vec_pushback(q,LINK(check_elem, i)->index);
+				farm->levels[LINK(check_elem, i)->index] = farm->levels[check_elem] + 1;
 			}
 		}
 	}
-	return (farm->levels[farm->end] != INF);
+	for (int i = 0; i < farm->nodes->length; i++)
+		printf("|%d| ", farm->levels[i]);
+	printf("\n");
+	return (farm->levels[farm->end] != -1);
 }
 
-void	dfs_helper(t_farm *farm, int *used, int node, int end)
+int 		min_fl(int val1, int val2)
 {
-	if (node == end)
-		return ;
-	used[node] = TRUE;
-	printf("%d->", node);
-	for (int i = 0; (size_t)i < NODE(node)->links->length; i++)
-		if (!used[NODE(node)->links->data[i]])
-			dfs_helper(farm, used, NODE(node)->links->data[i], end);
+	if (val1 < val2)
+		return val1;
+	return val2;
 }
 
-int 		dfs(t_farm *farm)
+int 		dfs(t_farm *farm, int node, int min_flow)
 {
-	int *used = (int*)malloc(sizeof(int) * farm->nodes->length);
+	int flow;
 
-	for (int i = 0; (size_t)i < farm->nodes->length; i++)
-		used[i] = FALSE;
-	dfs_helper(farm, used, farm->start, farm->end);
-	return (1);
+	if ((size_t)node == farm->end || min_flow == 0)
+		return min_flow;
+	for (int i = 0; NODE(node)->links->length; i++)
+		if (farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
+		{
+			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
+			LINK(node, i)->capacity = 0;
+			return flow;
+		}
+	return (0);
 }
 
-*/
+int 	dinic(t_farm *farm)
+{
+	int max_flow = 0;
+	int flow;
+
+	while (bfs(farm))
+	{
+		flow = dfs(farm, farm->start, INF);
+		while (flow)
+		{
+			max_flow += flow;
+			flow = dfs(farm, farm->start, INF);
+		}
+	}
+	for (int i = 0; i < farm->nodes->length; i++)
+	{
+		for (int j = 0; j < NODE(i)->links->length; j++)
+			printf("%d->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
+		printf("\n");
+	}
+	return max_flow;
+}

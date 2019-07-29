@@ -56,6 +56,7 @@ typedef struct	s_farm
 
 t_farm	*parse(int fd);
 int 	bfs(t_farm *farm);
-int 	dfs(t_farm *farm);
+int 	dfs(t_farm *farm, int start, int min_flow);
+int 	dinic(t_farm *farm);
 
 #endif

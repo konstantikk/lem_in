@@ -33,6 +33,7 @@ int 	main(int argc, char **argv)
 	debug(farm);
 //	bfs(farm);
 //	dfs(farm);
+	printf("max_flow: %d", dinic(farm));
 	close(fd);
 	return (0);
 }
