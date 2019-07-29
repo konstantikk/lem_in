@@ -71,9 +71,10 @@ int 		dfs(t_farm *farm, int node, int min_flow)
 
 	if ((size_t)node == farm->end || min_flow == 0)
 		return min_flow;
-	for (int i = 0; NODE(node)->links->length; i++)
+	for (int i = 0; i < NODE(node)->links->length; i++)
 		if (farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
 		{
+			printf("path:%d->", LINK(node, i)->index);
 			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
 			LINK(node, i)->capacity = 0;
 			return flow;
@@ -97,8 +98,9 @@ int 	dinic(t_farm *farm)
 	}
 	for (int i = 0; i < farm->nodes->length; i++)
 	{
+		printf("|index: %d| |name: %s| ", i ,NODE(i)->name);
 		for (int j = 0; j < NODE(i)->links->length; j++)
-			printf("%d->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
+			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
 		printf("\n");
 	}
 	return max_flow;
