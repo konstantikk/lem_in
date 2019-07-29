@@ -23,13 +23,19 @@ typedef enum e_values
 	END
 }			t_values;
 
+typedef	struct	s_link
+{
+	int		index;
+	int 	capacity;
+}				t_link;
+
 typedef struct	s_node
 {
 	int		 level;
 	unsigned usage:1;
 	char	*name;
-	t_ivec	*parents;
-	t_ivec	*links;
+//	t_ivec	*parents;
+	t_vec	*links;
 }				t_node;
 /*
 typedef	struct	s_node
@@ -44,6 +50,8 @@ typedef struct	s_farm
 	size_t 	start;
 	size_t	end;
 	t_vec	*nodes;
+	int 	*levels;
+	int 	*used;
 }				t_farm;
 
 t_farm	*parse(int fd);

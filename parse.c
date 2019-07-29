@@ -32,9 +32,20 @@ t_node	*create_node(char *name)
 	node->usage = 0;
 	node->level = 0;
 	node->name = name;
-	node->links = ft_int_vec_init();
-	node->parents = NULL;
+	node->links = ft_ptr_vec_init();
+	//node->parents = NULL;
 	return (node);
+}
+
+t_link	*create_link(int index)
+{
+	t_link	*link;
+
+	if (!(link = (t_link*)malloc(sizeof(t_link))))
+		return (NULL);
+	link->index = index;
+	link->capacity = 1;
+	return (link);
 }
 
 int 	read_node(t_farm *farm, char *buff)
@@ -52,8 +63,8 @@ int 	read_node(t_farm *farm, char *buff)
 		//del
 		return (0);
 	}
-	ft_int_vec_pushback(in_node->links, (int)farm->nodes->length + 1);
-	ft_int_vec_pushback(out_node->links, (int)farm->nodes->length);
+	ft_ptr_vec_pushback(in_node->links, create_link((int)farm->nodes->length + 1));
+	ft_ptr_vec_pushback(out_node->links, create_link((int)farm->nodes->length));
 	ft_ptr_vec_pushback(farm->nodes, in_node);
 	ft_ptr_vec_pushback(farm->nodes, out_node);
 	return (1);
@@ -69,19 +80,19 @@ int 	read_links(t_farm *farm, char *buff)
 	if ((size_t)index1 == farm->start || (size_t)index2 == farm->start)
 	{
 		if ((size_t)index1 == farm->start)
-			ft_int_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, index2 - 1);
+			ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
 		else
-			ft_int_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, index2);
+			ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2));
 	}
 	else if ((size_t)index1 == farm->end || (size_t)index2 == farm->end)
 	{
-		ft_int_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, index2);
-		ft_int_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, index1);
+		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2));
+		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1));
 	}
 	else
 	{
-		ft_int_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, index2 - 1);
-		ft_int_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, index1 - 1);
+		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
+		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
 	}
 	return (1);
 }
@@ -128,5 +139,8 @@ t_farm	*parse(int fd)
 			read_node(farm, buff);
 		ft_memdel((void**)&buff);
 	}
+	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->length);
+	farm->used = (int*)malloc(sizeof(int) * farm->nodes->length);
+	ft_memset(farm->used, 0, sizeof(int) * farm->nodes->length);;
 	return (farm);
 }

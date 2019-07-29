@@ -14,6 +14,8 @@
 
 #define NODE(i) ((t_node*)(((void**)(farm->nodes->data))[i]))
 
+int			INF = 1000000000;
+
 void	recover_path(int *parents, int end)
 {
 	t_ivec *path = ft_int_vec_init();
@@ -25,38 +27,29 @@ void	recover_path(int *parents, int end)
 	for (size_t i = 0; i < path->length; i++)
 		printf("%d->", path->data[i]);
 }
-
+/*
 int 	bfs(t_farm *farm)
 {
 	t_ivec	*q = ft_int_vec_init();
-	int		*used = (int*)malloc(sizeof(int) * farm->nodes->length);
-	int		*levels = (int*)malloc(sizeof(int) * farm->nodes->length);
-	int		*parents = (int*)malloc(sizeof(int) * farm->nodes->length);
 
-	for (size_t i = 0; i < farm->nodes->length; i++)
-	{
-		used[i] = FALSE;
-		levels[i] = 0;
-		parents[i] = 0;
-	}
-	used[farm->start] = TRUE;
-	parents[farm->start] = -1;
+	for (int i = 0; (size_t)i < farm->nodes->length; i++)
+		farm->levels[i] = INF;
+	farm->used[farm->start] = TRUE;
 	ft_int_vec_pushback(q, farm->start);
 	while (q->length)
 	{
 		int	check_elem = ft_int_vec_popfront(q);
 		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
 		{
-			if (!used[NODE(check_elem)->links->data[i]])
+			if (!farm->used[NODE(check_elem)->links->data[i]])
 			{
-				used[NODE(check_elem)->links->data[i]] = TRUE;
+				farm->used[NODE(check_elem)->links->data[i]] = TRUE;
 				ft_int_vec_pushback(q,NODE(check_elem)->links->data[i]);
-				levels[NODE(check_elem)->links->data[i]] = levels[check_elem] + 1;
-				parents[NODE(check_elem)->links->data[i]] = check_elem;
+				farm->levels[NODE(check_elem)->links->data[i]] = farm->levels[check_elem] + 1;
 			}
 		}
 	}
-	return (1);
+	return (farm->levels[farm->end] != INF);
 }
 
 void	dfs_helper(t_farm *farm, int *used, int node, int end)
@@ -80,3 +73,4 @@ int 		dfs(t_farm *farm)
 	return (1);
 }
 
+*/

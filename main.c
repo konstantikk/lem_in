@@ -18,7 +18,7 @@ void	debug(t_farm *farm)
 	{
 		printf("%s\t", ((t_node*)(((void**)(farm->nodes->data))[i]))->name);
 		for (int j = 0; (size_t)j < ((t_node*)(((void**)(farm->nodes->data))[i]))->links->length; j++)
-			printf("|%d| ", ((t_node*)(((void**)(farm->nodes->data))[i]))->links->data[j]);
+			printf("|%d| ", ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->links->data)[j])->index);
 		printf("\n");
 	}
 
@@ -32,7 +32,7 @@ int 	main(int argc, char **argv)
 	farm = parse(0);
 	debug(farm);
 //	bfs(farm);
-	dfs(farm);
+//	dfs(farm);
 	close(fd);
 	return (0);
 }
