@@ -100,7 +100,7 @@ int 	dinic(t_farm *farm)
 	}
 	for (int i = 0; i < farm->nodes->length; i++)
 	{
-		printf("|index: %d| |name: %s| ", i ,NODE(i)->name);
+		printf("|index: %10d| |name: %10s| ", i ,NODE(i)->name);
 		for (int j = 0; j < NODE(i)->links->length; j++)
 			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
 		printf("\n");
