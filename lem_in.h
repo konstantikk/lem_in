@@ -52,6 +52,7 @@ typedef struct	s_farm
 	t_vec	*nodes;
 	int 	*levels;
 	int 	*used;
+	int		fixed;
 }				t_farm;
 
 t_farm	*parse(int fd);

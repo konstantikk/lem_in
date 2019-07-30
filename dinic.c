@@ -31,6 +31,7 @@ void	recover_path(int *parents, int end)
 int 	bfs(t_farm *farm)
 {
 	t_ivec	*q = ft_int_vec_init();
+	static int flag = FALSE;
 
 	for (int i = 0; (size_t)i < farm->nodes->length; i++)
 	{
@@ -51,6 +52,11 @@ int 	bfs(t_farm *farm)
 				farm->levels[LINK(check_elem, i)->index] = farm->levels[check_elem] + 1;
 			}
 		}
+	}
+	if (!flag)
+	{
+		farm->fixed = farm->levels[farm->end];
+		flag  = TRUE;
 	}
 //	for (int i = 0; i < farm->nodes->length; i++)
 //		printf("|%d| ", farm->levels[i]);
@@ -86,10 +92,11 @@ int 		dfs(t_farm *farm, int node, int min_flow)
 	{
 		if (LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
 		{
-			printf("path:%d->", LINK(node, i)->index);
+			printf("%d->", LINK(node, i)->index);
 			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
-			if (!flow)
+			if (!flow || farm->levels[LINK(node, i)->index] > farm->fixed)
 			{
+				printf("\n");
 				i++;
 				continue ;
 			}
@@ -98,6 +105,7 @@ int 		dfs(t_farm *farm, int node, int min_flow)
 		}
 		i++;
 	}
+	farm->fixed++;
 	return (0);
 }
 
@@ -108,13 +116,14 @@ int 	dinic(t_farm *farm)
 
 	while (bfs(farm))
 	{
+		printf("path: ");
 		flow = dfs(farm, farm->start, INF);
 		printf("\n");
 		while (flow)
 		{
 			max_flow += flow;
+			printf("path: ");
 			flow = dfs(farm, farm->start, INF);
-			printf("\n");
 		}
 	}
 	for (int i = 0; i < farm->nodes->length; i++)
