@@ -78,25 +78,20 @@ int 		dfs(t_farm *farm, int node, int min_flow)
 
 	if ((size_t)node == farm->end || min_flow == 0)
 		return min_flow;
-/*	for (int i = 0; i < NODE(node)->links->length; i++)
-		if (LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
-		{
-			printf("path:%d->", LINK(node, i)->index);
-			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
-			if (flow)
-				LINK(node, i)->capacity = 0;
-			return flow;
-		}*/
 	i = 0;
 	while ((size_t)i < NODE(node)->links->length)
 	{
-		if (LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1)
+		if (LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 &&
+				farm->levels[LINK(node, i)->index] <= farm->fixed)
 		{
 			printf("%d->", LINK(node, i)->index);
+			if (LINK(node, i)->index == farm->end)
+				printf("good");
 			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
-			if (!flow || farm->levels[LINK(node, i)->index] > farm->fixed)
+			if (!flow)
 			{
-				printf("\n");
+				printf("stop\n");
+		//		printf("\n");
 				i++;
 				continue ;
 			}
@@ -124,6 +119,7 @@ int 	dinic(t_farm *farm)
 			max_flow += flow;
 			printf("path: ");
 			flow = dfs(farm, farm->start, INF);
+			printf("\n");
 		}
 	}
 	for (int i = 0; i < farm->nodes->length; i++)
