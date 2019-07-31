@@ -71,6 +71,13 @@ int 		min_fl(int val1, int val2)
 	return val2;
 }
 
+int 		ft_find_index(t_farm *farm, int parent,int val)
+{
+	for (int i = 0; i < NODE(parent)->links->length; i++)
+		if (LINK(parent, i)->index == val)
+			return (i);
+	return (-1);
+}
 
 int 		iterative_dfs(t_farm *farm)
 {
@@ -85,22 +92,32 @@ int 		iterative_dfs(t_farm *farm)
 	{
 		node = ft_int_vec_popfront(s);
 		i = 0;
+		printf("node: %d\n", node);
 		if (node == farm->end)
 		{
-
+			int v = farm->end;
+			while (v != farm->start)
+			{
+				printf("%d->%d\n", farm->parents[v], v);
+				LINK(farm->parents[v], ft_find_index(farm, farm->parents[v], v))->capacity = 0;
+				v = farm->parents[v];
+			}
 			return (1);
 		}
 		while ((size_t)i < NODE(node)->links->length)
 		{
-			if (!farm->used[i] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1&&
-				farm->levels[LINK(node, i)->index] <= farm->fixed)
+			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[LINK(node, i)->index] <= farm->fixed)
 			{
-				ft_int_vec_pushback(s, LINK(node, i)->index);
-				farm->used[i] = TRUE;
-				farm->parents[i] = node;
+				ft_int_vec_pushfront(s, LINK(node, i)->index);
+				farm->used[LINK(node, i)->index] = TRUE;
+				farm->parents[LINK(node, i)->index] = node;
 			}
 			i++;
 		}
+		printf("stack: ");
+		for (int j = 0; j < s->length; j++)
+			printf("%d ", s->data[j]);
+		printf("\n\n");
 	}
 	farm->fixed++;
 	return (0);
@@ -148,12 +165,14 @@ int 	dinic(t_farm *farm)
 	{
 		//printf("path: ");
 		flow = iterative_dfs(farm);///dfs(farm, farm->start, INF);
+	//	farm->fixed++;
 		printf("\n");
 		while (flow)
 		{
 			max_flow += flow;
 			//printf("path: ");
-			flow = iterative_dfs(farm);///dfs(farm, farm->start, INF);
+			flow = iterative_dfs(farm);
+			//farm->fixed++;///dfs(farm, farm->start, INF);
 			printf("\n");
 		}
 	}
