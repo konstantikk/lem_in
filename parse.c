@@ -29,8 +29,6 @@ t_node	*create_node(char *name)
 
 	if (!(node = (t_node*)malloc(sizeof(t_node))))
 		return (NULL);
-	node->usage = 0;
-	node->level = 0;
 	node->name = name;
 	node->links = ft_ptr_vec_init();
 	//node->parents = NULL;
@@ -142,5 +140,6 @@ t_farm	*parse(int fd)
 	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->length);
 	farm->used = (int*)malloc(sizeof(int) * farm->nodes->length);
 	farm->parents = (int*)malloc(sizeof(int) * farm->nodes->length);
+	farm->mainstream = ft_ptr_vec_init();
 	return (farm);
 }

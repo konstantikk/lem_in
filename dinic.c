@@ -14,19 +14,7 @@
 
 #define NODE(i) ((t_node*)(((void**)(farm->nodes->data))[i]))
 #define LINK(i, j) ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->links->data)[j])
-int			INF = 1000000000;
-
-void	recover_path(int *parents, int end)
-{
-	t_ivec *path = ft_int_vec_init();
-
-//	for (int i = 0; i < ft_strlen((char*)parents) / sizeof(int); i++)
-//		printf("%d ", parents[i]);
-	for (int i = end; i != -1; i = parents[i])
-		ft_int_vec_pushback(path, i);
-	for (size_t i = 0; i < path->length; i++)
-		printf("%d->", path->data[i]);
-}
+#define SUBSTREAM(i) ((t_sub_stream*)(((void**)farm->mainstream->data)[i]))
 
 int 	bfs(t_farm *farm)
 {
@@ -57,10 +45,8 @@ int 	bfs(t_farm *farm)
 	{
 		farm->fixed = farm->levels[farm->end];
 		flag  = TRUE;
+		ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	}
-//	for (int i = 0; i < farm->nodes->length; i++)
-//		printf("|%d| ", farm->levels[i]);
-//	printf("\n");
 	return (farm->levels[farm->end] != -1);
 }
 
@@ -79,7 +65,26 @@ int 		ft_find_index(t_farm *farm, int parent,int val)
 	return (-1);
 }
 
-int 		iterative_dfs(t_farm *farm)
+/**
+ * creating array sizeof farm->fixed + 1 because we storing the last(end_node) as well
+ *
+ */
+void		add_path(t_farm *farm)
+{
+	int 	vertex = farm->end;
+	int 	j = farm->fixed;
+	int 	*path = (int*)malloc(sizeof(int) * farm->fixed + 1);
+
+	while (vertex != farm->start)
+	{
+		path[j--] = vertex;
+		LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+		vertex = farm->parents[vertex];
+	}
+	ft_ptr_vec_pushback(SUBSTREAM(farm->mainstream->length - 1)->stream, path);
+}
+
+int 		dfs(t_farm *farm)
 {
 	int i;
 	t_ivec	*s = ft_int_vec_init();
@@ -92,68 +97,48 @@ int 		iterative_dfs(t_farm *farm)
 	{
 		node = ft_int_vec_popfront(s);
 		i = 0;
-		printf("node: %d\n", node);
 		if (node == farm->end)
 		{
-			int v = farm->end;
-			while (v != farm->start)
-			{
-				printf("%d->%d\n", farm->parents[v], v);
-				LINK(farm->parents[v], ft_find_index(farm, farm->parents[v], v))->capacity = 0;
-				v = farm->parents[v];
-			}
+			add_path(farm);
 			return (1);
 		}
 		while ((size_t)i < NODE(node)->links->length)
 		{
 			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[LINK(node, i)->index] <= farm->fixed)
 			{
-				ft_int_vec_pushfront(s, LINK(node, i)->index);
+				ft_int_vec_pushback(s, LINK(node, i)->index);
 				farm->used[LINK(node, i)->index] = TRUE;
 				farm->parents[LINK(node, i)->index] = node;
 			}
 			i++;
 		}
-		printf("stack: ");
-		for (int j = 0; j < s->length; j++)
-			printf("%d ", s->data[j]);
-		printf("\n\n");
 	}
-	farm->fixed++;
+	farm->fixed += 2;
+	ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	return (0);
 }
 
-int 		dfs(t_farm *farm, int node, int min_flow)
+void	debuf_dinic(t_farm *farm)
 {
-	int flow;
-	int i;
-
-	if ((size_t)node == farm->end || min_flow == 0)
-		return min_flow;
-	i = 0;
-	while ((size_t)i < NODE(node)->links->length)
+	for (int i = 0; i < farm->nodes->length; i++)
 	{
-		if (LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 &&
-				farm->levels[LINK(node, i)->index] <= farm->fixed)
-		{
-			printf("%d->", LINK(node, i)->index);
-			if (LINK(node, i)->index == farm->end)
-				printf("good");
-			flow = dfs(farm, LINK(node, i)->index, min_fl(min_flow, LINK(node, i)->capacity));
-			if (!flow)
-			{
-				printf("stop\n");
-		//		printf("\n");
-				i++;
-				continue ;
-			}
-			LINK(node, i)->capacity = 0;
-			return (flow);
-		}
-		i++;
+		printf("|index: %10d| |name: %10s| ", i ,NODE(i)->name);
+		for (int j = 0; j < NODE(i)->links->length; j++)
+			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
+		printf("\n");
 	}
-	farm->fixed++;
-	return (0);
+	printf("\n");
+	for (int i = 0; i < farm->mainstream->length - 1; i++)
+	{
+		printf("%d stream\n", i);
+		for (int j = 0; j <  SUBSTREAM(i)->stream->length; j++)
+		{
+			for (int m = 0; m < SUBSTREAM(i)->flow_size; m++)
+				printf("%d->", *((int*)(((void**)SUBSTREAM(i)->stream->data)[j]) + m));
+			printf("\n");
+		}
+		printf("\n\n");
+	}
 }
 
 int 	dinic(t_farm *farm)
@@ -163,25 +148,13 @@ int 	dinic(t_farm *farm)
 
 	while (bfs(farm))
 	{
-		//printf("path: ");
-		flow = iterative_dfs(farm);///dfs(farm, farm->start, INF);
-	//	farm->fixed++;
-		printf("\n");
+		flow = dfs(farm);
 		while (flow)
 		{
 			max_flow += flow;
-			//printf("path: ");
-			flow = iterative_dfs(farm);
-			//farm->fixed++;///dfs(farm, farm->start, INF);
-			printf("\n");
+			flow = dfs(farm);
 		}
 	}
-	for (int i = 0; i < farm->nodes->length; i++)
-	{
-		printf("|index: %10d| |name: %10s| ", i ,NODE(i)->name);
-		for (int j = 0; j < NODE(i)->links->length; j++)
-			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
-		printf("\n");
-	}
+	debuf_dinic(farm);
 	return max_flow;
 }
