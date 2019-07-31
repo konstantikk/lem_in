@@ -71,6 +71,41 @@ int 		min_fl(int val1, int val2)
 	return val2;
 }
 
+
+int 		iterative_dfs(t_farm *farm)
+{
+	int i;
+	t_ivec	*s = ft_int_vec_init();
+	int	node;
+
+	ft_memset(farm->used, 0, sizeof(int) * farm->nodes->length);
+	farm->used[farm->start] = TRUE;
+	ft_int_vec_pushback(s, farm->start);
+	while (s->length > 0)
+	{
+		node = ft_int_vec_popfront(s);
+		i = 0;
+		if (node == farm->end)
+		{
+
+			return (1);
+		}
+		while ((size_t)i < NODE(node)->links->length)
+		{
+			if (!farm->used[i] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1&&
+				farm->levels[LINK(node, i)->index] <= farm->fixed)
+			{
+				ft_int_vec_pushback(s, LINK(node, i)->index);
+				farm->used[i] = TRUE;
+				farm->parents[i] = node;
+			}
+			i++;
+		}
+	}
+	farm->fixed++;
+	return (0);
+}
+
 int 		dfs(t_farm *farm, int node, int min_flow)
 {
 	int flow;
@@ -111,14 +146,14 @@ int 	dinic(t_farm *farm)
 
 	while (bfs(farm))
 	{
-		printf("path: ");
-		flow = dfs(farm, farm->start, INF);
+		//printf("path: ");
+		flow = iterative_dfs(farm);///dfs(farm, farm->start, INF);
 		printf("\n");
 		while (flow)
 		{
 			max_flow += flow;
-			printf("path: ");
-			flow = dfs(farm, farm->start, INF);
+			//printf("path: ");
+			flow = iterative_dfs(farm);///dfs(farm, farm->start, INF);
 			printf("\n");
 		}
 	}

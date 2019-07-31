@@ -53,6 +53,7 @@ typedef struct	s_farm
 	int 	*levels;
 	int 	*used;
 	int		fixed;
+	int 	*parents;
 }				t_farm;
 
 t_farm	*parse(int fd);

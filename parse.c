@@ -141,6 +141,6 @@ t_farm	*parse(int fd)
 	}
 	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->length);
 	farm->used = (int*)malloc(sizeof(int) * farm->nodes->length);
-	ft_memset(farm->used, 0, sizeof(int) * farm->nodes->length);;
+	farm->parents = (int*)malloc(sizeof(int) * farm->nodes->length);
 	return (farm);
 }
