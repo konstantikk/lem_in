@@ -75,17 +75,31 @@ int 	read_links(t_farm *farm, char *buff)
 	const int	index1 = find_index(farm, (char*)node1);
 	const int	index2 = find_index(farm, (char*)node2);
 
-	if ((size_t)index1 == farm->start || (size_t)index2 == farm->start)
+	if (index1 == farm->start || index2 == farm->start)
 	{
-		if ((size_t)index1 == farm->start)
-			ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
+		if (index1 == farm->start)
+        {
+		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
+            ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1));
+        }
 		else
-			ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2));
+        {
+		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2));
+            ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
+        }
 	}
-	else if ((size_t)index1 == farm->end || (size_t)index2 == farm->end)
+	else if (index1 == farm->end || index2 == farm->end)
 	{
-		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2));
-		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1));
+	    if (index1 == farm->end)
+	    {
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1));
+        }
+	    else
+        {
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2));
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
+        }
 	}
 	else
 	{
