@@ -33,7 +33,7 @@ int 	bfs(t_farm *farm)
 		int	check_elem = ft_int_vec_popfront(q);
 		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
 		{
-			if (!farm->used[LINK(check_elem, i)->index] && LINK(check_elem, i)->capacity)
+			if (!farm->used[LINK(check_elem, i)->index] && LINK(check_elem, i)->capacity > 0)
 			{
 				farm->used[LINK(check_elem, i)->index] = TRUE;
 				ft_int_vec_pushback(q,LINK(check_elem, i)->index);
@@ -113,7 +113,6 @@ int 		dfs(t_farm *farm)
 			i++;
 		}
 	}
-	///farm->fixed += 2;
 	ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	return (0);
 }

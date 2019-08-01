@@ -27,6 +27,7 @@ typedef	struct	s_link
 {
 	int		index;
 	int 	capacity;
+	int 	reverse;
 }				t_link;
 
 typedef struct	s_sub_stream
