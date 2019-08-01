@@ -41,9 +41,9 @@ int 	bfs(t_farm *farm)
 			}
 		}
 	}
+	farm->fixed = farm->levels[farm->end];
 	if (!flag)
 	{
-		farm->fixed = farm->levels[farm->end];
 		flag  = TRUE;
 		ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	}
@@ -113,7 +113,7 @@ int 		dfs(t_farm *farm)
 			i++;
 		}
 	}
-	farm->fixed += 2;
+	///farm->fixed += 2;
 	ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	return (0);
 }
