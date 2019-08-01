@@ -78,7 +78,19 @@ void		add_path(t_farm *farm)
 	while (vertex != farm->start)
 	{
 		path[j--] = vertex;
+		///push_back(node[v], create_links(parents[v])); if exists: ..->capacity = 1;
+
 		LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+
+		int f = 0;
+		for (int i = 0; i < NODE(vertex)->links->length;i++)
+			if (i == farm->parents[vertex])
+			{
+				LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 1;
+				f = 1;
+			}
+		if (!f)
+			ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
 		vertex = farm->parents[vertex];
 	}
 	ft_ptr_vec_pushback(SUBSTREAM(farm->mainstream->length - 1)->stream, path);
@@ -106,6 +118,7 @@ int 		dfs(t_farm *farm)
 		{
 			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[LINK(node, i)->index] <= farm->fixed)
 			{
+				printf("%d ", i);
 				ft_int_vec_pushback(s, LINK(node, i)->index);
 				farm->used[LINK(node, i)->index] = TRUE;
 				farm->parents[LINK(node, i)->index] = node;
@@ -113,7 +126,6 @@ int 		dfs(t_farm *farm)
 			i++;
 		}
 	}
-	///farm->fixed += 2;
 	ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	return (0);
 }
