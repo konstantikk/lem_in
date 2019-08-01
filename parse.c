@@ -43,6 +43,7 @@ t_link	*create_link(int index)
 		return (NULL);
 	link->index = index;
 	link->capacity = 1;
+	///link->reverse = 0;
 	return (link);
 }
 

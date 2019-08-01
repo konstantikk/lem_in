@@ -33,8 +33,9 @@ int 	bfs(t_farm *farm)
 		int	check_elem = ft_int_vec_popfront(q);
 		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
 		{
-			if (!farm->used[LINK(check_elem, i)->index] && LINK(check_elem, i)->capacity > 0)
+			if (!farm->used[LINK(check_elem, i)->index] && (LINK(check_elem, i)->capacity))
 			{
+				printf("%d  ",check_elem);
 				farm->used[LINK(check_elem, i)->index] = TRUE;
 				ft_int_vec_pushback(q,LINK(check_elem, i)->index);
 				farm->levels[LINK(check_elem, i)->index] = farm->levels[check_elem] + 1;
@@ -47,6 +48,7 @@ int 	bfs(t_farm *farm)
 		flag  = TRUE;
 		ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	}
+	printf("\n");
 	return (farm->levels[farm->end] != -1);
 }
 
@@ -78,6 +80,7 @@ void		add_path(t_farm *farm)
 	while (vertex != farm->start)
 	{
 		path[j--] = vertex;
+		///push_back(node[v], create_links(parents[v])); if exists: ..->capacity = 1;
 		LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
 		vertex = farm->parents[vertex];
 	}
@@ -104,7 +107,9 @@ int 		dfs(t_farm *farm)
 		}
 		while ((size_t)i < NODE(node)->links->length)
 		{
-			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[LINK(node, i)->index] <= farm->fixed)
+			if (!farm->used[LINK(node, i)->index]
+			&& LINK(node, i)->capacity
+			&& farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[LINK(node, i)->index] <= farm->fixed)
 			{
 				ft_int_vec_pushback(s, LINK(node, i)->index);
 				farm->used[LINK(node, i)->index] = TRUE;
@@ -123,7 +128,7 @@ void	debuf_dinic(t_farm *farm)
 	{
 		printf("|index: %10d| |name: %10s| ", i ,NODE(i)->name);
 		for (int j = 0; j < NODE(i)->links->length; j++)
-			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
+			printf("|%d|->%d", LINK(i, j)->index, LINK(i, j)->capacity);
 		printf("\n");
 	}
 	printf("\n");
