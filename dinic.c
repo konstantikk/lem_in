@@ -78,22 +78,22 @@ void		add_path(t_farm *farm)
 	while (vertex != farm->start)
 	{
 		path[j--] = vertex;
-		///push_back(node[v], create_links(parents[v])); if exists: ..->capacity = 1;
-
-		LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
-
-		int f = 0;
-		for (int i = 0; i < NODE(vertex)->links->length;i++)
-			if (i == farm->parents[vertex])
-			{
-				LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 1;
-				f = 1;
-			}
-		if (!f)
-			ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
+        if (!ft_strncmp(NODE(vertex)->name, "st_", 3) || vertex == farm->end)
+        {
+            if (ft_find_index(farm, vertex, farm->parents[vertex]) == -1)
+                ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
+            LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+        }
+        else
+        {
+            LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+            LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
+        }
 		vertex = farm->parents[vertex];
 	}
+    SUBSTREAM(farm->mainstream->length - 1)->flow_size = farm->fixed;
 	ft_ptr_vec_pushback(SUBSTREAM(farm->mainstream->length - 1)->stream, path);
+	printf("\n");
 }
 
 int 		dfs(t_farm *farm)
@@ -116,9 +116,11 @@ int 		dfs(t_farm *farm)
 		}
 		while ((size_t)i < NODE(node)->links->length)
 		{
-			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[LINK(node, i)->index] <= farm->fixed)
+			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity
+			&& farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 &&
+			farm->levels[LINK(node, i)->index] <= farm->fixed)
 			{
-				printf("%d ", i);
+				int l = LINK(node, i)->index;
 				ft_int_vec_pushback(s, LINK(node, i)->index);
 				farm->used[LINK(node, i)->index] = TRUE;
 				farm->parents[LINK(node, i)->index] = node;
@@ -140,11 +142,13 @@ void	debuf_dinic(t_farm *farm)
 		printf("\n");
 	}
 	printf("\n");
-	for (int i = 0; i < farm->mainstream->length - 1; i++)
+	for (int i = 0; i < farm->mainstream->length; i++)
 	{
-		printf("%d stream\n", i);
+        int l = SUBSTREAM(i)->flow_size;
+        printf("%d stream len:%d\n", i, l);
 		for (int j = 0; j <  SUBSTREAM(i)->stream->length; j++)
 		{
+		    printf("path: ");
 			for (int m = 0; m < SUBSTREAM(i)->flow_size; m++)
 				printf("%d->", *((int*)(((void**)SUBSTREAM(i)->stream->data)[j]) + m));
 			printf("\n");
@@ -153,13 +157,72 @@ void	debuf_dinic(t_farm *farm)
 	}
 }
 
+void    delete_elem(t_vec *vec, int index)
+{
+    ft_memdel(&((void**)vec->data)[index]);
+    for (int i = index; (size_t)i < vec->length - 1; i++)
+        ((void**)vec->data)[i] = ((void**)vec->data)[i + 1];
+    vec->length--;
+}
+
+void    delete_reverse_links(t_farm *farm)
+{
+    for (int i = 0; i < farm->nodes->length; i++) {
+        if (i == farm->start || !ft_strncmp(NODE(i)->name, "st_", 3))
+            continue ;
+        for (int j = 0; j < NODE(i)->links->length; j++)
+            if (farm->levels[i] > farm->levels[LINK(i, j)->index] && LINK(i, j)->index != i - 1) {
+                delete_elem(NODE(i)->links, j);
+            }
+    }
+}
+
+void    delete_node(t_vec *nodes, int index)
+{
+    ft_memdel(&((t_node*)(((void**)nodes->data)[index]))->links->data);
+    ft_memdel(((void**)&(((t_node*)(((void**)nodes->data)[index]))->links)));
+    delete_elem(nodes, index);
+
+}
+
+void    delete_dead_ends(t_farm *farm)
+{
+    int  flag = TRUE;
+    while (TRUE)
+    {
+        if (flag == FALSE)
+            break ;
+        flag = FALSE;
+        int i = -1;
+        while ((size_t)++i < farm->nodes->length)
+        {
+            if (!NODE(i)->links->length)
+            {
+                flag = TRUE;
+                delete_node(farm->nodes, i - 1);
+                delete_node(farm->nodes, i);
+                i = -1;
+            }
+        }
+    }
+}
+
 int 	dinic(t_farm *farm)
 {
 	int max_flow = 0;
 	int flow;
+	int fisrt_entry = FALSE;
 
+/*	bfs(farm);
+	delete_reverse_links(farm);
+*/
 	while (bfs(farm))
 	{
+	    if (!fisrt_entry)
+        {
+	        delete_reverse_links(farm);
+	        fisrt_entry = TRUE;
+        }
 		flow = dfs(farm);
 		while (flow)
 		{

@@ -34,6 +34,8 @@ int 	main(int argc, char **argv)
 //	bfs(farm);
 //	dfs(farm);
 	printf("max_flow: %d", dinic(farm));
+//	ft_swap(&farm->start, &farm->end);
+//	printf("max_flow2: %d", dinic(farm));
 	close(fd);
 	return (0);
 }

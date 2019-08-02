@@ -58,6 +58,7 @@ t_farm	*parse(int fd);
 int 	bfs(t_farm *farm);
 int 	dfs(t_farm *farm);
 int 	dinic(t_farm *farm);
+t_link	*create_link(int index);
 t_sub_stream		*create_substream(t_farm *farm);
 
 #endif
