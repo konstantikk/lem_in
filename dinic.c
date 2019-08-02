@@ -13,7 +13,8 @@
 #include "lem_in.h"
 
 #define NODE(i) ((t_node*)(((void**)(farm->nodes->data))[i]))
-#define LINK(i, j) ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->links->data)[j])
+#define F_LINK(i, j) ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->f_links->data)[j])
+#define REV_LINK(i, j) ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->rev_links->data)[j])
 #define SUBSTREAM(i) ((t_sub_stream*)(((void**)farm->mainstream->data)[i]))
 
 int 	bfs(t_farm *farm)
@@ -31,13 +32,13 @@ int 	bfs(t_farm *farm)
 	while (q->length)
 	{
 		int	check_elem = ft_int_vec_popfront(q);
-		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
+		for (int i = 0; (size_t)i < NODE(check_elem)->f_links->length; i++)
 		{
-			if (!farm->used[LINK(check_elem, i)->index] && LINK(check_elem, i)->capacity)
+			if (!farm->used[F_LINK(check_elem, i)->index] && F_LINK(check_elem, i)->capacity)
 			{
-				farm->used[LINK(check_elem, i)->index] = TRUE;
-				ft_int_vec_pushback(q,LINK(check_elem, i)->index);
-				farm->levels[LINK(check_elem, i)->index] = farm->levels[check_elem] + 1;
+				farm->used[F_LINK(check_elem, i)->index] = TRUE;
+				ft_int_vec_pushback(q,F_LINK(check_elem, i)->index);
+				farm->levels[F_LINK(check_elem, i)->index] = farm->levels[check_elem] + 1;
 			}
 		}
 	}
@@ -59,8 +60,8 @@ int 		min_fl(int val1, int val2)
 
 int 		ft_find_index(t_farm *farm, int parent,int val)
 {
-	for (int i = 0; i < NODE(parent)->links->length; i++)
-		if (LINK(parent, i)->index == val)
+	for (int i = 0; i < NODE(parent)->f_links->length; i++)
+		if (F_LINK(parent, i)->index == val)
 			return (i);
 	return (-1);
 }
@@ -79,18 +80,17 @@ void		add_path(t_farm *farm)
 	{
 		path[j--] = vertex;
 		///push_back(node[v], create_links(parents[v])); if exists: ..->capacity = 1;
-
-		LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
-
+		F_LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
 		int f = 0;
-		for (int i = 0; i < NODE(vertex)->links->length;i++)
-			if (i == farm->parents[vertex])
-			{
-				LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 1;
-				f = 1;
-			}
+		for (int i = 0; i < NODE(vertex)->f_links->length;i++) {
+            int k = farm->parents[vertex], l = F_LINK(vertex, i)->index;
+		    if (F_LINK(vertex, i)->index == farm->parents[vertex]) {
+                F_LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 1;
+                f = 1;
+            }
+        }
 		if (!f)
-			ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
+			ft_ptr_vec_pushback(NODE(vertex)->f_links, create_link(farm->parents[vertex]));
 		vertex = farm->parents[vertex];
 	}
 	ft_ptr_vec_pushback(SUBSTREAM(farm->mainstream->length - 1)->stream, path);
@@ -114,14 +114,14 @@ int 		dfs(t_farm *farm)
 			add_path(farm);
 			return (1);
 		}
-		while ((size_t)i < NODE(node)->links->length)
+		while ((size_t)i < NODE(node)->f_links->length)
 		{
-			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity && farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[LINK(node, i)->index] <= farm->fixed)
+			if (!farm->used[F_LINK(node, i)->index] && F_LINK(node, i)->capacity && farm->levels[F_LINK(node, i)->index] == farm->levels[node] + 1 && farm->levels[F_LINK(node, i)->index] <= farm->fixed)
 			{
-				printf("%d ", i);
-				ft_int_vec_pushback(s, LINK(node, i)->index);
-				farm->used[LINK(node, i)->index] = TRUE;
-				farm->parents[LINK(node, i)->index] = node;
+				int k =  F_LINK(node, i)->index;
+				ft_int_vec_pushback(s, F_LINK(node, i)->index);
+				farm->used[F_LINK(node, i)->index] = TRUE;
+				farm->parents[F_LINK(node, i)->index] = node;
 			}
 			i++;
 		}
@@ -135,8 +135,12 @@ void	debuf_dinic(t_farm *farm)
 	for (int i = 0; i < farm->nodes->length; i++)
 	{
 		printf("|index: %10d| |name: %10s| ", i ,NODE(i)->name);
-		for (int j = 0; j < NODE(i)->links->length; j++)
-			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
+		printf("|forward links:| ");
+		for (int j = 0; j < NODE(i)->f_links->length; j++)
+			printf("|%d|->%d ", F_LINK(i, j)->index, F_LINK(i, j)->capacity);
+		printf("|reverse links:| ");
+        for (int j = 0; j < NODE(i)->rev_links->length; j++)
+            printf("|%d|->%d ", REV_LINK(i, j)->index, REV_LINK(i, j)->capacity);
 		printf("\n");
 	}
 	printf("\n");
@@ -156,17 +160,26 @@ void	debuf_dinic(t_farm *farm)
 int 	dinic(t_farm *farm)
 {
 	int max_flow = 0;
+	int first_entry = 0;
 	int flow;
 
-	while (bfs(farm))
+	bfs(farm);
+	create_reverse_links(farm);
+
+	/*while (bfs(farm))
 	{
+	    if (!first_entry)
+        {
+	        create_reverse_links(farm);
+	        first_entry = 1;
+        }
 		flow = dfs(farm);
 		while (flow)
 		{
 			max_flow += flow;
 			flow = dfs(farm);
 		}
-	}
+	}*/
 	debuf_dinic(farm);
 	return max_flow;
 }

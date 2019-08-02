@@ -30,7 +30,9 @@ t_node	*create_node(char *name)
 	if (!(node = (t_node*)malloc(sizeof(t_node))))
 		return (NULL);
 	node->name = name;
-	node->links = ft_ptr_vec_init();
+	node->f_links = ft_ptr_vec_init();
+    node->rev_links = ft_ptr_vec_init();
+    node->reverse = FALSE;
 	//node->parents = NULL;
 	return (node);
 }
@@ -61,8 +63,8 @@ int 	read_node(t_farm *farm, char *buff)
 		//del
 		return (0);
 	}
-	ft_ptr_vec_pushback(in_node->links, create_link((int)farm->nodes->length + 1));
-	ft_ptr_vec_pushback(out_node->links, create_link((int)farm->nodes->length));
+	ft_ptr_vec_pushback(in_node->f_links, create_link((int)farm->nodes->length + 1));
+//	ft_ptr_vec_pushback(out_node->links, create_link((int)farm->nodes->length));
 	ft_ptr_vec_pushback(farm->nodes, in_node);
 	ft_ptr_vec_pushback(farm->nodes, out_node);
 	return (1);
@@ -79,32 +81,32 @@ int 	read_links(t_farm *farm, char *buff)
 	{
 		if (index1 == farm->start)
         {
-		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-            ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1));
+		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->f_links, create_link(index2 - 1));
+            ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->f_links, create_link(index1));
         }
 		else
         {
-		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2));
-            ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
+		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->f_links, create_link(index2));
+            ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->f_links, create_link(index1 - 1));
         }
 	}
 	else if (index1 == farm->end || index2 == farm->end)
 	{
 	    if (index1 == farm->end)
 	    {
-            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1));
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->f_links, create_link(index2 - 1));
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->f_links, create_link(index1));
         }
 	    else
         {
-            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2));
-            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->f_links, create_link(index2));
+            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->f_links, create_link(index1 - 1));
         }
 	}
 	else
 	{
-		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
+		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->f_links, create_link(index2 - 1));
+		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->f_links, create_link(index1 - 1));
 	}
 	return (1);
 }

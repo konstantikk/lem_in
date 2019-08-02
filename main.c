@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
+/*
 void	debug(t_farm *farm)
 {
 	for (int i = 0; (size_t)i < farm->nodes->length; i++)
@@ -23,14 +23,14 @@ void	debug(t_farm *farm)
 	}
 
 	printf("\n%zu, %zu\n", farm->start, farm->end);
-}
+}*/
 
 int 	main(int argc, char **argv)
 {
 	t_farm *farm;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
-	debug(farm);
+//	debug(farm);
 //	bfs(farm);
 //	dfs(farm);
 	printf("max_flow: %d", dinic(farm));
