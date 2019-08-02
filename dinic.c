@@ -77,6 +77,8 @@ void		add_path(t_farm *farm)
 
 	while (vertex != farm->start)
 	{
+	    int k = vertex, chlen = farm->parents[vertex];
+	    printf("%d ", vertex);
 		path[j--] = vertex;
         if (!ft_strncmp(NODE(vertex)->name, "st_", 3) || vertex == farm->end)
         {
@@ -87,6 +89,7 @@ void		add_path(t_farm *farm)
         else
         {
             LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+            int l = ft_find_index(farm,  vertex, farm->parents[vertex]), v = farm->parents[vertex];
             LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
         }
 		vertex = farm->parents[vertex];
@@ -211,7 +214,7 @@ int 	dinic(t_farm *farm)
 {
 	int max_flow = 0;
 	int flow;
-	int fisrt_entry = FALSE;
+	static int fisrt_entry = FALSE;
 
 /*	bfs(farm);
 	delete_reverse_links(farm);
