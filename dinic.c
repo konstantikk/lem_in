@@ -45,7 +45,7 @@ int 	bfs(t_farm *farm)
 	if (!flag)
 	{
 		flag  = TRUE;
-		ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
+		//fft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	}
 	return (farm->levels[farm->end] != -1);
 }
@@ -72,14 +72,15 @@ int 		ft_find_index(t_farm *farm, int parent,int val)
 void		add_path(t_farm *farm)
 {
 	int 	vertex = farm->end;
-	int 	j = farm->fixed;
-	int 	*path = (int*)malloc(sizeof(int) * farm->fixed + 1);
+	///int 	j = farm->fixed;
+	//int 	*path = (int*)malloc(sizeof(int) * farm->fixed + 1);
+
+	printf("|%d|\n", farm->fixed);
 
 	while (vertex != farm->start)
 	{
-	    int k = vertex, chlen = farm->parents[vertex];
-	    printf("%d ", vertex);
-		path[j--] = vertex;
+	    int child_chlen = vertex, parent_chlen = farm->parents[vertex];
+		///path[j--] = vertex;
         if (!ft_strncmp(NODE(vertex)->name, "st_", 3) || vertex == farm->end)
         {
             if (ft_find_index(farm, vertex, farm->parents[vertex]) == -1)
@@ -88,15 +89,24 @@ void		add_path(t_farm *farm)
         }
         else
         {
-            LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
-            int l = ft_find_index(farm,  vertex, farm->parents[vertex]), v = farm->parents[vertex];
+            LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = !LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity;
             LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
         }
+		int parent_link_chlen = LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity;
+		int child_link_chlen = LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity;
+		if (child_chlen == 6 && parent_chlen == 7)
+		{
+			if (parent_link_chlen)
+				printf("6-7");
+			else if (child_link_chlen)
+				printf("7-6");
+			printf("\n");
+		}
 		vertex = farm->parents[vertex];
 	}
-    SUBSTREAM(farm->mainstream->length - 1)->flow_size = farm->fixed;
-	ft_ptr_vec_pushback(SUBSTREAM(farm->mainstream->length - 1)->stream, path);
-	printf("\n");
+    ///SUBSTREAM(farm->mainstream->length - 1)->flow_size = farm->fixed;
+	///ft_ptr_vec_pushback(SUBSTREAM(farm->mainstream->length - 1)->stream, path);
+///	printf("\n");
 }
 
 int 		dfs(t_farm *farm)
@@ -131,7 +141,7 @@ int 		dfs(t_farm *farm)
 			i++;
 		}
 	}
-	ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
+	//ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
 	return (0);
 }
 
@@ -145,7 +155,7 @@ void	debuf_dinic(t_farm *farm)
 		printf("\n");
 	}
 	printf("\n");
-	for (int i = 0; i < farm->mainstream->length; i++)
+	/*for (int i = 0; i < farm->mainstream->length; i++)
 	{
         int l = SUBSTREAM(i)->flow_size;
         printf("%d stream len:%d\n", i, l);
@@ -157,7 +167,7 @@ void	debuf_dinic(t_farm *farm)
 			printf("\n");
 		}
 		printf("\n\n");
-	}
+	}*/
 }
 
 void    delete_elem(t_vec *vec, int index)
