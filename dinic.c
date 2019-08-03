@@ -33,7 +33,7 @@ int 	bfs(t_farm *farm)
 		int	check_elem = ft_int_vec_popfront(q);
 		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
 		{
-			if (!farm->used[LINK(check_elem, i)->index] && LINK(check_elem, i)->capacity)
+			if (!farm->used[LINK(check_elem, i)->index] && (LINK(check_elem, i)->f != 1) )//|| LINK(check_elem, i)->f == -1))
 			{
 				farm->used[LINK(check_elem, i)->index] = TRUE;
 				ft_int_vec_pushback(q,LINK(check_elem, i)->index);
@@ -79,29 +79,26 @@ void		add_path(t_farm *farm)
 
 	while (vertex != farm->start)
 	{
-	    int child_chlen = vertex, parent_chlen = farm->parents[vertex];
-		///path[j--] = vertex;
+
         if (!ft_strncmp(NODE(vertex)->name, "st_", 3) || vertex == farm->end)
         {
             if (ft_find_index(farm, vertex, farm->parents[vertex]) == -1)
-                ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
-            LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+			{
+            	ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
+				LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 0;
+				LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->f = -1;
+			}
+            //LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->f = 1;
         }
         else
         {
-            LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = !LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity;
-            LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
+            //LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
+			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->f = 1;
+			//LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
+            LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->f = -1;
         }
-		int parent_link_chlen = LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity;
-		int child_link_chlen = LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity;
-		if (child_chlen == 6 && parent_chlen == 7)
-		{
-			if (parent_link_chlen)
-				printf("6-7");
-			else if (child_link_chlen)
-				printf("7-6");
-			printf("\n");
-		}
+
 		vertex = farm->parents[vertex];
 	}
     ///SUBSTREAM(farm->mainstream->length - 1)->flow_size = farm->fixed;
@@ -129,9 +126,9 @@ int 		dfs(t_farm *farm)
 		}
 		while ((size_t)i < NODE(node)->links->length)
 		{
-			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->capacity
+			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->f != 1
 			&& farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 &&
-			farm->levels[LINK(node, i)->index] <= farm->fixed)
+			farm->levels[LINK(node, i)->index] <= farm->fixed) /// LINK(node, i)->capacity
 			{
 				int l = LINK(node, i)->index;
 				ft_int_vec_pushback(s, LINK(node, i)->index);
@@ -242,6 +239,7 @@ int 	dinic(t_farm *farm)
 			max_flow += flow;
 			flow = dfs(farm);
 		}
+		///release_flow()
 	}
 	debuf_dinic(farm);
 	return max_flow;
