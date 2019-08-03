@@ -43,7 +43,7 @@ t_link	*create_link(int index)
 		return (NULL);
 	link->index = index;
 	link->capacity = 1;
-	link->f = 0;
+	link->flow = 0;
 	return (link);
 }
 

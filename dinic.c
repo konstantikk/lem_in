@@ -33,7 +33,7 @@ int 	bfs(t_farm *farm)
 		int	check_elem = ft_int_vec_popfront(q);
 		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
 		{
-			if (!farm->used[LINK(check_elem, i)->index] && (LINK(check_elem, i)->f != 1) )//|| LINK(check_elem, i)->f == -1))
+			if (!farm->used[LINK(check_elem, i)->index] && (LINK(check_elem, i)->flow != 1) )//|| LINK(check_elem, i)->f == -1))
 			{
 				farm->used[LINK(check_elem, i)->index] = TRUE;
 				ft_int_vec_pushback(q,LINK(check_elem, i)->index);
@@ -86,17 +86,17 @@ void		add_path(t_farm *farm)
 			{
             	ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
 				LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 0;
-				LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->f = -1;
+				LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->flow = -1;
 			}
             //LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
-			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->f = 1;
+			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->flow = 1;
         }
         else
         {
             //LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
-			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->f = 1;
+			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->flow = 1;
 			//LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
-            LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->f = -1;
+            LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->flow = -1;
         }
 
 		vertex = farm->parents[vertex];
@@ -126,7 +126,7 @@ int 		dfs(t_farm *farm)
 		}
 		while ((size_t)i < NODE(node)->links->length)
 		{
-			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->f != 1
+			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->flow != 1
 			&& farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 &&
 			farm->levels[LINK(node, i)->index] <= farm->fixed) /// LINK(node, i)->capacity
 			{

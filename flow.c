@@ -29,7 +29,7 @@ void	release_flow(t_farm *farm)
 		while (++j < (int)NODE(i)->links->length)
 		{
 		//	printf("[%d] ",farm->levels[LINK(i, j)->index]);
-			if (LINK(i, j)->f == 1 && LINK(i, j)->capacity == 1)
+			if (LINK(i, j)->flow == 1 && LINK(i, j)->capacity == 1)
 				printf("{%s} ",  NODE(LINK(i, j)->index)->name);
 		}
 		printf("\n");
