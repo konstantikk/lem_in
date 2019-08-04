@@ -36,7 +36,7 @@ int 	main(int argc, char **argv)
 	printf("max_flow: %d\n", dinic(farm));
 	//ft_swap(&farm->start, &farm->end);
 ///	printf("max_flow2: %d", dinic(farm));
-release_flow(farm);
+
 	close(fd);
 	return (0);
 }

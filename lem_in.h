@@ -60,7 +60,7 @@ int 	bfs(t_farm *farm);
 int 	dfs(t_farm *farm);
 int 	dinic(t_farm *farm);
 t_link	*create_link(int index);
-void	release_flow(t_farm *farm);
+int     release_flow(t_farm *farm);
 t_sub_stream		*create_substream(t_farm *farm);
 
 #endif
