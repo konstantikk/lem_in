@@ -18,6 +18,6 @@ FILE(GLOB char_vec ./libft/vec_funcs/char_vec/*.c)
 
 include_directories( ./libft/includes)
 
-add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} dinic.c creations.c flow.c)
+add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} dinic.c flow.c)
 
 target_link_libraries(lem_in ~/lem_in/libft/libft.a)

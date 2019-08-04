@@ -14,25 +14,50 @@
 
 #define NODE(i) ((t_node*)(nodes[i]))
 #define LINK(i, j) ((t_link*)((void**)((t_node*)nodes[i])->links->data)[j])
+#define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
 
 int 	check_profit()
 {
 
 }
 
-void    get_flow(t_farm *farm)
+t_path    *create_path()
+{
+    t_path *path;
+
+    path = (t_path*)malloc(sizeof(t_path));
+    path->path = ft_ptr_vec_init();
+    path->last_occupied = 0;
+    return (path);
+}
+
+t_room  *create_room(int node_num)
+{
+    t_room *room;
+
+    room = (t_room*)malloc(sizeof(t_room));
+    room->capacity = 0;
+    room->temp_ant = -1;
+    room->node_num = node_num;
+    return (room);
+}
+
+t_vec    *get_flow(t_farm *farm)
 {
 	void **nodes = farm->nodes->data;
 	int		i = -1;
 	int		j;
-//	int 	counter_patch = 0;
 	int 	v;
+	t_path *path;
+	t_vec *flow;
 
+
+	flow = ft_ptr_vec_init();
 	while (++i < (int) NODE(farm->start)->links->length)
 	{
 		if ((LINK(farm->start, i)->flow == 1 && LINK(farm->start, i)->capacity == 1))
 		{
-			///malloc new patch
+			path = create_path();
 			v = LINK(farm->start, i)->index;
 			while (v != farm->end)
 			{
@@ -42,19 +67,24 @@ void    get_flow(t_farm *farm)
 					if (LINK(v, j)->flow == 1 && LINK(v, j)->capacity == 1)
 					{
 						if (ft_strncmp(NODE(v)->name, "st_", 3))
-							printf("%s->", NODE(v)->name); ///add strjoin("L",node->name) in vector (patch)
+                        {
+						    printf("%s->", NODE(v)->name); ///add strjoin("L",node->name) in vector (path)
+						    ft_ptr_vec_pushback(path->path, create_room(v));
+                        }
 						v = LINK(v, j)->index;
 						break ;
 					}
 				}
 			}
-			///add strjoin("L",node->name) in vector (patch)
+			ft_ptr_vec_pushback(path->path, create_room((int)farm->nodes));
+			///add strjoin("L",node->name) in vector (path)
 			printf("%s", NODE(farm->end)->name);
 			printf("\n");
-			///add new patch in flow
+			ft_ptr_vec_pushback(flow, path);
 		}
 	}
-	///return (flow);
+
+	return (flow);
 }
 
 int		release_flow(t_farm *farm)
@@ -124,7 +154,8 @@ void    let_the_flow_go(t_farm *farm)
              */
             //turn capacity to 1
             //print
-            //if ant reached the finish mark this ant with 1
+            //if ant has reached the finish then mark this ant with 1
+            //change index of the last occupied node
         }
         //print '\n'
     }

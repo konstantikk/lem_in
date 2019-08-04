@@ -30,11 +30,18 @@ typedef	struct	s_link
 	int 	flow;
 }				t_link;
 
-typedef struct	s_sub_stream
+typedef struct	s_path
 {
-	t_vec	*stream;
-	int 	flow_size;
-}				t_sub_stream;
+	t_vec	*path;
+	int 	last_occupied;
+}				t_path;
+
+typedef struct  s_room
+{
+    int node_num;
+    int capacity;
+    int temp_ant;
+}               t_room;
 
 typedef struct	s_node
 {
@@ -44,7 +51,7 @@ typedef struct	s_node
 
 typedef struct	s_farm
 {
-	//t_vec	*mainstream;
+	t_vec	*stream;
 	t_vec	*nodes;
 	int 	*levels;
 	int 	*used;
@@ -61,6 +68,5 @@ int 	dfs(t_farm *farm);
 int 	dinic(t_farm *farm);
 t_link	*create_link(int index);
 int     release_flow(t_farm *farm);
-t_sub_stream		*create_substream(t_farm *farm);
 
 #endif

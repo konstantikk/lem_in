@@ -141,7 +141,7 @@ int 		dfs(t_farm *farm)
 	return (0);
 }
 
-void	debuf_dinic(t_farm *farm)
+void	debug_dinic(t_farm *farm)
 {
 	for (int i = 0; i < farm->nodes->length; i++)
 	{
@@ -241,6 +241,6 @@ int 	dinic(t_farm *farm)
 			flow = dfs(farm);
 		}
 	}
-	//debuf_dinic(farm);
+	//debug_dinic(farm);
 	return max_flow;
 }
