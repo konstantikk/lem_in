@@ -59,7 +59,9 @@ void    get_flow(t_farm *farm)
 
 int		release_flow(t_farm *farm)
 {
-	void **nodes = farm->nodes->data;
+	void	**nodes = farm->nodes->data;
+	int		*array;
+	//t_vec	*flow;
 
 	///int *array_profit;
 
@@ -73,9 +75,13 @@ int		release_flow(t_farm *farm)
     else
     {
       get_flow(farm);
+      array =  (int *)malloc(sizeof(int) * flow->length);
+      for (int i = 0; i < flow->length; i++)
+	  {
+      	array[i] = flow[i]->length + farm->ant_num - 1;
+ 	  }
         /*if (check_profit())
         {
-            let_the_flow_go(flow)
             ///start ant race
             return (0);
         }
