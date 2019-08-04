@@ -234,6 +234,8 @@ int 	dinic(t_farm *farm)
 	        fisrt_entry = TRUE;
         }
 		flow = dfs(farm);
+	    if (!release_flow(farm))
+			return (0);
 		while (flow)
 		{
 			max_flow += flow;
