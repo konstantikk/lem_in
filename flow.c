@@ -14,6 +14,7 @@
 
 #define NODE(i) ((t_node*)(nodes[i]))
 #define LINK(i, j) ((t_link*)((void**)((t_node*)nodes[i])->links->data)[j])
+#define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
 
 int 	check_profit()
 {
@@ -82,6 +83,7 @@ t_vec    *get_flow(t_farm *farm)
 			ft_ptr_vec_pushback(flow, path);
 		}
 	}
+
 	return (flow);
 }
 
