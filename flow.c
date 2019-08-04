@@ -25,14 +25,13 @@ void    get_flow(t_farm *farm)
 	void **nodes = farm->nodes->data;
 	int		i = -1;
 	int		j;
-//	int 	counter_patch = 0;
 	int 	v;
 
 	while (++i < (int) NODE(farm->start)->links->length)
 	{
 		if ((LINK(farm->start, i)->flow == 1 && LINK(farm->start, i)->capacity == 1))
 		{
-			///malloc new patch
+			///malloc new path
 			v = LINK(farm->start, i)->index;
 			while (v != farm->end)
 			{
@@ -41,17 +40,17 @@ void    get_flow(t_farm *farm)
 				{
 					if (LINK(v, j)->flow == 1 && LINK(v, j)->capacity == 1)
 					{
-						///add strjoin("L",node->name) in vector (patch)
+						///add strjoin("L",node->name) in vector (path)
 						printf("%s->", NODE(v)->name);
 						v = LINK(v, j)->index;
 						break ;
 					}
 				}
 			}
-			///add strjoin("L",node->name) in vector (patch)
+			///add strjoin("L",node->name) in vector (path)
 			printf("%s", NODE(farm->end)->name);
 			printf("\n");
-			///add new patch in flow
+			///add new path in flow
 		}
 	}
 	///return (flow);
@@ -116,7 +115,8 @@ void    let_the_flow_go(t_farm *farm)
              */
             //turn capacity to 1
             //print
-            //if ant reached the finish mark this ant with 1
+            //if ant has reached the finish then mark this ant with 1
+            //change index of the last occupied node
         }
         //print '\n'
     }
