@@ -75,7 +75,6 @@ void		add_path(t_farm *farm)
 	///int 	j = farm->fixed;
 	//int 	*path = (int*)malloc(sizeof(int) * farm->fixed + 1);
 
-	printf("|%d|\n", farm->fixed);
 
 	while (vertex != farm->start)
 	{
@@ -234,15 +233,14 @@ int 	dinic(t_farm *farm)
 	        fisrt_entry = TRUE;
         }
 		flow = dfs(farm);
-	    if (!release_flow(farm))
-			return (0);
+		if (!release_flow(farm))
+			return (flow);
 		while (flow)
 		{
 			max_flow += flow;
 			flow = dfs(farm);
 		}
-		///release_flow()
 	}
-	debuf_dinic(farm);
+	//debuf_dinic(farm);
 	return max_flow;
 }

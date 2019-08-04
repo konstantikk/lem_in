@@ -41,8 +41,8 @@ void    get_flow(t_farm *farm)
 				{
 					if (LINK(v, j)->flow == 1 && LINK(v, j)->capacity == 1)
 					{
-						///add strjoin("L",node->name) in vector (patch)
-						printf("%s->", NODE(v)->name);
+						if (ft_strncmp(NODE(v)->name, "st_", 3))
+							printf("%s->", NODE(v)->name); ///add strjoin("L",node->name) in vector (patch)
 						v = LINK(v, j)->index;
 						break ;
 					}
@@ -60,9 +60,10 @@ void    get_flow(t_farm *farm)
 int		release_flow(t_farm *farm)
 {
 	void **nodes = farm->nodes->data;
-	int i;
-	int j;
 
+	///int *array_profit;
+
+	printf("\nnew patch \n");
     if (farm->ant_num == 1)
     {
         get_flow(farm);
@@ -71,10 +72,10 @@ int		release_flow(t_farm *farm)
     }
     else
     {
-        get_flow(farm);
+      get_flow(farm);
         /*if (check_profit())
         {
-            print_flow(farm);
+            let_the_flow_go(flow)
             ///start ant race
             return (0);
         }
@@ -83,6 +84,7 @@ int		release_flow(t_farm *farm)
             ///array.push_back(profit);
         }*/
     }
+
     return (1);
 }
 
