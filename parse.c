@@ -155,6 +155,6 @@ t_farm	*parse(int fd)
 	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->length);
 	farm->used = (int*)malloc(sizeof(int) * farm->nodes->length);
 	farm->parents = (int*)malloc(sizeof(int) * farm->nodes->length);
-//	farm->mainstream = ft_ptr_vec_init();
+	farm->stream = ft_ptr_vec_init();
 	return (farm);
 }

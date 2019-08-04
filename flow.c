@@ -20,18 +20,43 @@ int 	check_profit()
 
 }
 
-void    get_flow(t_farm *farm)
+t_path    *create_path()
+{
+    t_path *path;
+
+    path = (t_path*)malloc(sizeof(t_path));
+    path->path = ft_ptr_vec_init();
+    path->last_occupied = 0;
+    return (path);
+}
+
+t_room  *create_room(int node_num)
+{
+    t_room *room;
+
+    room = (t_room*)malloc(sizeof(t_room));
+    room->capacity = 0;
+    room->temp_ant = -1;
+    room->node_num = node_num;
+    return (room);
+}
+
+t_vec    *get_flow(t_farm *farm)
 {
 	void **nodes = farm->nodes->data;
 	int		i = -1;
 	int		j;
 	int 	v;
+	t_path *path;
+	t_vec *flow;
 
+
+	flow = ft_ptr_vec_init();
 	while (++i < (int) NODE(farm->start)->links->length)
 	{
 		if ((LINK(farm->start, i)->flow == 1 && LINK(farm->start, i)->capacity == 1))
 		{
-			///malloc new path
+			path = create_path();
 			v = LINK(farm->start, i)->index;
 			while (v != farm->end)
 			{
@@ -40,22 +65,24 @@ void    get_flow(t_farm *farm)
 				{
 					if (LINK(v, j)->flow == 1 && LINK(v, j)->capacity == 1)
 					{
-						///add strjoin("L",node->name) in vector (path)
-						printf("%s->", NODE(v)->name);
 						if (ft_strncmp(NODE(v)->name, "st_", 3))
-							printf("%s->", NODE(v)->name); ///add strjoin("L",node->name) in vector (patch)
+                        {
+						    printf("%s->", NODE(v)->name); ///add strjoin("L",node->name) in vector (path)
+						    ft_ptr_vec_pushback(path->path, create_room(v));
+                        }
 						v = LINK(v, j)->index;
 						break ;
 					}
 				}
 			}
+			ft_ptr_vec_pushback(path->path, create_room((int)farm->nodes));
 			///add strjoin("L",node->name) in vector (path)
 			printf("%s", NODE(farm->end)->name);
 			printf("\n");
-			///add new path in flow
+			ft_ptr_vec_pushback(flow, path);
 		}
 	}
-	///return (flow);
+	return (flow);
 }
 
 int		release_flow(t_farm *farm)
