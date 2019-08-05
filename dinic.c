@@ -233,13 +233,14 @@ int 	dinic(t_farm *farm)
 	        fisrt_entry = TRUE;
         }
 		flow = dfs(farm);
-		if (!release_flow(farm))
-			return (flow);
+
 		while (flow)
 		{
 			max_flow += flow;
 			flow = dfs(farm);
 		}
+		if (!release_flow(farm)) ///check for flow contains 2patch one size and 1 ant
+			return (flow);
 	}
 	//debug_dinic(farm);
 	return max_flow;

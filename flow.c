@@ -90,23 +90,32 @@ t_vec    *get_flow(t_farm *farm)
 
 int		release_flow(t_farm *farm)
 {
-	void **nodes = farm->nodes->data;
+	//void	**nodes = farm->nodes->data;
+	int		*array;
+	t_vec	*flow;
 
 	///int *array_profit;
 
 	printf("\nnew patch \n");
     if (farm->ant_num == 1)
     {
-        let_the_flow_go(farm, get_flow(farm), farm->ant_num);
+        flow = get_flow(farm);
         ///start ant race
         return (0);
     }
     else
     {
-      let_the_flow_go(farm, get_flow(farm), farm->ant_num);
+      flow = get_flow(farm);
+      array =  (int *)malloc(sizeof(int) * flow->length);
+      for (int i = 0; i < (int)flow->length; i++)
+	  {
+      	array[i] = (int) LENGTH(i) + farm->ant_num - 1;
+      	printf("%d ", array[i]);
+ 	  }
+      //sort(array)   new patch it's array[flow->lenght - 1]
+      printf("\n");
         /*if (check_profit())
         {
-            let_the_flow_go(flow)
             ///start ant race
             return (0);
         }
@@ -140,7 +149,6 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
             ants[saved_index] = 0;
             ROOM(i, 0)->capacity = 1;
             ROOM(i, 0)->temp_ant = saved_index;
-            ROOM(i,0)->index = 0;
             printf("L%d-%s ", saved_index + 1, NODE(ROOM(i, 0)->node_num)->name);
         }
         i = -1;
