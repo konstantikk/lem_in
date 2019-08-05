@@ -15,6 +15,7 @@
 #define NODE(i) ((t_node*)(nodes[i]))
 #define LINK(i, j) ((t_link*)((void**)((t_node*)nodes[i])->links->data)[j])
 #define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
+#define ROOM(i, j) ((t_room*)(((void**)((t_path*)(((void**)flow->data)[i]))->path->data)[j]))
 
 int 	check_profit()
 {
@@ -76,7 +77,7 @@ t_vec    *get_flow(t_farm *farm)
 					}
 				}
 			}
-			ft_ptr_vec_pushback(path->path, create_room((int)farm->nodes));
+			ft_ptr_vec_pushback(path->path, create_room((int)farm->end));
 			///add strjoin("L",node->name) in vector (path)
 			printf("%s", NODE(farm->end)->name);
 			printf("\n");
@@ -96,13 +97,13 @@ int		release_flow(t_farm *farm)
 	printf("\nnew patch \n");
     if (farm->ant_num == 1)
     {
-        get_flow(farm);
+        let_the_flow_go(farm, get_flow(farm), farm->ant_num);
         ///start ant race
         return (0);
     }
     else
     {
-      get_flow(farm);
+      let_the_flow_go(farm, get_flow(farm), farm->ant_num);
         /*if (check_profit())
         {
             let_the_flow_go(flow)
@@ -118,40 +119,49 @@ int		release_flow(t_farm *farm)
     return (1);
 }
 
-void    let_the_flow_go(t_farm *farm)
+void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
 {
-    char *ants = (char*)malloc(sizeof(char) * farm->ant_num);
+    char *ants = (char*)malloc(sizeof(char) * ant_num);
     int i;
+    int j;
     int saved_index = -1;
-    int num_of_ways = 68468467;
+    void **nodes = farm->nodes->data;
+    int fisrt_entry = FALSE;
 
     i = -1;
-    while (++i < farm->ant_num)
+    while (++i < ant_num)
         ants[i] = -1;
-    while (ants[farm->ant_num - 1] != 1)
+    while (ants[ant_num - 1] != 1)
     {
         i = -1;
-        while (++i < num_of_ways && ++saved_index < farm->ant_num)
+        int hey = flow->length;
+        while (++i < flow->length && ++saved_index < ant_num)
         {
-            ants[saved_index] = 0; //mark ants that are on their way
-            //put them on the start node
-            //turn capacity to 1
-            //print
+            ants[saved_index] = 0;
+            ROOM(i, 0)->capacity = 1;
+            ROOM(i, 0)->temp_ant = saved_index;
+            ROOM(i,0)->index = 0;
+            printf("L%d-%s ", saved_index + 1, NODE(ROOM(i, 0)->node_num)->name);
         }
         i = -1;
-        while (++i < num_of_ways)
+        while (++i < flow->length && fisrt_entry == TRUE)
         {
-            //turn capacity to 0
-            //move forward each ant
-            /*
-             *
-             */
-            //turn capacity to 1
-            //print
-            //if ant has reached the finish then mark this ant with 1
-            //change index of the last occupied node
+            j = 0;
+            while (++j < LENGTH(i)) {
+
+                if (!ROOM(i, j)->capacity) {
+                    ROOM(i, j - 1)->capacity = 0;
+                    ROOM(i, j)->capacity = 1;
+                    ROOM(i, j)->temp_ant = ROOM(i, j - 1)->temp_ant;
+                    printf("L%d-%s ", ROOM(i, j)->temp_ant + 1, NODE(ROOM(i, j)->node_num)->name);
+                    if (ROOM(i, j)->node_num == farm->end)
+                        ants[ROOM(i, j)->temp_ant] = 1;
+                    break;
+                }
+            }
         }
-        //print '\n'
+        fisrt_entry = TRUE;
+        printf("\n");
     }
 }
 
