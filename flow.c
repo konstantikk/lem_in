@@ -100,18 +100,18 @@ int		release_flow(t_farm *farm)
     if (farm->ant_num == 1)
     {
         flow = get_flow(farm);
-        let_the_flow_go(farm, flow, farm->ant_num);
+       // let_the_flow_go(farm, flow, farm->ant_num);
         ///start ant race
         return (0);
     }
     else
     {
       flow = get_flow(farm);
-      let_the_flow_go(farm, flow, farm->ant_num);
+      //let_the_flow_go(farm, flow, farm->ant_num);
       array =  (int *)malloc(sizeof(int) * flow->length);
       for (int i = 0; i < (int)flow->length; i++)
 	  {
-      	array[i] = (int) LENGTH(i) + farm->ant_num - 1;
+      	array[i] = (int) LENGTH(i) ;//+ farm->ant_num - 1;
       	printf("%d ", array[i]);
  	  }
       //sort(array)   new patch it's array[flow->lenght - 1]
