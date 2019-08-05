@@ -147,7 +147,7 @@ void	debug_dinic(t_farm *farm)
 	{
 		printf("|index: %10d| |name: %10s| ", i ,NODE(i)->name);
 		for (int j = 0; j < NODE(i)->links->length; j++)
-			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->capacity);
+			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->flow);
 		printf("\n");
 	}
 	printf("\n");
@@ -239,9 +239,10 @@ int 	dinic(t_farm *farm)
 			max_flow += flow;
 			flow = dfs(farm);
 		}
+		//debug_dinic(farm);
 		if (!release_flow(farm)) ///check for flow contains 2patch one size and 1 ant
 			return (flow);
 	}
-	//debug_dinic(farm);
+
 	return max_flow;
 }
