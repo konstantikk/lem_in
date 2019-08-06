@@ -97,7 +97,6 @@ void		add_path(t_farm *farm)
 			//LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
             LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->flow = -1;
         }
-
 		vertex = farm->parents[vertex];
 	}
     ///SUBSTREAM(farm->mainstream->length - 1)->flow_size = farm->fixed;
@@ -227,11 +226,11 @@ int 	dinic(t_farm *farm)
 */
 	while (bfs(farm))
 	{
-	    if (!fisrt_entry)
+	   /* if (!fisrt_entry)
         {
 	        delete_reverse_links(farm);
 	        fisrt_entry = TRUE;
-        }
+        }*/
 		flow = dfs(farm);
 
 		while (flow)

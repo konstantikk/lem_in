@@ -33,7 +33,7 @@ typedef	struct	s_link
 typedef struct	s_path
 {
 	t_vec	*path;
-	int 	last_occupied;
+	int 	ants_onw;
 }				t_path;
 
 typedef struct  s_room
@@ -68,5 +68,6 @@ int 	dfs(t_farm *farm);
 int 	dinic(t_farm *farm);
 t_link	*create_link(int index);
 int     release_flow(t_farm *farm);
+void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num);
 
 #endif
