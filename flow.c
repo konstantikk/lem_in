@@ -148,30 +148,24 @@ int		release_flow(t_farm *farm)
         ///start ant race
         return (0);
     }
+
+    flow = get_flow(farm);
+    //let_the_flow_go(farm, flow, farm->ant_num);
+    array = check_profit(farm, flow, farm->max_path);
+    if (farm->loss->length == 1 || (farm->loss->length > 1 &&
+    farm->loss[farm->loss->length - 2] > farm->loss[farm->loss->length - 1]))
+    {
+    	/// free array
+    	//search continue
+      	return (1);
+    }
     else
     {
-      flow = get_flow(farm);
-      //let_the_flow_go(farm, flow, farm->ant_num);
-      array = check_profit(farm, flow, farm->max_path);
-      if (farm->loss->length == 1)
-	  {
-      	/// free array
-		  //search continue
-      	return (1);
-	  }
-      else if (farm->loss[farm->loss->length - 2] > farm->loss[farm->loss->length - 1])
-	  {
-      	/// free array
-      	//search continue
-      	return (1);
-	  }
-      else
-	  {
       	///free array
       	array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
       	///start and race
-	  }
+      	return (0);
     }
-    return (1);
+
 }
 
