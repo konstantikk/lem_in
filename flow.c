@@ -23,13 +23,11 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 	int sum = 0;
 	int additional_ants;
 	int residual_ants;
-	int min = LENGTH(0);
+	int max_loss = 0;
 
 	array = (int *)malloc(sizeof(int) * flow->length);
 	for (int i = 0; i < (int)flow->length; i++)
 	{
-		if (array[i] <= min)
-			min = i;
 		array[i] = max - (int) LENGTH(i) + 1;
 		sum += array[i];
 		printf("%2d ", array[i]);
@@ -45,7 +43,12 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 			array[i] += 1;
 		printf("%2d ", array[i]);
 	}
-	ft_int_vec_pushback(farm->loss, farm->min_path + array[min] - 1); ///array[min]
+	for (int i = 0; i < (int)flow->length; i++)
+	{
+		if (max_loss < LENGTH(i) + array[i] - 1)
+			max_loss = LENGTH(i) + array[i] - 1;
+	}
+	ft_int_vec_pushback(farm->loss, max_loss); ///array[min]
 	return (array);
 }
 
@@ -154,7 +157,7 @@ int		release_flow(t_farm *farm)
     //let_the_flow_go(farm, flow, farm->ant_num);
     array = check_profit(farm, flow, farm->max_path);
     if (farm->loss->length == 1 || (farm->loss->length > 1 &&
-    farm->loss[farm->loss->length - 2] > farm->loss[farm->loss->length - 1]))
+    farm->loss->data[farm->loss->length - 2] > farm->loss->data[farm->loss->length - 1]))
     {
     	/// free array
     	//search continue
