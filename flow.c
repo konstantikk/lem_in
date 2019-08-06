@@ -27,7 +27,7 @@ int 	*check_profit(t_farm *farm, t_vec *flow)
 	array = (int *)malloc(sizeof(int) * flow->length);
 	for (int i = 0; i < (int)flow->length; i++)
 	{
-		array[i] = farm->max_patch - (int) LENGTH(i) + 1;
+		array[i] = farm->max_path - (int) LENGTH(i) + 1;
 		sum += array[i];
 		printf("%2d ", array[i]);
 	}
@@ -104,10 +104,10 @@ t_vec    *get_flow(t_farm *farm)
 			///add strjoin("L",node->name) in vector (path)
 			printf("%s", NODE(farm->end)->name);
 			printf("\n");
-			if ((int)path->path->length > farm->max_patch)
-				farm->max_patch = (int)path->path->length;
-			else if ((int)path->path->length < farm->min_patch)
-				farm->min_patch = (int)path->path->length;
+			if ((int)path->path->length > farm->max_path)
+				farm->max_path = (int)path->path->length;
+			else if ((int)path->path->length < farm->min_path)
+				farm->min_path = (int)path->path->length;
 			ft_ptr_vec_pushback(flow, path);
 		}
 	}
@@ -137,7 +137,7 @@ int		release_flow(t_farm *farm)
       //let_the_flow_go(farm, flow, farm->ant_num);
 
       printf("\n");
-        if (farm->max_patch - farm->min_patch > farm->ant_num)///max - min > farm->num_ants
+        if (farm->max_path - farm->min_path > farm->ant_num)///max - min > farm->num_ants
         {
             ///start ant race
             return (0);

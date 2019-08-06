@@ -45,7 +45,7 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
 		}
 		printf("\n");
 		i = -1;
-		while (++i < flow->length /*&& fisrt_entry == TRUE*/)
+		while (++i < flow->length)
 		{
 			j = 0;
 			while (++j < LENGTH(i)) {
