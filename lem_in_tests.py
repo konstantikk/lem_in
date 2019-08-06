@@ -11,19 +11,20 @@ with open(test_file, 'r') as f:
     inp = f.read().split('\n')
     for x in inp:
         if ' ' in x:
-            x.partition(' ')
-            dict['x'] = 0
+            x = x.partition(' ')
+            graph[x[0]] = None
          #   print(x)
         elif '-' in x:
             x = x.partition('-')
-            dict['x[0]'] += [x[2]]
-            dict['x[2]'] += [x[0]]
-          #  print (x[0], x[2])
+            #graph['x[0]'] += [x[2]]
+            #graph['x[2]'] += [x[0]]
+            print (x[0], x[2])
         elif "##start" in x:
-            x.readline()
+            x = f.readline()
             x.partition(' ')
-            print("Start :".x)
+            #print("Start :".x)
         elif "##end" in x:
-            x.readline()
+            x = f.readline()
             x.partition(' ')
-            print("End :".x)
+            #print("End :".x)
+print(graph)
