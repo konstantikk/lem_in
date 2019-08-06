@@ -17,17 +17,20 @@
 #define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
 #define ROOM(i, j) ((t_room*)(((void**)((t_path*)(((void**)flow->data)[i]))->path->data)[j]))
 
-int 	*check_profit(t_farm *farm, t_vec *flow)
+int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 {
 	int *array;
 	int sum = 0;
 	int additional_ants;
 	int residual_ants;
+	int min = LENGTH(0);
 
 	array = (int *)malloc(sizeof(int) * flow->length);
 	for (int i = 0; i < (int)flow->length; i++)
 	{
-		array[i] = farm->max_path - (int) LENGTH(i) + 1;
+		if (array[i] <= min)
+			min = i;
+		array[i] = max - (int) LENGTH(i) + 1;
 		sum += array[i];
 		printf("%2d ", array[i]);
 	}
@@ -42,6 +45,7 @@ int 	*check_profit(t_farm *farm, t_vec *flow)
 			array[i] += 1;
 		printf("%2d ", array[i]);
 	}
+	ft_int_vec_pushback(farm->loss, farm->min_path + array[min] - 1); ///array[min]
 	return (array);
 }
 
@@ -116,13 +120,26 @@ t_vec    *get_flow(t_farm *farm)
 	return (flow);
 }
 
+int 	find_previous_max(t_vec *flow, int main_max)
+{
+	int i;
+	int max;
+
+	max = 0;
+	i  = -1;
+	while (++i < (int)flow->length)
+	{
+		if (LENGTH(i) > max && LENGTH(i) != main_max)
+			max = LENGTH(i);
+	}
+	return (max);
+}
+
 int		release_flow(t_farm *farm)
 {
 	//void	**nodes = farm->nodes->data;
 	int		*array;
 	t_vec	*flow;
-
-	///int *array_profit;
 
 	printf("\nnew patch \n");
     if (farm->ant_num == 1)
@@ -132,24 +149,24 @@ int		release_flow(t_farm *farm)
         ///start ant race
         return (0);
     }
+
+    flow = get_flow(farm);
+    //let_the_flow_go(farm, flow, farm->ant_num);
+    array = check_profit(farm, flow, farm->max_path);
+    if (farm->loss->length == 1 || (farm->loss->length > 1 &&
+    farm->loss[farm->loss->length - 2] > farm->loss[farm->loss->length - 1]))
+    {
+    	/// free array
+    	//search continue
+      	return (1);
+    }
     else
     {
-      flow = get_flow(farm);
-      let_the_flow_go(farm, flow, farm->ant_num);
-
-      /*printf("\n");
-        if (farm->max_path - farm->min_path > farm->ant_num)///max - min > farm->num_ants
-        {
-            ///start ant race
-            return (0);
-        }
-        else
-        {
-        	array = check_profit(farm, flow);
-            ///array.push_back(profit);
-        }*/
+      	///free array
+      	array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
+      	///start and race
+      	return (0);
     }
 
-    return (1);
 }
 

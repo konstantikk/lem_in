@@ -57,6 +57,7 @@ typedef struct	s_farm
 	int 	*levels;
 	int 	*used;
 	int 	*parents;
+	t_ivec 	*loss;
 	int		fixed;
 	int		ant_num;
 	int		start;
