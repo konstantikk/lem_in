@@ -240,7 +240,7 @@ int 	dinic(t_farm *farm)
 		}
 		//debug_dinic(farm);
 		if (!release_flow(farm)) ///check for flow contains 2path one size and 1 ant
-			return (flow);
+			return (0);
 	}
 
 	return max_flow;

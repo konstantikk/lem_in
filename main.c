@@ -28,15 +28,19 @@ void	debug(t_farm *farm)
 int 	main(int argc, char **argv)
 {
 	t_farm *farm;
+	t_vec *flow;
+	int *array;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
 	debug(farm);
 //	bfs(farm);
 //	dfs(farm);
-	printf("max_flow: %d\n", dinic(farm));
-	//ft_swap(&farm->start, &farm->end);
-///	printf("max_flow2: %d", dinic(farm));
-
+	if (dinic(farm))
+	{
+		flow = get_flow(farm);
+		array = check_profit(farm, flow, farm->max_path);
+		//start
+	}
 	close(fd);
 	return (0);
 }

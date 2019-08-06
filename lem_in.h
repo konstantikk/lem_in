@@ -71,6 +71,8 @@ int 	dfs(t_farm *farm);
 int 	dinic(t_farm *farm);
 t_link	*create_link(int index);
 int     release_flow(t_farm *farm);
+t_vec    *get_flow(t_farm *farm);
+int 	*check_profit(t_farm *farm, t_vec *flow, int max);
 void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num);
 
 #endif
