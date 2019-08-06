@@ -34,6 +34,7 @@ typedef struct	s_path
 {
 	t_vec	*path;
 	int 	ants_onw;
+	int     fixed_ant_num;
 	int     last_occupied;
 }				t_path;
 
@@ -71,6 +72,6 @@ int 	dfs(t_farm *farm);
 int 	dinic(t_farm *farm);
 t_link	*create_link(int index);
 int     release_flow(t_farm *farm);
-void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num);
+void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array);
 
 #endif
