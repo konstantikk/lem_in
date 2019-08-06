@@ -156,5 +156,6 @@ t_farm	*parse(int fd)
 	farm->used = (int*)malloc(sizeof(int) * farm->nodes->length);
 	farm->parents = (int*)malloc(sizeof(int) * farm->nodes->length);
 	farm->stream = ft_ptr_vec_init();
+	farm->loss = ft_int_vec_init();
 	return (farm);
 }
