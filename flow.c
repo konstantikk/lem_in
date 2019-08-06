@@ -60,6 +60,7 @@ t_path    *create_path()
     path->path = ft_ptr_vec_init();
     path->ants_onw = 0;
     path->last_occupied = 0;
+    path->fixed_ant_num = 0;
     return (path);
 }
 
@@ -147,15 +148,12 @@ int		release_flow(t_farm *farm)
     if (farm->ant_num == 1)
     {
         flow = get_flow(farm);
-        let_the_flow_go(farm, flow, farm->ant_num);
+        //let_the_flow_go(farm, flow, farm->ant_num);
         ///start ant race
         return (0);
     }
 
     flow = get_flow(farm);
-
-    let_the_flow_go(farm, flow, farm->ant_num);
-
     array = check_profit(farm, flow, farm->max_path);
     if (farm->loss->length == 1 || (farm->loss->length > 1 &&
     farm->loss->data[farm->loss->length - 2] > farm->loss->data[farm->loss->length - 1]))
@@ -168,6 +166,7 @@ int		release_flow(t_farm *farm)
     {
       	///free array
       	array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
+      	let_the_flow_go(farm, flow, farm->ant_num, array);
       	///start and race
       	return (0);
     }
