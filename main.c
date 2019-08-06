@@ -32,14 +32,15 @@ int 	main(int argc, char **argv)
 	int *array;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
-	debug(farm);
+//	debug(farm);
 //	bfs(farm);
 //	dfs(farm);
-	if (dinic(farm))
+	if (dinic(farm) > 0)
 	{
+		//printf("AAA\n");
 		flow = get_flow(farm);
 		array = check_profit(farm, flow, farm->max_path);
-		let_the_flow_go(farm, flow, farm->ant_num, array);
+		//let_the_flow_go(farm, flow, farm->ant_num, array);
 		//start
 	}
 	close(fd);

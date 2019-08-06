@@ -20,22 +20,25 @@
 int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 {
 	int *array;
-	int sum = 0;
-	int additional_ants;
+	long long sum = 0;
+	long long additional_ants;
 	int residual_ants;
 	int max_loss = 0;
 
-	array = (int *)malloc(sizeof(int) * flow->length);
+	array = (int *)ft_memalloc(sizeof(int) * flow->length);
 	for (int i = 0; i < (int)flow->length; i++)
 	{
 		array[i] = max - (int) LENGTH(i) + 1;
+		if (farm->max_path == LENGTH(i))
+			array[i] = 0;
 		sum += array[i];
-		printf(" %2d ", array[i]);
+	//	printf("(%d)", array[i]);
 	}
-
+	if (farm->ant_num < sum)
+		return (0);
 	additional_ants = (farm->ant_num - sum) / flow->length;
 	residual_ants = (farm->ant_num - sum) % flow->length;
-	printf("\n%d  %d \n", additional_ants, residual_ants);
+	//printf("\n%d  %d \n", additional_ants, residual_ants);
 	for (int i = 0; i < (int)flow->length; i++)
 	{
 		array[i] += additional_ants;
@@ -44,7 +47,7 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 			array[i] += 1;
 			residual_ants--;
 		}
-		printf("#%2d ", array[i]);
+		///printf("%2d ", array[i]);
 	}
 	for (int i = 0; i < (int)flow->length; i++)
 	{
@@ -52,7 +55,6 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 			max_loss = LENGTH(i) + array[i] - 1;
 	}
 	ft_int_vec_pushback(farm->loss, max_loss); ///array[min]
-	printf("\n");
 	return (array);
 }
 
@@ -103,7 +105,7 @@ t_vec    *get_flow(t_farm *farm)
 					{
 						if (ft_strncmp(NODE(v)->name, "st_", 3))
                         {
-						    printf("%s->", NODE(v)->name); ///add strjoin("L",node->name) in vector (path)
+						//    printf("%s->", NODE(v)->name); ///add strjoin("L",node->name) in vector (path)
 						    ft_ptr_vec_pushback(path->path, create_room(v));
                         }
 						v = LINK(v, j)->index;
@@ -113,8 +115,8 @@ t_vec    *get_flow(t_farm *farm)
 			}
 			ft_ptr_vec_pushback(path->path, create_room((int)farm->end));
 			///add strjoin("L",node->name) in vector (path)
-			printf("%s", NODE(farm->end)->name);
-			printf("\n");
+			//printf("%s", NODE(farm->end)->name);
+		//	printf("\n");
 			if ((int)path->path->length > farm->max_path)
 				farm->max_path = (int)path->path->length;
 			else if ((int)path->path->length < farm->min_path)
@@ -147,7 +149,7 @@ int		release_flow(t_farm *farm)
 	int		*array;
 	t_vec	*flow;
 
-	printf("\nnew patch \n");
+	//printf("\nnew patch \n");
     if (farm->ant_num == 1)
     {
         flow = get_flow(farm);
@@ -158,9 +160,16 @@ int		release_flow(t_farm *farm)
 
     flow = get_flow(farm);
 
-    //let_the_flow_go(farm, flow, farm->ant_num);
 
     array = check_profit(farm, flow, farm->max_path);
+    if (!array)
+	{
+		///printf ("BBB\n");
+		array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
+		///start and race
+		return (0);
+	}
+	///printf("\n\n");
     if (farm->loss->length == 1 || (farm->loss->length > 1 &&
     farm->loss->data[farm->loss->length - 2] > farm->loss->data[farm->loss->length - 1]))
     {
@@ -172,7 +181,7 @@ int		release_flow(t_farm *farm)
 			farm->loss->data[farm->loss->length - 2] < farm->loss->data[farm->loss->length - 1])
     {
       	///free array
-      	printf ("AAA\n");
+      ///	printf ("AAA\n");
       	array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
       	///start and race
       	return (0);
