@@ -60,6 +60,8 @@ typedef struct	s_farm
 	int		ant_num;
 	int		start;
 	int		end;
+	int 	max_patch;
+	int 	min_patch;
 }				t_farm;
 
 t_farm	*parse(int fd);

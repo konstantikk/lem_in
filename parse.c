@@ -131,9 +131,9 @@ t_farm	*parse(int fd)
 	t_farm	*farm;
 	char	*buff = NULL;
 
-	if (!(farm = (t_farm*)malloc(sizeof(t_farm))))
+	if (!(farm = (t_farm*)ft_memalloc(sizeof(t_farm))))
 		return (NULL);
-	farm->ant_num = 0;
+	///farm->ant_num = 0;
 	farm->nodes = ft_ptr_vec_init();
 	while (get_next_line(fd, &buff))
 	{

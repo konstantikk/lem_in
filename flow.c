@@ -17,9 +17,32 @@
 #define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
 #define ROOM(i, j) ((t_room*)(((void**)((t_path*)(((void**)flow->data)[i]))->path->data)[j]))
 
-int 	check_profit()
+int 	*check_profit(t_farm *farm, t_vec *flow)
 {
+	int *array;
+	int sum = 0;
+	int additional_ants;
+	int residual_ants;
 
+	array = (int *)malloc(sizeof(int) * flow->length);
+	for (int i = 0; i < (int)flow->length; i++)
+	{
+		array[i] = farm->max_patch - (int) LENGTH(i) + 1;
+		sum += array[i];
+		printf("%2d ", array[i]);
+	}
+
+	additional_ants = (farm->ant_num - sum) / flow->length;
+	residual_ants = (farm->ant_num - sum) % flow->length;
+	printf("\n%d  %d \n", additional_ants, residual_ants);
+	for (int i = 0; i < (int)flow->length; i++)
+	{
+		array[i] += additional_ants;
+		if (residual_ants--)
+			array[i] += 1;
+		printf("%2d ", array[i]);
+	}
+	return (array);
 }
 
 t_path    *create_path()
@@ -81,6 +104,10 @@ t_vec    *get_flow(t_farm *farm)
 			///add strjoin("L",node->name) in vector (path)
 			printf("%s", NODE(farm->end)->name);
 			printf("\n");
+			if ((int)path->path->length > farm->max_patch)
+				farm->max_patch = (int)path->path->length;
+			else if ((int)path->path->length < farm->min_patch)
+				farm->min_patch = (int)path->path->length;
 			ft_ptr_vec_pushback(flow, path);
 		}
 	}
@@ -108,90 +135,20 @@ int		release_flow(t_farm *farm)
     {
       flow = get_flow(farm);
       //let_the_flow_go(farm, flow, farm->ant_num);
-      array =  (int *)malloc(sizeof(int) * flow->length);
-      for (int i = 0; i < (int)flow->length; i++)
-	  {
-      	array[i] = (int) LENGTH(i) ;//+ farm->ant_num - 1;
-      	printf("%d ", array[i]);
- 	  }
-      //sort(array)   new patch it's array[flow->lenght - 1]
+
       printf("\n");
-        /*if (check_profit())
+        if (farm->max_patch - farm->min_patch > farm->ant_num)///max - min > farm->num_ants
         {
             ///start ant race
             return (0);
         }
         else
         {
+        	array = check_profit(farm, flow);
             ///array.push_back(profit);
-        }*/
+        }
     }
 
     return (1);
 }
-
-void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
-{
-    char *ants = (char*)malloc(sizeof(char) * ant_num);
-    int i;
-    int j;
-    int saved_index = 0;
-    void **nodes = farm->nodes->data;
-    int fisrt_entry = FALSE;
-
-    i = -1;
-    while (++i < ant_num)
-        ants[i] = -1;
-    int shit = 0;
-    while (ants[ant_num - 1] != 1)
-    {
-        i = -1;
-        while (++i < flow->length && saved_index < ant_num)
-        {
-            ants[saved_index] = 0;
-            ROOM(i, 0)->capacity = 1;
-            ROOM(i, 0)->temp_ant = saved_index;
-            ((t_path*)((void**)flow->data)[i])->ants_onw++;
-            printf("L%d-%s ", saved_index + 1, NODE(ROOM(i, 0)->node_num)->name);
-            ++saved_index;
-
-        }
-        printf("\n");
-        i = -1;
-        while (++i < flow->length /*&& fisrt_entry == TRUE*/)
-        {
-            j = 0;
-            while (++j < LENGTH(i)) {
-
-                int l = ROOM(i, j)->capacity, m = ROOM(i, j)->temp_ant;
-                int ll = ROOM(i, j - 1)->capacity, mm = ROOM(i, j - 1)->temp_ant;
-                if (!ROOM(i, j)->capacity && ROOM(i, j)->temp_ant == -1) {
-                        int counter = ((t_path*)((void**)flow->data)[i])->ants_onw;
-                        while (counter-- && j > 0)
-                        {
-                            if (ROOM(i, j)->node_num == farm->end)
-                            {
-                                ants[ROOM(i, j - 1)->temp_ant] = 1;
-                                ((t_path*)((void**)flow->data)[i])->ants_onw--;
-                                printf("L%d-%s ", ROOM(i, j - 1)->temp_ant + 1, NODE(ROOM(i, j)->node_num)->name);
-                                ROOM(i, j - 1)->temp_ant = -1;
-                                ROOM(i, j - 1)->capacity = 0;
-                            }
-                            else {
-                                ROOM(i, j - 1)->capacity = 0;
-                                ROOM(i, j)->capacity = 1;
-                                ROOM(i, j)->temp_ant = ROOM(i, j - 1)->temp_ant;
-                                ROOM(i, j - 1)->temp_ant = -1;
-                                printf("L%d-%s ", ROOM(i, j)->temp_ant + 1, NODE(ROOM(i, j)->node_num)->name);
-                            }
-                            j--;
-                        }
-                    break ;
-                    }
-                }
-            }
-        }
-
-    }
-
 
