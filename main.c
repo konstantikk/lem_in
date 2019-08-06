@@ -40,7 +40,7 @@ int 	main(int argc, char **argv)
 		//printf("AAA\n");
 		flow = get_flow(farm);
 		array = check_profit(farm, flow, farm->max_path);
-		//let_the_flow_go(farm, flow, farm->ant_num, array);
+		let_the_flow_go(farm, flow, farm->ant_num, array);
 		//start
 	}
 	close(fd);

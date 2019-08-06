@@ -165,6 +165,7 @@ int		release_flow(t_farm *farm)
 	{
 		///printf ("BBB\n");
 		array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
+		let_the_flow_go(farm, flow, farm->ant_num, array);
 		///start and race
 		return (0);
 	}
