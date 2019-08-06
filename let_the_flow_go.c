@@ -17,7 +17,7 @@
 #define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
 #define ROOM(i, j) ((t_room*)(((void**)((t_path*)(((void**)flow->data)[i]))->path->data)[j]))
 
-void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
+void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array)
 {
 	char *ants = (char*)malloc(sizeof(char) * ant_num);
 	int i;
@@ -32,14 +32,16 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
 		ants[i] = -1;
 	while (ants[ant_num - 1] != 1)
 	{
-		i = -1;
-		while (++i < flow->length && saved_index < ant_num)
+		i = 0;
+		while (i < flow->length && saved_index < ant_num && ((t_path*)((void**)flow->data)[i])->fixed_ant_num != array[i])
 		{
 			ants[saved_index] = 0;
 			ROOM(i, 0)->temp_ant = saved_index;
 			((t_path*)((void**)flow->data)[i])->ants_onw++;
 			printf("L%d-%s ", saved_index + 1, NODE(ROOM(i, 0)->node_num)->name);
 			++saved_index;
+			++i;
+            ((t_path*)((void**)flow->data)[i])->fixed_ant_num++;
 		}
 		printf("\n");
 		i = -1;

@@ -34,6 +34,7 @@ typedef struct	s_path
 {
 	t_vec	*path;
 	int 	ants_onw;
+	int     fixed_ant_num;
 	int     last_occupied;
 }				t_path;
 
@@ -74,5 +75,6 @@ int     release_flow(t_farm *farm);
 t_vec    *get_flow(t_farm *farm);
 int 	*check_profit(t_farm *farm, t_vec *flow, int max);
 void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array);
+
 
 #endif
