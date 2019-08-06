@@ -30,7 +30,7 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 	{
 		array[i] = max - (int) LENGTH(i) + 1;
 		sum += array[i];
-		printf("%2d ", array[i]);
+		printf(" %2d ", array[i]);
 	}
 
 	additional_ants = (farm->ant_num - sum) / flow->length;
@@ -39,9 +39,12 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 	for (int i = 0; i < (int)flow->length; i++)
 	{
 		array[i] += additional_ants;
-		if (residual_ants--)
+		if (residual_ants > 0)
+		{
 			array[i] += 1;
-		printf("%2d ", array[i]);
+			residual_ants--;
+		}
+		printf("#%2d ", array[i]);
 	}
 	for (int i = 0; i < (int)flow->length; i++)
 	{
@@ -49,6 +52,7 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 			max_loss = LENGTH(i) + array[i] - 1;
 	}
 	ft_int_vec_pushback(farm->loss, max_loss); ///array[min]
+	printf("\n");
 	return (array);
 }
 
@@ -164,13 +168,15 @@ int		release_flow(t_farm *farm)
     	//search continue
       	return (1);
     }
-    else
+    else if (farm->loss->length > 1 &&
+			farm->loss->data[farm->loss->length - 2] < farm->loss->data[farm->loss->length - 1])
     {
       	///free array
+      	printf ("AAA\n");
       	array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
       	///start and race
       	return (0);
     }
-
+    return (1);
 }
 
