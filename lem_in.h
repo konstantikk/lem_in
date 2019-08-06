@@ -40,7 +40,6 @@ typedef struct	s_path
 typedef struct  s_room
 {
     int node_num;
-    int capacity;
     int temp_ant;
 }               t_room;
 
