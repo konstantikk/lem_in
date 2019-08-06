@@ -147,14 +147,14 @@ int		release_flow(t_farm *farm)
     if (farm->ant_num == 1)
     {
         flow = get_flow(farm);
-        let_the_flow_go(farm, flow, farm->ant_num);
+        //let_the_flow_go(farm, flow, farm->ant_num);
         ///start ant race
         return (0);
     }
 
     flow = get_flow(farm);
 
-    let_the_flow_go(farm, flow, farm->ant_num);
+    //let_the_flow_go(farm, flow, farm->ant_num);
 
     array = check_profit(farm, flow, farm->max_path);
     if (farm->loss->length == 1 || (farm->loss->length > 1 &&
