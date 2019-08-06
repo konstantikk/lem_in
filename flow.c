@@ -153,8 +153,9 @@ int		release_flow(t_farm *farm)
     }
 
     flow = get_flow(farm);
+
     let_the_flow_go(farm, flow, farm->ant_num);
-    //let_the_flow_go(farm, flow, farm->ant_num);
+
     array = check_profit(farm, flow, farm->max_path);
     if (farm->loss->length == 1 || (farm->loss->length > 1 &&
     farm->loss->data[farm->loss->length - 2] > farm->loss->data[farm->loss->length - 1]))
