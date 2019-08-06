@@ -24,12 +24,12 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
 	int j;
 	int saved_index = 0;
 	void **nodes = farm->nodes->data;
-	int fisrt_entry = FALSE;
+	int flag = FALSE;
 
 	i = -1;
 	while (++i < ant_num)
 		ants[i] = -1;
-	int shit = 0;
+	int flow_size = flow->length;
 	while (ants[ant_num - 1] != 1)
 	{
 		i = -1;
@@ -41,40 +41,42 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num)
 			((t_path*)((void**)flow->data)[i])->ants_onw++;
 			printf("L%d-%s ", saved_index + 1, NODE(ROOM(i, 0)->node_num)->name);
 			++saved_index;
-
 		}
 		printf("\n");
 		i = -1;
+		flag = FALSE;
 		while (++i < flow->length)
 		{
-			j = 0;
-			while (++j < LENGTH(i)) {
+			j = ((t_path*)((void**)flow->data)[i])->last_occupied + 1;
+			int l = ROOM(i, j)->capacity, m = ROOM(i, j)->temp_ant;
+			int ll = ROOM(i, j - 1)->capacity, mm = ROOM(i, j - 1)->temp_ant;
+			if (!ROOM(i, j)->capacity && ROOM(i, j)->temp_ant == -1) {
+			    int counter = ((t_path*)((void**)flow->data)[i])->ants_onw;
+			    while (counter-- && j > 0)
+			    {
+			        if (ROOM(i, j)->node_num == farm->end)
+			        {
+			            ants[ROOM(i, j - 1)->temp_ant] = 1;
+			            flag = TRUE;
+			            ((t_path*)((void**)flow->data)[i])->ants_onw--;
+			          //  ((t_path*)((void**)flow->data)[i])->last_occupied--;
+			            printf("L%d-%s ", ROOM(i, j - 1)->temp_ant + 1, NODE(ROOM(i, j)->node_num)->name);
+			            ROOM(i, j - 1)->temp_ant = -1;
+			            ROOM(i, j - 1)->capacity = 0;
+			        }
+			        else {
+			            ROOM(i, j - 1)->capacity = 0;
+			            ROOM(i, j)->capacity = 1;
+			            ROOM(i, j)->temp_ant = ROOM(i, j - 1)->temp_ant;
+			            ROOM(i, j - 1)->temp_ant = -1;
+			            printf("L%d-%s ", ROOM(i, j)->temp_ant + 1, NODE(ROOM(i, j)->node_num)->name);
+			           // ((t_path*)((void**)flow->data)[i])->last_occupied++;
+			        }
+			        j--;
+			    }
+			    if (flag != TRUE)
+                    ((t_path*)((void**)flow->data)[i])->last_occupied++;
 
-				int l = ROOM(i, j)->capacity, m = ROOM(i, j)->temp_ant;
-				int ll = ROOM(i, j - 1)->capacity, mm = ROOM(i, j - 1)->temp_ant;
-				if (!ROOM(i, j)->capacity && ROOM(i, j)->temp_ant == -1) {
-					int counter = ((t_path*)((void**)flow->data)[i])->ants_onw;
-					while (counter-- && j > 0)
-					{
-						if (ROOM(i, j)->node_num == farm->end)
-						{
-							ants[ROOM(i, j - 1)->temp_ant] = 1;
-							((t_path*)((void**)flow->data)[i])->ants_onw--;
-							printf("L%d-%s ", ROOM(i, j - 1)->temp_ant + 1, NODE(ROOM(i, j)->node_num)->name);
-							ROOM(i, j - 1)->temp_ant = -1;
-							ROOM(i, j - 1)->capacity = 0;
-						}
-						else {
-							ROOM(i, j - 1)->capacity = 0;
-							ROOM(i, j)->capacity = 1;
-							ROOM(i, j)->temp_ant = ROOM(i, j - 1)->temp_ant;
-							ROOM(i, j - 1)->temp_ant = -1;
-							printf("L%d-%s ", ROOM(i, j)->temp_ant + 1, NODE(ROOM(i, j)->node_num)->name);
-						}
-						j--;
-					}
-					break ;
-				}
 			}
 		}
 	}

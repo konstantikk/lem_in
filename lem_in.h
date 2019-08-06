@@ -34,6 +34,7 @@ typedef struct	s_path
 {
 	t_vec	*path;
 	int 	ants_onw;
+	int     last_occupied;
 }				t_path;
 
 typedef struct  s_room
