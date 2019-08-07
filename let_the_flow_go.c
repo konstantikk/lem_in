@@ -44,10 +44,8 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array)
 			ants[saved_index] = 0;
 			ROOM(i, 0)->temp_ant = saved_index;
 			((t_path*)((void**)flow->data)[i])->ants_onw++;
-			printf("L%d-%s ", saved_index + 1, NODE(ROOM(i, 0)->node_num)->name);
-            ((t_path*)((void**)flow->data)[i])->fixed_ant_num++;
-			++saved_index;
-			++i;
+			printf("L%d-%s ", saved_index++ + 1, NODE(ROOM(i, 0)->node_num)->name);
+            ((t_path*)((void**)flow->data)[i++])->fixed_ant_num++;
 		}
 		printf("\n");
 		i = -1;
