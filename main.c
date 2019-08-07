@@ -51,11 +51,21 @@ int 	main(int argc, char **argv)
     insert_node(hashtable, create_node(ft_strdup("3")));
     insert_node(hashtable, create_node(ft_strdup("4")));
     insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("6")));
-    insert_node(hashtable, create_node(ft_strdup("7")));
-    insert_node(hashtable, create_node(ft_strdup("8")));
-    insert_node(hashtable, create_node(ft_strdup("9")));
-    insert_node(hashtable, create_node(ft_strdup("10")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+
 
     t_list **table = hashtable->table;
     for (int i = 0; i < hashtable->capacity; i++)

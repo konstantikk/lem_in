@@ -12,25 +12,17 @@
 
 #include "lem_in.h"
 
-int     insert_node(t_ht *hashtable, t_node *node)
+t_node      *find_node(t_ht *hashtable, char *name)
 {
-    unsigned long index;
+    const unsigned long index = ft_hash((unsigned char*)name, hashtable->capacity);
     t_list              *temp;
-    t_list              *new;
 
-    if (enlarge_table(hashtable)) {
-        index = ft_hash((unsigned char*)node->name, hashtable->capacity);
-        temp = hashtable->table[index];
-        if (!temp) {
-            if (!(hashtable->table[index] = ft_lstnew(node, sizeof(node))))
-                return (0);
-            ft_int_vec_pushback(hashtable->loaded, (int) index);
-        } else {
-            if (!(new = ft_lstnew(node, sizeof(node))))
-                return (0);
-            ft_lstadd(&hashtable->table[index], new);
-        }
-        hashtable->size++;
+    temp = hashtable->table[index];
+    while (temp)
+    {
+        if (!ft_strcmp(((t_node*)temp->content)->name, name))
+            return (temp->content);
+        temp = temp->next;
     }
-    return (1);
+    return (NULL);
 }
