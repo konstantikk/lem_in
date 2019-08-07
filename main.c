@@ -27,7 +27,7 @@ void	debug(t_farm *farm)
 
 int 	main(int argc, char **argv)
 {
-	t_farm *farm;
+/*	t_farm *farm;
 	t_vec *flow;
 	int *array;
 	int fd = open(argv[1], O_RDONLY);
@@ -43,6 +43,31 @@ int 	main(int argc, char **argv)
 		let_the_flow_go(farm, flow, farm->ant_num, array);
 		//start
 	}
-	close(fd);
+	close(fd);*/
+    t_ht *hashtable = ft_ht_init();
+
+    insert_node(hashtable, create_node(ft_strdup("1")));
+    insert_node(hashtable, create_node(ft_strdup("2")));
+    insert_node(hashtable, create_node(ft_strdup("3")));
+    insert_node(hashtable, create_node(ft_strdup("4")));
+    insert_node(hashtable, create_node(ft_strdup("5")));
+    insert_node(hashtable, create_node(ft_strdup("6")));
+    insert_node(hashtable, create_node(ft_strdup("7")));
+    insert_node(hashtable, create_node(ft_strdup("8")));
+    insert_node(hashtable, create_node(ft_strdup("9")));
+    insert_node(hashtable, create_node(ft_strdup("10")));
+
+    t_list **table = hashtable->table;
+    for (int i = 0; i < hashtable->capacity; i++)
+    {
+        t_list *temp = table[i];
+        printf("index %d: ", i);
+        while (temp)
+        {
+            printf("%s ", ((t_node*)temp->content)->name);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
 	return (0);
 }

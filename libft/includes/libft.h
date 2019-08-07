@@ -43,6 +43,14 @@ typedef	struct		s_ivec
 	size_t			capacity;
 }					t_ivec;
 
+typedef struct      s_ht
+{
+    size_t          size;
+    size_t          capacity;
+    t_list          **table;
+    t_ivec          *loaded;
+}                   t_ht;
+
 size_t				ft_strlen(const char *s);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
 void				*ft_memset(void *b, int c, size_t len);
@@ -122,6 +130,9 @@ int					ft_ptr_vec_pushback(t_vec *vec, void *value);
 int					ft_ptr_vec_pushfront(t_vec *vec, void *value);
 void				*ft_ptr_vec_popfront(t_vec *vec);
 void				ft_ptr_vec_del(t_vec **vec, void (*del)(void**));
+
+unsigned long       ft_hash(unsigned char *str, int capacity);
+t_ht                *ft_ht_init(void);
 
 t_vec				*ft_vec_init(size_t size);
 int					ft_vec_enlarge(t_vec *vec);

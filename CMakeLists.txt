@@ -15,9 +15,10 @@ FILE(GLOB int_vec_func ./libft/vec_funcs/int_vec/*.c)
 FILE(GLOB ptr_vec_func ./libft/vec_funcs/ptr_vec/*.c)
 FILE(GLOB memes_func ./libft/mem_funcs/*.c)
 FILE(GLOB char_vec ./libft/vec_funcs/char_vec/*.c)
+FILE(GLOB hashtable ./libft/hashtable/*.c)
 
 include_directories( ./libft/includes)
 
-add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} dinic.c flow.c let_the_flow_go.c)
+add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} ${hashtable} ${lst_func} dinic.c flow.c let_the_flow_go.c insert_node.c enlarge_table.c)
 
 target_link_libraries(lem_in ~/lem_in/libft/libft.a)
