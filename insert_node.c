@@ -12,22 +12,24 @@
 
 #include "lem_in.h"
 
-int     insert_node(t_ht *hashtable, t_node *node)
+int     ht_insert_node(t_ht *hashtable, t_node *node)
 {
     unsigned long index;
     t_list              *temp;
     t_list              *new;
 
-    if (enlarge_table(hashtable)) {
+    if (ht_enlarge(hashtable)) {
         index = ft_hash((unsigned char*)node->name, hashtable->capacity);
         temp = hashtable->table[index];
         if (!temp) {
-            if (!(hashtable->table[index] = ft_lstnew(node, sizeof(node))))
+            if (!(hashtable->table[index] = ft_lstnew(NULL, 0)))
                 return (0);
+            hashtable->table[index]->content = node;
             ft_int_vec_pushback(hashtable->loaded, (int) index);
         } else {
-            if (!(new = ft_lstnew(node, sizeof(node))))
+            if (!(new = ft_lstnew(NULL, 0)))
                 return (0);
+            new->content = node;
             ft_lstadd(&hashtable->table[index], new);
         }
         hashtable->size++;

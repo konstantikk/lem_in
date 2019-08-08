@@ -31,7 +31,8 @@ t_node	*create_node(char *name)
 		return (NULL);
 	node->name = name;
 	node->links = ft_ptr_vec_init();
-	//node->parents = NULL;
+	node->flow = NULL;
+	node->capacity = NULL;
 	return (node);
 }
 

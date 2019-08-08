@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   insert_node.c                                      :+:      :+:    :+:   */
+/*   delete_hashtable.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,17 +12,33 @@
 
 #include "lem_in.h"
 
-t_node      *ht_find_node(t_ht *hashtable, char *name)
+static void    del_elem(t_list **head)
 {
-    const unsigned long index = ft_hash((unsigned char*)name, hashtable->capacity);
-    t_list              *temp;
+    t_list *temp;
 
-    temp = hashtable->table[index];
+    temp = *head;
     while (temp)
     {
-        if (!ft_strcmp(((t_node*)temp->content)->name, name))
-            return (temp->content);
+        *head = temp;
+        ft_memdel((void**)&((t_node*)(temp->content))->name);
+        ft_memdel(&temp->content);
         temp = temp->next;
+        ft_memdel((void**)head);
     }
-    return (NULL);
+}
+
+void    ht_delete(t_ht **hashtable)
+{
+    t_ht        *ht;
+    const int   *data = (*hashtable)->loaded->data;
+    const size_t length = (*hashtable)->loaded->length;
+    int         i;
+
+    ht = *hashtable;
+    i = -1;
+    while (++i < length)
+        del_elem(&ht->table[data[i]]);
+    free(ht->table);
+    ft_int_vec_del(&ht->loaded);
+    ft_memdel((void**)hashtable);
 }

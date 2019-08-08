@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-void    del_elem(t_list **head)
+static void    del_elem(t_list **head)
 {
     t_list *temp;
 
@@ -20,14 +20,12 @@ void    del_elem(t_list **head)
     while (temp)
     {
         *head = temp;
-      //  ft_memdel((void**)&((t_node*)(temp->content))->name);
-       // ft_memdel(&temp->content);
         temp = temp->next;
         ft_memdel((void**)head);
     }
 }
 
-int     copy_element(t_list **dst, t_node *node, size_t capacity, t_ivec *loaded)
+static int     copy_element(t_list **dst, t_node *node, size_t capacity, t_ivec *loaded)
 {
     const unsigned long index = ft_hash((unsigned char*)node->name, capacity);
     t_list              *temp;
@@ -36,21 +34,23 @@ int     copy_element(t_list **dst, t_node *node, size_t capacity, t_ivec *loaded
     temp = dst[index];
     if (!temp)
     {
-        if (!(dst[index] = ft_lstnew(node, sizeof(node))))
+        if (!(dst[index] = ft_lstnew(NULL, 0)))
             return (0);
+        dst[index]->content = node;
         ft_int_vec_pushback(loaded, (int)index);
     }
     else
     {
-        if(!(new = ft_lstnew(node, sizeof(node))))
+        if(!(new = ft_lstnew(NULL, 0)))
             return (0);
+        new->content = node;
         ft_lstadd(&dst[index], new);
     }
     return (1);
 }
 
 
-int     copy_table(t_ivec *loaded, t_list **dst, t_list **src, size_t capacity)
+static int     copy_table(t_ivec *loaded, t_list **dst, t_list **src, size_t capacity)
 {
     const int   *data = loaded->data;
     const size_t length = loaded->length;
@@ -71,7 +71,7 @@ int     copy_table(t_ivec *loaded, t_list **dst, t_list **src, size_t capacity)
     return (length);
 }
 
-int     enlarge_table(t_ht *hashtable)
+int     ht_enlarge(t_ht *hashtable)
 {
     const float load_factor = (float)(hashtable->size + 1) / (float)hashtable->capacity;
     t_list      **resized;
