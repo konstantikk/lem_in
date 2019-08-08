@@ -19,7 +19,7 @@
 # include "get_next_line.h"
 # include "ft_printf.h"
 
-# define START_CAP 10
+# define START_CAP 20
 # define USE_GC 	  0
 
 typedef	struct		s_list
@@ -35,6 +35,13 @@ typedef	struct		s_vec
 	size_t			length;
 	size_t			capacity;
 }					t_vec;
+
+typedef struct      s_pvec
+{
+    void			**data;
+    size_t			length;
+    size_t			capacity;
+}                   t_pvec;
 
 typedef	struct		s_ivec
 {
@@ -124,12 +131,12 @@ int					ft_int_vec_popfront(t_ivec *vec);
 int					ft_int_vec_enlarge(t_ivec *vec);
 void				ft_int_vec_del(t_ivec **vec);
 
-t_vec				*ft_ptr_vec_init(void);
-int					ft_ptr_vec_enlarge(t_vec *vec);
-int					ft_ptr_vec_pushback(t_vec *vec, void *value);
-int					ft_ptr_vec_pushfront(t_vec *vec, void *value);
-void				*ft_ptr_vec_popfront(t_vec *vec);
-void				ft_ptr_vec_del(t_vec **vec, void (*del)(void**));
+t_pvec				*ft_ptr_vec_init(void);
+int					ft_ptr_vec_enlarge(t_pvec *vec);
+int					ft_ptr_vec_pushback(t_pvec *vec, void *value);
+int					ft_ptr_vec_pushfront(t_pvec *vec, void *value);
+void				*ft_ptr_vec_popfront(t_pvec *vec);
+void				ft_ptr_vec_del(t_pvec **vec, void (*del)(void**));
 
 unsigned long       ft_hash(unsigned char *str, int capacity);
 t_ht                *ft_ht_init(void);
@@ -143,8 +150,8 @@ int					ft_abs(int x);
 int					ft_atoi_base(const char *src, int src_base);
 void				ft_swap(int *x, int *y);
 
-t_vec				*ft_put_in_gc(void *value);
-void				find_and_del(t_vec *garbage, void *value);
+t_pvec				*ft_put_in_gc(void *value);
+void				find_and_del(t_pvec *garbage, void *value);
 char				*ft_find_word(const char *str, int i, char c);
 
 int					ft_printf(const char *restrict format, ...);

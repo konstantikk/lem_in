@@ -12,13 +12,13 @@
 
 #include "libft.h"
 
-int		ft_ptr_vec_pushback(t_vec *vec, void *value)
+int		ft_ptr_vec_pushback(t_pvec *vec, void *value)
 {
 	if (!vec)
 		return (-1);
 	if (ft_ptr_vec_enlarge(vec))
 	{
-		((void**)(vec->data))[vec->length++] = value;
+		vec->data[vec->length++] = value;
 		return (1);
 	}
 	return (0);

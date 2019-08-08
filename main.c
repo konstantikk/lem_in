@@ -27,7 +27,7 @@ void	debug(t_farm *farm)
 
 int 	main(int argc, char **argv)
 {
-/*	t_farm *farm;
+	t_farm *farm;
 	t_vec *flow;
 	int *array;
 	int fd = open(argv[1], O_RDONLY);
@@ -35,46 +35,31 @@ int 	main(int argc, char **argv)
 //	debug(farm);
 //	bfs(farm);
 //	dfs(farm);
-	if (dinic(farm) > 0)
+/*	if (dinic(farm) > 0)
 	{
 		//printf("AAA\n");
 		flow = get_flow(farm);
 		array = check_profit(farm, flow, farm->max_path);
 		let_the_flow_go(farm, flow, farm->ant_num, array);
 		//start
-	}
-	close(fd);*/
-    t_ht *hashtable = ft_ht_init();
-
-    insert_node(hashtable, create_node(ft_strdup("1")));
-    insert_node(hashtable, create_node(ft_strdup("2")));
-    insert_node(hashtable, create_node(ft_strdup("3")));
-    insert_node(hashtable, create_node(ft_strdup("4")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-    insert_node(hashtable, create_node(ft_strdup("5")));
-
-
-    t_list **table = hashtable->table;
-    for (int i = 0; i < hashtable->capacity; i++)
+	}*/
+//	close(fd);
+    t_list **table = farm->nnodes->table;
+    for (int i = 0; i < farm->nnodes->loaded->length; i++)
     {
-        t_list *temp = table[i];
+        t_list *temp = table[farm->nnodes->loaded->data[i]];
         printf("index %d: ", i);
         while (temp)
         {
+            if (temp->content == farm->sstart)
+                printf("start: ");
+            else if (temp->content == farm->eend)
+                printf("end: ");
             printf("%s ", ((t_node*)temp->content)->name);
+            printf("links: ");
+            for (int j = 0; j < ((t_node*)temp->content)->links->length; j++)
+                 printf("%s ", ((t_node*)temp->content)->links->data[j]);
+            printf("\n");
             temp = temp->next;
         }
         printf("\n");

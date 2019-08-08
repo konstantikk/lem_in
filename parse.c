@@ -63,10 +63,16 @@ int 	read_node(t_farm *farm, char *buff)
 		//del
 		return (0);
 	}
-	ft_ptr_vec_pushback(in_node->links, create_link((int)farm->nodes->length + 1));
-	ft_ptr_vec_pushback(out_node->links, create_link((int)farm->nodes->length));
-	ft_ptr_vec_pushback(farm->nodes, in_node);
-	ft_ptr_vec_pushback(farm->nodes, out_node);
+	///old version
+//	ft_ptr_vec_pushback(in_node->links, create_link((int)farm->nodes->length + 1));
+//	ft_ptr_vec_pushback(out_node->links, create_link((int)farm->nodes->length));
+//	ft_ptr_vec_pushback(farm->nodes, in_node);
+//	ft_ptr_vec_pushback(farm->nodes, out_node);
+	///new version
+	ft_ptr_vec_pushback(in_node->links, out_node->name);
+	ft_ptr_vec_pushback(out_node->links, in_node->name);
+	ht_insert_node(farm->nnodes, in_node);
+	ht_insert_node(farm->nnodes, out_node);
 	return (1);
 }
 
@@ -80,28 +86,16 @@ int 	read_links(t_farm *farm, char *buff)
 	if (index1 == farm->start || index2 == farm->start)
 	{
 		if (index1 == farm->start)
-        {
 		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-      //      ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1));
-        }
 		else
-        {
-		//    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2));
-            ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
-        }
+		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
 	}
 	else if (index1 == farm->end || index2 == farm->end)
 	{
 	    if (index1 == farm->end)
-	    {
-           // ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1));
-        }
+	        ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1));
 	    else
-        {
-            ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2));
-           // ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
-        }
+	        ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2));
 	}
 	else
 	{
@@ -114,16 +108,24 @@ int 	read_links(t_farm *farm, char *buff)
 int		read_start_end(t_farm *farm, int fd, char **buff, int start_end)
 {
 	t_node *node;
+	//const char *name = ft_find_word(*buff, 0, ' ');
 
 	ft_memdel((void**)buff);
 	get_next_line(fd, buff);
 	if (!(node = create_node(ft_find_word(*buff, 0, ' '))))
 		return (0);
+	///old version
 	ft_ptr_vec_pushback(farm->nodes, node);
 	if (start_end == START)
-		farm->start = farm->nodes->length - 1;
+    {
+	    ///old version
+	    farm->start = farm->nodes->length - 1;
+    }
 	else if (start_end == END)
-		farm->end = farm->nodes->length - 1;
+    {
+	    ///old version
+	    farm->end = farm->nodes->length - 1;
+    }
 	return (1);
 }
 
@@ -134,8 +136,8 @@ t_farm	*parse(int fd)
 
 	if (!(farm = (t_farm*)ft_memalloc(sizeof(t_farm))))
 		return (NULL);
-	///farm->ant_num = 0;
 	farm->nodes = ft_ptr_vec_init();
+	farm->nnodes = ft_ht_init();
 	while (get_next_line(fd, &buff))
 	{
 		if (!farm->ant_num)
@@ -143,12 +145,21 @@ t_farm	*parse(int fd)
 		else if (buff[0] == '#')
 		{
 			if (!ft_strcmp(buff, "##start"))
-				read_start_end(farm, fd, &buff, START);
+            {
+			    new_read_start_end(farm, fd, &buff, START);
+//			    read_start_end(farm, fd, &buff, START);
+            }
 			else if (!ft_strcmp(buff, "##end"))
-				read_start_end(farm, fd, &buff, END);
+            {
+                new_read_start_end(farm, fd, &buff, END);
+//			    read_start_end(farm, fd, &buff, END);
+            }
 		}
 		else if (ft_strchr(buff, '-'))
-			read_links(farm, buff);
+        {
+            new_read_links(farm, buff);
+//		    read_links(farm, buff);
+        }
 		else
 			read_node(farm, buff);
 		ft_memdel((void**)&buff);

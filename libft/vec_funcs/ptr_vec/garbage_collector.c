@@ -12,9 +12,9 @@
 
 #include "libft.h"
 
-t_vec	*ft_put_in_gc(void *value)
+t_pvec	*ft_put_in_gc(void *value)
 {
-	static t_vec *garbage_collector = NULL;
+	static t_pvec *garbage_collector = NULL;
 
 	if (!garbage_collector)
 		if (!(garbage_collector = ft_ptr_vec_init()))

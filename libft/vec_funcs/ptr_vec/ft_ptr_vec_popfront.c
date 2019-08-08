@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-void	*ft_ptr_vec_popfront(t_vec *vec)
+void	*ft_ptr_vec_popfront(t_pvec *vec)
 {
 	void	*ret_val;
 	size_t	i;
@@ -21,10 +21,10 @@ void	*ft_ptr_vec_popfront(t_vec *vec)
 		return (NULL);
 	if (!vec->length || !vec->data)
 		return (NULL);
-	ret_val = ((void**)(vec->data))[0];
+	ret_val = vec->data[0];
 	i = -1;
 	while (++i < vec->length - 1)
-		((void**)(vec->data))[i] = ((void**)(vec->data))[i + 1];
+		vec->data[i] = vec->data[i + 1];
 	vec->length--;
 	return (ret_val);
 }

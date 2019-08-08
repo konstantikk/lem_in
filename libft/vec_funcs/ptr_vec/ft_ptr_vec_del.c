@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-void	ft_ptr_vec_del(t_vec **vec, void (*del)(void**))
+void	ft_ptr_vec_del(t_pvec **vec, void (*del)(void**))
 {
 	size_t i;
 
@@ -21,6 +21,6 @@ void	ft_ptr_vec_del(t_vec **vec, void (*del)(void**))
 		return ;
 	while (++i < (*vec)->length)
 		del(&(((void**)(*vec)->data)[i]));
-	ft_memdel(&((*vec)->data));
+	free((*vec)->data);
 	ft_memdel((void**)vec);
 }

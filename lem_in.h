@@ -32,7 +32,7 @@ typedef	struct	s_link
 
 typedef struct	s_path
 {
-	t_vec	*path;
+	t_pvec	*path;
 	int 	ants_onw;
 	int     fixed_ant_num;
 	int     last_occupied;
@@ -47,15 +47,18 @@ typedef struct  s_room
 typedef struct	s_node
 {
 	char	*name;
-	t_vec	*links;
+	t_pvec	*links;
 	int *flow;
 	int *capacity;
 }				t_node;
 
 typedef struct	s_farm
 {
-	t_vec	*stream;
-	t_vec	*nodes;
+	t_pvec	*stream;
+	t_ht    *nnodes;
+	t_node  *sstart;
+	t_node  *eend;
+	t_pvec	*nodes;
 	int 	*levels;
 	int 	*used;
 	int 	*parents;
@@ -82,6 +85,8 @@ t_node	*create_node(char *name);
 int     ht_enlarge(t_ht *hashtable);
 void    ht_delete(t_ht **hashtable);
 t_node  *ht_find_node(t_ht *hashtable, char *name);
+int		new_read_start_end(t_farm *farm, int fd, char **buff, int start_end);
+int 	new_read_links(t_farm *farm, char *buff);
 
 
 #endif

@@ -52,7 +52,6 @@ static int     copy_element(t_list **dst, t_node *node, size_t capacity, t_ivec 
 
 static int     copy_table(t_ivec *loaded, t_list **dst, t_list **src, size_t capacity)
 {
-    const int   *data = loaded->data;
     const size_t length = loaded->length;
     register int        i;
     t_list              *temp;
@@ -60,7 +59,7 @@ static int     copy_table(t_ivec *loaded, t_list **dst, t_list **src, size_t cap
     i = -1;
     while((size_t)++i < length)
     {
-        temp = src[data[i]];
+        temp = src[loaded->data[i]];
         while (temp)
         {
             if (!copy_element(dst, temp->content, capacity, loaded))
@@ -76,9 +75,8 @@ int     ht_enlarge(t_ht *hashtable)
     const float load_factor = (float)(hashtable->size + 1) / (float)hashtable->capacity;
     t_list      **resized;
     int         i;
-    int         *data;
 
-    printf("load_factor: %f\n", load_factor);
+   // printf("load_factor: %f\n", load_factor);
     if (load_factor >= 0.75)
     {
         if (!(resized = (t_list**)malloc(sizeof(t_list*) * (hashtable->capacity * 2))))

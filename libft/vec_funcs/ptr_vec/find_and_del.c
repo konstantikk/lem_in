@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-void		find_and_del(t_vec *garbage, void *value)
+void		find_and_del(t_pvec *garbage, void *value)
 {
 	size_t i;
 
@@ -20,9 +20,9 @@ void		find_and_del(t_vec *garbage, void *value)
 		return ;
 	i = -1;
 	while (++i < garbage->length)
-		if (((void**)garbage->data)[i] == value)
+		if (garbage->data[i] == value)
 		{
-			ft_memdel(&(((void**)garbage->data)[i]));
+			ft_memdel(&(garbage->data[i]));
 			break ;
 		}
 }

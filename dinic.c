@@ -185,36 +185,6 @@ void    delete_reverse_links(t_farm *farm)
     }
 }
 
-void    delete_node(t_vec *nodes, int index)
-{
-    ft_memdel(&((t_node*)(((void**)nodes->data)[index]))->links->data);
-    ft_memdel(((void**)&(((t_node*)(((void**)nodes->data)[index]))->links)));
-    delete_elem(nodes, index);
-
-}
-
-void    delete_dead_ends(t_farm *farm)
-{
-    int  flag = TRUE;
-    while (TRUE)
-    {
-        if (flag == FALSE)
-            break ;
-        flag = FALSE;
-        int i = -1;
-        while ((size_t)++i < farm->nodes->length)
-        {
-            if (!NODE(i)->links->length)
-            {
-                flag = TRUE;
-                delete_node(farm->nodes, i - 1);
-                delete_node(farm->nodes, i);
-                i = -1;
-            }
-        }
-    }
-}
-
 int 	dinic(t_farm *farm)
 {
 	int max_flow = 0;

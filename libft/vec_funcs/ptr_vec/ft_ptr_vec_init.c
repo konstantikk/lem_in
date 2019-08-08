@@ -12,11 +12,11 @@
 
 #include "libft.h"
 
-t_vec	*ft_ptr_vec_init(void)
+t_pvec	*ft_ptr_vec_init(void)
 {
-	t_vec *vec;
+	t_pvec *vec;
 
-	vec = (t_vec*)malloc(sizeof(t_vec));
+	vec = (t_pvec*)malloc(sizeof(t_pvec));
 	if (vec)
 	{
 		if (!(vec->data = (void**)malloc(sizeof(void*) * START_CAP)))

@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int		ft_ptr_vec_enlarge(t_vec *vec)
+int		ft_ptr_vec_enlarge(t_pvec *vec)
 {
 	void	*temp;
 

@@ -19,6 +19,6 @@ FILE(GLOB hashtable ./libft/hashtable/*.c)
 
 include_directories( ./libft/includes)
 
-add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} ${hashtable} ${lst_func} dinic.c flow.c let_the_flow_go.c insert_node.c enlarge_table.c)
+add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} ${hashtable} ${lst_func} dinic.c flow.c let_the_flow_go.c insert_node.c enlarge_table.c find_node.c reading_data.c)
 
 target_link_libraries(lem_in ~/lem_in/libft/libft.a)
