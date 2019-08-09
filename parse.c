@@ -45,9 +45,7 @@ t_farm	*parse(int fd)
                 read_start_end(farm, fd, &buff, END);
 		}
 		else if (ft_strchr(buff, '-'))
-        {
-		    //read_links(farm, buff);
-        }
+		    read_links(farm, buff);
 		else
 			read_node(farm, buff);
 		ft_memdel((void**)&buff);
