@@ -25,6 +25,33 @@ t_node	*create_node(char *name)
 	return (node);
 }
 
+static int  dec_check(char c, t_farm **farm)
+{
+     if (c >= '0' && c <= '9')
+         return (c - '0');
+     finish_him(farm);
+     return (-1);
+}
+
+int		safe_atoi(const char *src, t_farm **farm)
+{
+    int result;
+    int sign;
+
+    result = 0;
+    sign = 1;
+    while (*src == 32 || (*src >= 9 && *src <= 13))
+        src++;
+    if (*src == '+')
+    {
+        *src++;
+        sign *= 1;
+    }
+    while (*src >= '0' && *src <= '9')
+        result = result * 10 + dec_check(*src++, farm);
+    return (result * sign);
+}
+
 t_farm	*parse(int fd)
 {
 	t_farm	*farm;
@@ -36,18 +63,18 @@ t_farm	*parse(int fd)
 	while (get_next_line(fd, &buff))
 	{
 		if (!farm->ant_num)
-			farm->ant_num = ft_atoi(buff);
+			farm->ant_num = safe_atoi(buff, &farm);
 		else if (buff[0] == '#')
 		{
 			if (!ft_strcmp(buff, "##start"))
-			    read_start_end(farm, fd, &buff, START);
+			    read_start_end(&farm, fd, &buff, START);
 			else if (!ft_strcmp(buff, "##end"))
-                read_start_end(farm, fd, &buff, END);
+                read_start_end(&farm, fd, &buff, END);
 		}
 		else if (ft_strchr(buff, '-'))
-		    read_links(farm, buff);
+		    read_links(&farm, buff);
 		else
-			read_node(farm, buff);
+			read_node(&farm, buff);
 		ft_memdel((void**)&buff);
 	}
 	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->size);

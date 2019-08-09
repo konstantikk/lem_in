@@ -82,9 +82,11 @@ t_node	*create_node(char *name);
 int     ht_enlarge(t_ht *hashtable);
 void    ht_delete(t_ht **hashtable);
 t_node  *ht_find_node(t_ht *hashtable, char *name);
-int		read_start_end(t_farm *farm, int fd, char **buff, int start_end);
-int 	read_links(t_farm *farm, char *buff);
-int 	read_node(t_farm *farm, char *buff);
+int		read_start_end(t_farm **farm, int fd, char **buff, int start_end);
+int 	read_links(t_farm **farm, char *buff);
+int 	read_node(t_farm **farm, char *buff);
+void    free_memory(t_farm **farm);
+void    finish_him(t_farm **farm);
 
 
 #endif

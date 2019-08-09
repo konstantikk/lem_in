@@ -25,7 +25,8 @@ int     ht_insert_node(t_ht *hashtable, t_node *node)
             if (!(hashtable->table[index] = ft_lstnew(NULL, 0)))
                 return (0);
             hashtable->table[index]->content = node;
-            ft_int_vec_pushback(hashtable->loaded, (int) index);
+            if (ft_int_vec_pushback(hashtable->loaded, (int) index) != 1)
+                return (0);
         } else {
             if (!(new = ft_lstnew(NULL, 0)))
                 return (0);
@@ -33,6 +34,7 @@ int     ht_insert_node(t_ht *hashtable, t_node *node)
             ft_lstadd(&hashtable->table[index], new);
         }
         hashtable->size++;
+        return (1);
     }
-    return (1);
+    return (0);
 }

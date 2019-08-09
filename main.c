@@ -12,6 +12,13 @@
 
 #include "lem_in.h"
 
+void    finish_him(t_farm **farm)
+{
+    write(2, "Error\n", 6);
+    free_memory(farm);
+    exit(-1);
+}
+
 void    free_memory(t_farm **farm) {
     t_farm *to_del;
 
