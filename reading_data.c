@@ -37,7 +37,7 @@ int 	read_node(t_farm **farm, char *buff)
 
     if (!(name = ft_find_word(buff, 0, ' ')))
         finish_him(farm);
-    if (ft_strchr(name, 'L') || ft_strchr(name, '-'))
+    if (name[0] == 'L' || ft_strchr(name, '-'))
     {
         ft_memdel((void**)&name);
         finish_him(farm);
@@ -75,7 +75,7 @@ int		read_start_end(t_farm **farm, int fd, char **buff, int start_end)
     get_next_line(fd, buff);
     if (!(name = ft_find_word(*buff, 0, ' ')))
         finish_him(farm);
-    if (ft_strchr(name, 'L') || ft_strchr(name, '-'))
+    if (name[0] == 'L' || ft_strchr(name, '-'))
     {
         ft_memdel((void**)&name);
         finish_him(farm);
