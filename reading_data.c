@@ -12,7 +12,28 @@
 
 #include "lem_in.h"
 
-int		new_read_start_end(t_farm *farm, int fd, char **buff, int start_end)
+int 	read_node(t_farm *farm, char *buff)
+{
+    t_node	*in_node;
+    t_node	*out_node;
+    char 	*name;
+
+    name = ft_find_word(buff, 0, ' ');
+    if (!(in_node = create_node(ft_strjoin("L", name))))
+        return (0);
+    if (!(out_node = create_node(name)))
+    {
+        //del
+        return (0);
+    }
+    ft_ptr_vec_pushback(in_node->links, ft_strdup(out_node->name));
+    ft_ptr_vec_pushback(out_node->links, ft_strdup(in_node->name));
+    ht_insert_node(farm->nodes, in_node);
+    ht_insert_node(farm->nodes, out_node);
+    return (1);
+}
+
+int		read_start_end(t_farm *farm, int fd, char **buff, int start_end)
 {
     t_node *node;
 
@@ -20,54 +41,40 @@ int		new_read_start_end(t_farm *farm, int fd, char **buff, int start_end)
     get_next_line(fd, buff);
     if (!(node = create_node(ft_find_word(*buff, 0, ' '))))
         return (0);
-    ft_ptr_vec_pushback(farm->nodes, node);
-    ht_insert_node(farm->nnodes, node);
+    ht_insert_node(farm->nodes, node);
     if (start_end == START)
-        farm->sstart = node;
+        farm->start = node;
     else if (start_end == END)
-        farm->eend = node;
+        farm->end = node;
     return (1);
 }
 
-int 	new_read_links(t_farm *farm, char *buff)
+int 	read_links(t_farm *farm, char *buff)
 {
     const char	*node_name1 = ft_find_word(buff, 0, '-');
-    const char	*node_name2 = ft_strsub(buff, ft_strlen(node_name1) + 1, ft_strlen(buff) - ft_strlen(node_name1) - 1);
-    const t_node *node1 = ht_find_node(farm->nnodes, (char*)node_name1);
-    const t_node *node2 = ht_find_node(farm->nnodes, (char*)node_name2);
+    const char	*node_name2 = ft_strsub(buff, ft_strlen(node_name1) + 1,
+            ft_strlen(buff) - ft_strlen(node_name1) - 1);
+    const t_node *node1 = ht_find_node(farm->nodes, (char*)node_name1);
+    const t_node *node2 = ht_find_node(farm->nodes, (char*)node_name2);
 
-    if (node1 == farm->sstart || node2 == farm->sstart)
+    if (node1 == farm->start || node2 == farm->start)
     {
-        if (node1 == farm->sstart)
-        {
-            ft_ptr_vec_pushback(node1->links, ft_strjoin("st_", (char*)node_name2));
-            //ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-        }
+        if (node1 == farm->start)
+            ft_ptr_vec_pushback(node1->links, ft_strjoin("L", (char*)node_name2));
         else
-        {
-            ft_ptr_vec_pushback(node2->links, ft_strjoin("st_", (char*)node_name1));
-            //ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
-        }
+            ft_ptr_vec_pushback(node2->links, ft_strjoin("L", (char*)node_name1));
     }
-    else if (node1 == farm->eend || node2 == farm->eend)
+    else if (node1 == farm->end || node2 == farm->end)
     {
-        if (node1 == farm->eend)
-        {
-            ft_ptr_vec_pushback(node2->links, (char*)node_name1);
-            //ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1));
-        }
+        if (node1 == farm->end)
+            ft_ptr_vec_pushback(node2->links, ((char*)node_name1));
         else
-        {
             ft_ptr_vec_pushback(node1->links, (char*)node_name2);
-            //ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2));
-        }
     }
     else
     {
-        ft_ptr_vec_pushback(node1->links, ft_strjoin("st_", (char*)node_name2));
-        ft_ptr_vec_pushback(node2->links, ft_strjoin("st_", (char*)node_name1));
-        //ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-        //ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
+        ft_ptr_vec_pushback(node1->links, ft_strjoin("L", (char*)node_name2));
+        ft_ptr_vec_pushback(node2->links, ft_strjoin("L", (char*)node_name1));
     }
     return (1);
 }

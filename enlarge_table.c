@@ -76,7 +76,6 @@ int     ht_enlarge(t_ht *hashtable)
     t_list      **resized;
     int         i;
 
-   // printf("load_factor: %f\n", load_factor);
     if (load_factor >= 0.75)
     {
         if (!(resized = (t_list**)malloc(sizeof(t_list*) * (hashtable->capacity * 2))))

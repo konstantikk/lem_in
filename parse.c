@@ -12,17 +12,6 @@
 
 #include "lem_in.h"
 
-int		find_index(t_farm *farm, char *name)
-{
-	int i;
-
-	i = -1;
-	while ((size_t)++i < farm->nodes->length)
-		if (!ft_strcmp(((t_node*)(((void**)farm->nodes->data)[i]))->name, name))
-			return (i);
-	return (-1);
-}
-
 t_node	*create_node(char *name)
 {
 	t_node *node;
@@ -36,99 +25,6 @@ t_node	*create_node(char *name)
 	return (node);
 }
 
-t_link	*create_link(int index)
-{
-	t_link	*link;
-
-	if (!(link = (t_link*)malloc(sizeof(t_link))))
-		return (NULL);
-	link->index = index;
-	link->capacity = 1;
-	link->flow = 0;
-	return (link);
-}
-
-int 	read_node(t_farm *farm, char *buff)
-{
-	t_node	*in_node;
-	t_node	*out_node;
-	char 	*name;
-
-	name = ft_find_word(buff, 0, ' ');
-	if (!(in_node =
-		create_node(ft_strjoin("st_", name))))
-		return (0);
-	if (!(out_node = create_node(name)))
-	{
-		//del
-		return (0);
-	}
-	///old version
-//	ft_ptr_vec_pushback(in_node->links, create_link((int)farm->nodes->length + 1));
-//	ft_ptr_vec_pushback(out_node->links, create_link((int)farm->nodes->length));
-//	ft_ptr_vec_pushback(farm->nodes, in_node);
-//	ft_ptr_vec_pushback(farm->nodes, out_node);
-	///new version
-	ft_ptr_vec_pushback(in_node->links, out_node->name);
-	ft_ptr_vec_pushback(out_node->links, in_node->name);
-	ht_insert_node(farm->nnodes, in_node);
-	ht_insert_node(farm->nnodes, out_node);
-	return (1);
-}
-
-int 	read_links(t_farm *farm, char *buff)
-{
-	const char	*node1 = ft_find_word(buff, 0, '-');
-	const char	*node2 = ft_strsub(buff, ft_strlen(node1) + 1, ft_strlen(buff) - ft_strlen(node1) - 1);
-	const int	index1 = find_index(farm, (char*)node1);
-	const int	index2 = find_index(farm, (char*)node2);
-
-	if (index1 == farm->start || index2 == farm->start)
-	{
-		if (index1 == farm->start)
-		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-		else
-		    ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
-	}
-	else if (index1 == farm->end || index2 == farm->end)
-	{
-	    if (index1 == farm->end)
-	        ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index2]))->links, create_link(index1));
-	    else
-	        ft_ptr_vec_pushback(((t_node *)(((void **)farm->nodes->data)[index1]))->links, create_link(index2));
-	}
-	else
-	{
-		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index1]))->links, create_link(index2 - 1));
-		ft_ptr_vec_pushback(((t_node*)(((void**)farm->nodes->data)[index2]))->links, create_link(index1 - 1));
-	}
-	return (1);
-}
-
-int		read_start_end(t_farm *farm, int fd, char **buff, int start_end)
-{
-	t_node *node;
-	//const char *name = ft_find_word(*buff, 0, ' ');
-
-	ft_memdel((void**)buff);
-	get_next_line(fd, buff);
-	if (!(node = create_node(ft_find_word(*buff, 0, ' '))))
-		return (0);
-	///old version
-	ft_ptr_vec_pushback(farm->nodes, node);
-	if (start_end == START)
-    {
-	    ///old version
-	    farm->start = farm->nodes->length - 1;
-    }
-	else if (start_end == END)
-    {
-	    ///old version
-	    farm->end = farm->nodes->length - 1;
-    }
-	return (1);
-}
-
 t_farm	*parse(int fd)
 {
 	t_farm	*farm;
@@ -136,8 +32,7 @@ t_farm	*parse(int fd)
 
 	if (!(farm = (t_farm*)ft_memalloc(sizeof(t_farm))))
 		return (NULL);
-	farm->nodes = ft_ptr_vec_init();
-	farm->nnodes = ft_ht_init();
+	farm->nodes = ft_ht_init();
 	while (get_next_line(fd, &buff))
 	{
 		if (!farm->ant_num)
@@ -145,29 +40,22 @@ t_farm	*parse(int fd)
 		else if (buff[0] == '#')
 		{
 			if (!ft_strcmp(buff, "##start"))
-            {
-			    new_read_start_end(farm, fd, &buff, START);
-//			    read_start_end(farm, fd, &buff, START);
-            }
+			    read_start_end(farm, fd, &buff, START);
 			else if (!ft_strcmp(buff, "##end"))
-            {
-                new_read_start_end(farm, fd, &buff, END);
-//			    read_start_end(farm, fd, &buff, END);
-            }
+                read_start_end(farm, fd, &buff, END);
 		}
 		else if (ft_strchr(buff, '-'))
         {
-            new_read_links(farm, buff);
-//		    read_links(farm, buff);
+		    //read_links(farm, buff);
         }
 		else
 			read_node(farm, buff);
 		ft_memdel((void**)&buff);
 	}
-	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->length);
-	farm->used = (int*)malloc(sizeof(int) * farm->nodes->length);
-	farm->parents = (int*)malloc(sizeof(int) * farm->nodes->length);
-	farm->stream = ft_ptr_vec_init();
+	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->size);
+	farm->used = (int*)malloc(sizeof(int) * farm->nodes->size);
+	farm->parents = (int*)malloc(sizeof(int) * farm->nodes->size);
+//	farm->stream = ft_ptr_vec_init();
 	farm->loss = ft_int_vec_init();
 	return (farm);
 }

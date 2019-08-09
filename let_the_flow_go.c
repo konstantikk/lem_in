@@ -16,7 +16,7 @@
 #define LINK(i, j) ((t_link*)((void**)((t_node*)nodes[i])->links->data)[j])
 #define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
 #define ROOM(i, j) ((t_room*)(((void**)((t_path*)(((void**)flow->data)[i]))->path->data)[j]))
-
+/*
 void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array)
 {
 	char *ants = (char*)malloc(sizeof(char) * ant_num);
@@ -75,4 +75,4 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array)
 
 }
 
-
+*/

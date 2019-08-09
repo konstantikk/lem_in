@@ -12,17 +12,34 @@
 
 #include "lem_in.h"
 
-void	debug(t_farm *farm)
-{
-	for (int i = 0; (size_t)i < farm->nodes->length; i++)
-	{
-		printf("%s\t", ((t_node*)(((void**)(farm->nodes->data))[i]))->name);
-		for (int j = 0; (size_t)j < ((t_node*)(((void**)(farm->nodes->data))[i]))->links->length; j++)
-			printf("|%d| ", ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->links->data)[j])->index);
-		printf("\n");
-	}
+void    free_memory(t_farm **farm) {
+    t_farm *to_del;
 
-	printf("\n%zu, %zu\n", farm->start, farm->end);
+    to_del = *farm;
+    ft_memdel((void**)&to_del->levels);
+    ft_memdel((void**)&to_del->used);
+    ft_memdel((void**)&to_del->parents);
+    ft_int_vec_del(&to_del->loss);
+    ht_delete(&to_del->nodes);
+    ft_memdel((void**)farm);
+}
+
+int     debug(t_farm *to_del)
+{
+    t_list **table = to_del->nodes->table;
+    for (int i = 0; i < to_del->nodes->loaded->length; i++) {
+        t_list *temp = table[to_del->nodes->loaded->data[i]];
+        printf("index %d\n", to_del->nodes->loaded->data[i]);
+        while (temp) {
+            printf("|%5s|->", ((t_node *) temp->content)->name);
+            printf("links: ");
+            for (int j = 0; j < ((t_node *) temp->content)->links->length; j++)
+                printf("|%s| ", ((t_node *) temp->content)->links->data[j]);
+            printf("\n");
+            temp = temp->next;
+        }
+        printf("\n");
+    }
 }
 
 int 	main(int argc, char **argv)
@@ -32,6 +49,8 @@ int 	main(int argc, char **argv)
 	int *array;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
+	debug(farm);
+	free_memory(&farm);
 //	debug(farm);
 //	bfs(farm);
 //	dfs(farm);
@@ -44,25 +63,5 @@ int 	main(int argc, char **argv)
 		//start
 	}*/
 //	close(fd);
-    t_list **table = farm->nnodes->table;
-    for (int i = 0; i < farm->nnodes->loaded->length; i++)
-    {
-        t_list *temp = table[farm->nnodes->loaded->data[i]];
-        printf("index %d: ", i);
-        while (temp)
-        {
-            if (temp->content == farm->sstart)
-                printf("start: ");
-            else if (temp->content == farm->eend)
-                printf("end: ");
-            printf("%s ", ((t_node*)temp->content)->name);
-            printf("links: ");
-            for (int j = 0; j < ((t_node*)temp->content)->links->length; j++)
-                 printf("%s ", ((t_node*)temp->content)->links->data[j]);
-            printf("\n");
-            temp = temp->next;
-        }
-        printf("\n");
-    }
 	return (0);
 }

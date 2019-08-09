@@ -55,18 +55,15 @@ typedef struct	s_node
 typedef struct	s_farm
 {
 	t_pvec	*stream;
-	t_ht    *nnodes;
-	t_node  *sstart;
-	t_node  *eend;
-	t_pvec	*nodes;
+	t_ht    *nodes;
+	t_node  *start;
+	t_node  *end;
+    t_ivec 	*loss;
 	int 	*levels;
 	int 	*used;
 	int 	*parents;
-	t_ivec 	*loss;
 	int		fixed;
 	int		ant_num;
-	int		start;
-	int		end;
 	int 	max_path;
 	int 	min_path;
 }				t_farm;
@@ -85,8 +82,9 @@ t_node	*create_node(char *name);
 int     ht_enlarge(t_ht *hashtable);
 void    ht_delete(t_ht **hashtable);
 t_node  *ht_find_node(t_ht *hashtable, char *name);
-int		new_read_start_end(t_farm *farm, int fd, char **buff, int start_end);
-int 	new_read_links(t_farm *farm, char *buff);
+int		read_start_end(t_farm *farm, int fd, char **buff, int start_end);
+int 	read_links(t_farm *farm, char *buff);
+int 	read_node(t_farm *farm, char *buff);
 
 
 #endif

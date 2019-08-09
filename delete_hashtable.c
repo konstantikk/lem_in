@@ -17,10 +17,12 @@ static void    del_elem(t_list **head)
     t_list *temp;
 
     temp = *head;
+
     while (temp)
     {
         *head = temp;
         ft_memdel((void**)&((t_node*)(temp->content))->name);
+        ft_ptr_vec_del(&(((t_node*)(temp->content))->links), ft_memdel);
         ft_memdel(&temp->content);
         temp = temp->next;
         ft_memdel((void**)head);
@@ -37,7 +39,7 @@ void    ht_delete(t_ht **hashtable)
     ht = *hashtable;
     i = -1;
     while (++i < length)
-        del_elem(&ht->table[data[i]]);
+        del_elem(&(ht->table[data[i]]));
     free(ht->table);
     ft_int_vec_del(&ht->loaded);
     ft_memdel((void**)hashtable);

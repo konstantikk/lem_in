@@ -15,7 +15,7 @@
 #define NODE(i) ((t_node*)(((void**)(farm->nodes->data))[i]))
 #define LINK(i, j) ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->links->data)[j])
 #define SUBSTREAM(i) ((t_sub_stream*)(((void**)farm->mainstream->data)[i]))
-
+/*
 int 	bfs(t_farm *farm)
 {
 	t_ivec	*q = ft_int_vec_init();
@@ -65,10 +65,6 @@ int 		ft_find_index(t_farm *farm, int parent,int val)
 	return (-1);
 }
 
-/**
- * creating array sizeof farm->fixed + 1 because we storing the last(end_node) as well
- *
- */
 void		add_path(t_farm *farm)
 {
 	int 	vertex = farm->end;
@@ -150,7 +146,7 @@ void	debug_dinic(t_farm *farm)
 		printf("\n");
 	}
 	printf("\n");
-	/*for (int i = 0; i < farm->mainstream->length; i++)
+	for (int i = 0; i < farm->mainstream->length; i++)
 	{
         int l = SUBSTREAM(i)->flow_size;
         printf("%d stream len:%d\n", i, l);
@@ -162,7 +158,7 @@ void	debug_dinic(t_farm *farm)
 			printf("\n");
 		}
 		printf("\n\n");
-	}*/
+	}
 }
 
 void    delete_elem(t_vec *vec, int index)
@@ -191,16 +187,16 @@ int 	dinic(t_farm *farm)
 	int flow;
 	static int fisrt_entry = FALSE;
 
-/*	bfs(farm);
+	bfs(farm);
 	delete_reverse_links(farm);
-*/
+
 	while (bfs(farm))
 	{
-	   /* if (!fisrt_entry)
+	    if (!fisrt_entry)
         {
 	        delete_reverse_links(farm);
 	        fisrt_entry = TRUE;
-        }*/
+        }
 		flow = dfs(farm);
 
 		while (flow)
@@ -214,4 +210,4 @@ int 	dinic(t_farm *farm)
 	}
 
 	return max_flow;
-}
+}*/
