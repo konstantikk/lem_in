@@ -5,6 +5,9 @@ from time import time
 
 valid = True
 flag = sys.argv[1]
+if flag in ('--help', '-h'):
+    os.system('./generator.dms --help')
+    sys.exit()
 test = 'lem_in_output.txt'
 test_file = 'lem_in_input.txt'
 os.system('./generator.dms %s > %s ' % (flag, test_file))
