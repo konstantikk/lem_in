@@ -2,10 +2,10 @@ import sys
 import os
 from time import time
 
-
+flags = ['-h', '--help', '--flow-one', '--flow-ten', '--flow-thousand', '--big', '--big-superposition']
 valid = True
 flag = sys.argv[1]
-if flag in ('--help', '-h'):
+if flag in ('--help', '-h') or flag not in flags:
     os.system('./generator.dms --help')
     sys.exit()
 test = 'lem_in_output.txt'
