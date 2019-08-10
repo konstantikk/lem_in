@@ -94,7 +94,105 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 	}
 	ft_int_vec_pushback(farm->loss, max_loss); ///array[min]
 	return (array);
+}
+
+
+t_vec    *get_flow(t_farm *farm)
+{
+	void **nodes = farm->nodes->data;
+	int		i = -1;
+	int		j;
+	int 	v;
+	t_path *path;
+	t_vec *flow;
+
+
+	flow = ft_ptr_vec_init();
+	while (++i < (int) NODE(farm->start)->links->length)
+	{
+		if ((LINK(farm->start, i)->flow == 1 && LINK(farm->start, i)->capacity == 1))
+		{
+			path = create_path();
+			v = LINK(farm->start, i)->index;
+			while (v != farm->end)
+			{
+				j = -1;
+				while (++j < (int)NODE(v)->links->length)
+				{
+					if (LINK(v, j)->flow == 1 && LINK(v, j)->capacity == 1)
+					{
+						if (ft_strncmp(NODE(v)->name, "st_", 3))
+							ft_ptr_vec_pushback(path->path, create_room(v));
+						v = LINK(v, j)->index;
+						break ;
+					}
+				}
+			}
+			ft_ptr_vec_pushback(path->path, create_room((int)farm->end));
+			//if ((int)path->path->length > farm->max_path)
+			///	farm->max_path = (int)path->path->length;
+			///else if ((int)path->path->length < farm->min_path)
+			//	farm->min_path = (int)path->path->length;
+			ft_ptr_vec_pushback(flow, path);
+		}
+	}
+	return (flow);
 }*/
+
+void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec *flow)
+{
+	t_path	*path;
+	register int i;
+	t_node *node;
+	t_farm *farm;
+	t_link *forward_link;
+
+	farm = *farm_ptr;
+	if (!(path = create_path()))
+		finish_him(farm_ptr);
+	node = link->ptr;
+	while (node != farm->end)
+	{
+		i = -1;
+		while ((size_t)++i < node->links->length)
+		{
+			forward_link = node->links->data[i];
+			if (forward_link->capacity == 1 && forward_link->flow == 1)
+			{
+				if (forward_link->name[0] == 'L')
+					ft_ptr_vec_pushback(path->path, create_room(node));
+				node = forward_link->ptr;
+				break ;
+			}
+		}
+	}
+	ft_ptr_vec_pushback(path->path, create_room((int)farm->end));
+	ft_ptr_vec_pushback(flow, path);
+}
+
+t_pvec	*ft_get_flow(t_farm **farm_ptr)
+{
+	register int i;
+	///
+	t_pvec	*flow;
+	t_farm *farm;
+	t_link	*link;
+
+	farm = *farm_ptr;
+	i = -1;
+	if (!(flow = ft_ptr_vec_init()))
+		finish_him(farm_ptr);
+	while ((size_t)++i < farm->start->links->length)
+	{
+		link = farm->start->links->data[i];
+		if (link->flow == 1 && link->capacity == 1)
+		{
+			ft_recover_path(farm_ptr, link, flow);
+		}
+	}///sort flow
+	return (flow);
+}
+
 int 	ft_check_profit(t_farm *farm, t_vec *flow, t_ivec *ants_allocation)
 {
 	int		sum;
@@ -145,7 +243,7 @@ int 	ft_release_flow(t_farm **farm_ptr)
 	}
 	if (!ft_check_profit())
 	{
-		ft_decrease_flow_size(farm, flow, ants_allocation);
+		ft_decrease_flow_size(farm_ptr, flow, ants_allocation);
 		return (0);
 	}
 	/*if (loss->length == 1 || (loss->length > 1 &&
@@ -156,7 +254,7 @@ int 	ft_release_flow(t_farm **farm_ptr)
 	}*/
 	if (loss->length > 1 && loss->data[loss->length - 2] < loss->data[loss->length - 1])
 	{
-		ft_decrease_flow_size(farm, flow, ants_allocation);
+		ft_decrease_flow_size(farm_ptr, flow, ants_allocation);
 		return (0);
 	}
 	ft_int_vec_del(&ants_allocation);
