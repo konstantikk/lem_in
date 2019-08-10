@@ -32,13 +32,11 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 		if (farm->max_path == LENGTH(i))
 			array[i] = 0;
 		sum += array[i];
-	//	printf("(%d)", array[i]);
 	}
 	if (farm->ant_num < sum)
 		return (0);
 	additional_ants = (farm->ant_num - sum) / flow->length;
 	residual_ants = (farm->ant_num - sum) % flow->length;
-	//printf("\n%d  %d \n", additional_ants, residual_ants);
 	for (int i = 0; i < (int)flow->length; i++)
 	{
 		array[i] += additional_ants;
@@ -47,7 +45,6 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 			array[i] += 1;
 			residual_ants--;
 		}
-		///printf("%2d ", array[i]);
 	}
 	for (int i = 0; i < (int)flow->length; i++)
 	{
