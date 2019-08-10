@@ -17,6 +17,16 @@
 #define LENGTH(i) ((t_path*)(((void**)flow->data)[i]))->path->length
 #define ROOM(i, j) ((t_room*)(((void**)((t_path*)(((void**)flow->data)[i]))->path->data)[j]))
 
+int     check_ants(char *ants, int ant_num)
+{
+    int sum = 0;
+
+    for (int i = 0; i < ant_num; i++)
+       if (ants[i] == -1 || ants[i] == 0)
+           return (0);
+    return (1);
+}
+
 void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array)
 {
 	char *ants = (char*)malloc(sizeof(char) * ant_num);
@@ -31,11 +41,12 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array)
 	while (++i < ant_num)
 		ants[i] = -1;
 	int l = flow->length;
-	while (ants[ant_num - 1] != 1)
+	while (!check_ants(ants, ant_num))
 	{
 		i = 0;
 		while (i < flow->length && saved_index < ant_num)
 		{
+		    int ar = array[i];
 		    if (((t_path*)((void**)flow->data)[i])->fixed_ant_num == array[i])
             {
 		        i++;
@@ -72,7 +83,7 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array)
             }
 		}
 	}
-
+    printf("\n");
 }
 
 
