@@ -72,7 +72,5 @@ if valid:
     print("\033[92m%s\033[0m" % "Valid output")
 print("time:", ("\033[92m%s\033[0m" if timer < 3 else "\033[91m%s\033[0m") %
       timer)
-print("steps:", ("\033[92m%s(%s)\033[0m" if steps_count - len(inp) <= 0 else "\033[91m%s(%s)\033[0m") %
+print("steps:", ("\033[92m%s(%s)\033[0m" if steps_count - len(inp) >= 0 else "\033[91m%s(%s)\033[0m") %
       (len(inp), steps_count))
-
-
