@@ -11,203 +11,170 @@
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-#define NODE(i) ((t_node*)(((void**)(farm->nodes->data))[i]))
-#define LINK(i, j) ((t_link*)((void**)((t_node*)((void**)(farm->nodes->data))[i])->links->data)[j])
-#define SUBSTREAM(i) ((t_sub_stream*)(((void**)farm->mainstream->data)[i]))
 /*
-int 	bfs(t_farm *farm)
+int		release_flow(t_farm *farm)
 {
-	t_ivec	*q = ft_int_vec_init();
-	static int flag = FALSE;
+	//void	**nodes = farm->nodes->data;
+	int		*array;
+	t_vec	*flow;
 
-	for (int i = 0; (size_t)i < farm->nodes->length; i++)
+	//printf("\nnew patch \n");
+	if (farm->ant_num == 1)
 	{
-		farm->levels[i] = -1;
-		farm->used[i] = FALSE;
+		flow = get_flow(farm);
+		//let_the_flow_go(farm, flow, farm->ant_num);
+		///start ant race
+		return (0);
 	}
-	farm->used[farm->start] = TRUE;
-	ft_int_vec_pushback(q, farm->start);
-	while (q->length)
+
+	flow = get_flow(farm);
+	array = check_profit(farm, flow, farm->max_path);
+	if (!array)
 	{
-		int	check_elem = ft_int_vec_popfront(q);
-		for (int i = 0; (size_t)i < NODE(check_elem)->links->length; i++)
+		///printf ("BBB\n");
+		array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
+		let_the_flow_go(farm, flow, farm->ant_num, array);
+		///start and race
+		return (0);
+	}
+	///printf("\n\n");
+	if (farm->loss->length == 1 || (farm->loss->length > 1 &&
+			farm->loss->data[farm->loss->length - 2] > farm->loss->data[farm->loss->length - 1]))
+	{
+		/// free array
+		//search continue
+		return (1);
+	}
+	else if (farm->loss->length > 1 &&
+			farm->loss->data[farm->loss->length - 2] < farm->loss->data[farm->loss->length - 1])
+	{
+		///free array
+		///	printf ("AAA\n");
+		array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
+		let_the_flow_go(farm, flow, farm->ant_num, array);
+		///start and race
+		return (0);
+	}
+	return (1);
+}
+
+int 	*check_profit(t_farm *farm, t_vec *flow, int max)
+{
+	int *array;
+	long long sum = 0;
+	long long additional_ants;
+	int residual_ants;
+	int max_loss = 0;
+
+	///array = (int *)ft_memalloc(sizeof(int) * flow->length);
+	for (int i = 0; i < (int)flow->length; i++)
+	{
+		array[i] = max - (int) LENGTH(i) + 1;/// flow->max_patch = ants_allocation[0]
+		if (farm->max_path == LENGTH(i))
+			array[i] = 0;
+		sum += array[i];
+	}
+	if (farm->ant_num < sum)
+		return (0);
+	additional_ants = (farm->ant_num - sum) / flow->length;
+	residual_ants = (farm->ant_num - sum) % flow->length;
+	for (int i = 0; i < (int)flow->length; i++)
+	{
+		array[i] += additional_ants;
+		if (residual_ants > 0)
 		{
-			if (!farm->used[LINK(check_elem, i)->index] && (LINK(check_elem, i)->flow != 1) )//|| LINK(check_elem, i)->f == -1))
-			{
-				farm->used[LINK(check_elem, i)->index] = TRUE;
-				ft_int_vec_pushback(q,LINK(check_elem, i)->index);
-				farm->levels[LINK(check_elem, i)->index] = farm->levels[check_elem] + 1;
-			}
+			array[i] += 1;
+			residual_ants--;
 		}
 	}
-	farm->fixed = farm->levels[farm->end];
-	if (!flag)
+	for (int i = 0; i < (int)flow->length; i++)
 	{
-		flag  = TRUE;
-		//fft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
+		if (max_loss < LENGTH(i) + array[i] - 1)
+			max_loss = LENGTH(i) + array[i] - 1;
 	}
-	return (farm->levels[farm->end] != -1);
-}
-
-int 		min_fl(int val1, int val2)
+	ft_int_vec_pushback(farm->loss, max_loss); ///array[min]
+	return (array);
+}*/
+int 	ft_check_profit(t_farm *farm, t_vec *flow, t_ivec *ants_allocation)
 {
-	if (val1 < val2)
-		return val1;
-	return val2;
-}
+	int		sum;
+	int 	addition_ants;
+	int 	residual_ants;
+	int 	max_loss;//???
+	int 	i;
 
-int 		ft_find_index(t_farm *farm, int parent,int val)
-{
-	for (int i = 0; i < NODE(parent)->links->length; i++)
-		if (LINK(parent, i)->index == val)
-			return (i);
-	return (-1);
-}
-
-void		add_path(t_farm *farm)
-{
-	int 	vertex = farm->end;
-	///int 	j = farm->fixed;
-	//int 	*path = (int*)malloc(sizeof(int) * farm->fixed + 1);
-
-
-	while (vertex != farm->start)
+	sum = 0;
+	i = -1;
+	while ((size_t)++i < ants_allocation->length)
 	{
-
-        if (!ft_strncmp(NODE(vertex)->name, "st_", 3) || vertex == farm->end)
-        {
-            if (ft_find_index(farm, vertex, farm->parents[vertex]) == -1)
-			{
-            	ft_ptr_vec_pushback(NODE(vertex)->links, create_link(farm->parents[vertex]));
-				LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 0;
-				LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->flow = -1;
-			}
-            //LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
-			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->flow = 1;
-        }
-        else
-        {
-            //LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->capacity = 0;
-			LINK(farm->parents[vertex], ft_find_index(farm, farm->parents[vertex], vertex))->flow = 1;
-			//LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->capacity = 1;
-            LINK(vertex, ft_find_index(farm, vertex, farm->parents[vertex]))->flow = -1;
-        }
-		vertex = farm->parents[vertex];
+		ants_allocation->data[i] =
 	}
-    ///SUBSTREAM(farm->mainstream->length - 1)->flow_size = farm->fixed;
-	///ft_ptr_vec_pushback(SUBSTREAM(farm->mainstream->length - 1)->stream, path);
-///	printf("\n");
+
+
 }
 
-int 		dfs(t_farm *farm)
+void	ft_decrease_flow_size(t_farm **farm_ptr, t_pvec *flow, t_ivec *ants_allocation)
 {
-	int i;
-	t_ivec	*s = ft_int_vec_init();
-	int	node;
+	while (!ft_check_profit(*farm_ptr, flow, ants_allocation))
+		ft_int_vec_popfront(ants_allocation);
+	let_the_flow_go(*farm_ptr, flow, ants_allocation);
+}
 
-	ft_memset(farm->used, 0, sizeof(int) * farm->nodes->length);
-	farm->used[farm->start] = TRUE;
-	ft_int_vec_pushback(s, farm->start);
-	while (s->length > 0)
+int 	ft_release_flow(t_farm **farm_ptr)
+{
+	t_farm	*farm;
+	t_ivec 	*ants_allocation;
+	t_pvec	*flow;
+	t_ivec	*loss;
+
+	farm = *farm_ptr;
+	loss = farm->loss;
+	if (!(flow = ft_get_flow(farm_ptr)))
+	{    ///del flow
+		finish_him(farm_ptr);
+	}
+	if (farm->ant_num == 1)
 	{
-		node = ft_int_vec_popfront(s);
-		i = 0;
-		if (node == farm->end)
-		{
-			add_path(farm);
-			return (1);
-		}
-		while ((size_t)i < NODE(node)->links->length)
-		{
-			if (!farm->used[LINK(node, i)->index] && LINK(node, i)->flow != 1
-			&& farm->levels[LINK(node, i)->index] == farm->levels[node] + 1 &&
-			farm->levels[LINK(node, i)->index] <= farm->fixed) /// LINK(node, i)->capacity
-			{
-				int l = LINK(node, i)->index;
-				ft_int_vec_pushback(s, LINK(node, i)->index);
-				farm->used[LINK(node, i)->index] = TRUE;
-				farm->parents[LINK(node, i)->index] = node;
-			}
-			i++;
-		}
+		let_the_flow_go(farm, flow, farm->ant_num, NULL);
+		return (0);
 	}
-	//ft_ptr_vec_pushback(farm->mainstream, create_substream(farm));
-	return (0);
-}
-
-void	debug_dinic(t_farm *farm)
-{
-	for (int i = 0; i < farm->nodes->length; i++)
+	if (!(ants_allocation = ft_int_vec_init()))
 	{
-		printf("|index: %10d| |name: %10s| ", i ,NODE(i)->name);
-		for (int j = 0; j < NODE(i)->links->length; j++)
-			printf("|%d|->%d ", LINK(i, j)->index, LINK(i, j)->flow);
-		printf("\n");
+		//del flow
+		finish_him(farm_ptr);
 	}
-	printf("\n");
-	for (int i = 0; i < farm->mainstream->length; i++)
+	if (!ft_check_profit())
 	{
-        int l = SUBSTREAM(i)->flow_size;
-        printf("%d stream len:%d\n", i, l);
-		for (int j = 0; j <  SUBSTREAM(i)->stream->length; j++)
-		{
-		    printf("path: ");
-			for (int m = 0; m < SUBSTREAM(i)->flow_size; m++)
-				printf("%d->", *((int*)(((void**)SUBSTREAM(i)->stream->data)[j]) + m));
-			printf("\n");
-		}
-		printf("\n\n");
+		ft_decrease_flow_size(farm, flow, ants_allocation);
+		return (0);
 	}
+	/*if (loss->length == 1 || (loss->length > 1 &&
+	loss->data[loss->length - 2] > loss->data[loss->length - 1]))
+	{
+		///
+		return (1);
+	}*/
+	if (loss->length > 1 && loss->data[loss->length - 2] < loss->data[loss->length - 1])
+	{
+		ft_decrease_flow_size(farm, flow, ants_allocation);
+		return (0);
+	}
+	ft_int_vec_del(&ants_allocation);
+	return (1);
+
 }
 
-void    delete_elem(t_vec *vec, int index)
+int		ft_dinic(t_farm **farm)
 {
-    ft_memdel(&((void**)vec->data)[index]);
-    for (int i = index; (size_t)i < vec->length - 1; i++)
-        ((void**)vec->data)[i] = ((void**)vec->data)[i + 1];
-    vec->length--;
-}
-
-void    delete_reverse_links(t_farm *farm)
-{
-    for (int i = 0; i < farm->nodes->length; i++) {
-        if (i == farm->start || !ft_strncmp(NODE(i)->name, "st_", 3))
-            continue ;
-        for (int j = 0; j < NODE(i)->links->length; j++)
-            if (farm->levels[i] > farm->levels[LINK(i, j)->index] && LINK(i, j)->index != i - 1) {
-                delete_elem(NODE(i)->links, j);
-            }
-    }
-}
-
-int 	dinic(t_farm *farm)
-{
-	int max_flow = 0;
 	int flow;
-	static int fisrt_entry = FALSE;
 
-	bfs(farm);
-	delete_reverse_links(farm);
-
-	while (bfs(farm))
+	while (ft_bfs(farm))
 	{
-	    if (!fisrt_entry)
-        {
-	        delete_reverse_links(farm);
-	        fisrt_entry = TRUE;
-        }
-		flow = dfs(farm);
-
+		flow = ft_dfs(farm);
 		while (flow)
-		{
-			max_flow += flow;
-			flow = dfs(farm);
-		}
-		//debug_dinic(farm);
-		if (!release_flow(farm)) ///check for flow contains 2path one size and 1 ant
+			flow = ft_dfs(farm);
+		if (!ft_release_flow(farm))
 			return (0);
 	}
-
-	return max_flow;
-}*/
+	return (1);
+}

@@ -22,7 +22,22 @@ t_node	*create_node(char *name)
 	node->links = ft_ptr_vec_init();
 	node->flow = NULL;
 	node->capacity = NULL;
+	node->level = -1;
+	node->used = FALSE;
 	return (node);
+}
+
+t_link	*create_link(char *name, t_ht *nodes)
+{
+	t_link *link;
+
+	if (!(link = (t_link*)malloc(sizeof(t_link))))
+		return (NULL);
+	link->name = name;
+	link->flow = 0;
+	link->ptr = ht_find_node(nodes, name);
+	link->capacity = 1;
+	return (link);
 }
 
 static int  dec_check(char c, t_farm **farm)
@@ -80,7 +95,7 @@ t_farm	*parse(int fd)
 	farm->levels = (int*)malloc(sizeof(int) * farm->nodes->size);
 	farm->used = (int*)malloc(sizeof(int) * farm->nodes->size);
 	farm->parents = (int*)malloc(sizeof(int) * farm->nodes->size);
-//	farm->stream = ft_ptr_vec_init();
+	farm->stream = ft_ptr_vec_init();
 	farm->loss = ft_int_vec_init();
 	return (farm);
 }

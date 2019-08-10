@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-void    safe_pushback(t_farm **farm, t_pvec *links, char *name)
+void    safe_pushback(t_farm **farm, t_pvec *links, t_link *name)
 {
     if (!name)
         finish_him(farm);
@@ -26,6 +26,17 @@ void    safe_insert(t_farm **farm, t_ht *nodes, t_node *node)
         finish_him(farm);
     if (!ht_insert_node(nodes, node))
         finish_him(farm);
+}
+
+t_link	*safe_create_link(t_farm **farm, char *name)
+{
+	t_link *link;
+
+	if (!name)
+		finish_him(farm);
+	if (!(link = create_link(name, (*farm)->nodes)))
+		finish_him(farm);
+	return (link);
 }
 
 int 	read_node(t_farm **farm, char *buff)
@@ -59,10 +70,10 @@ int 	read_node(t_farm **farm, char *buff)
         ft_memdel((void**)&sup_name);
         finish_him(farm);
     }
-    safe_pushback(farm, in_node->links, ft_strdup(out_node->name));
-    safe_pushback(farm, out_node->links, ft_strdup(in_node->name));
     safe_insert(farm, (*farm)->nodes, in_node);
     safe_insert(farm, (*farm)->nodes, out_node);
+	safe_pushback(farm, in_node->links, safe_create_link(farm ,ft_strdup(out_node->name)));
+	safe_pushback(farm, out_node->links, safe_create_link(farm, ft_strdup(in_node->name)));
     return (1);
 }
 
@@ -82,9 +93,9 @@ int		read_start_end(t_farm **farm, int fd, char **buff, int start_end)
     }
     safe_insert(farm, (*farm)->nodes, create_node(name));
     if (start_end == START)
-        (*farm)->start = node;
+        (*farm)->start = ht_find_node((*farm)->nodes, name);
     else if (start_end == END)
-        (*farm)->end = node;
+        (*farm)->end = ht_find_node((*farm)->nodes, name);
     return (1);
 }
 
@@ -105,21 +116,21 @@ int 	read_links(t_farm **farm, char *buff)
     if (node1 == (*farm)->start || node2 == (*farm)->start)
     {
         if (node1 == (*farm)->start)
-            safe_pushback(farm, node1->links, ft_strjoin("L", (char*)node_name2));
+            safe_pushback(farm, node1->links, safe_create_link(farm, ft_strjoin("L", (char*)node_name2)));
         else
-            safe_pushback(farm, node2->links, ft_strjoin("L", (char*)node_name1));
+            safe_pushback(farm, node2->links, safe_create_link(farm, ft_strjoin("L", (char*)node_name1)));
     }
     else if (node1 == (*farm)->end || node2 == (*farm)->end)
     {
         if (node1 == (*farm)->end)
-            safe_pushback(farm, node2->links, ((char*)node_name1));
+            safe_pushback(farm, node2->links, safe_create_link(farm, ((char*)node_name1)));
         else
-            safe_pushback(farm, node1->links, (char*)node_name2);
+            safe_pushback(farm, node1->links, safe_create_link(farm, (char*)node_name2));
     }
     else
     {
-        safe_pushback(farm, node1->links, ft_strjoin("L", (char*)node_name2));
-        safe_pushback(farm, node2->links, ft_strjoin("L", (char*)node_name1));
+        safe_pushback(farm, node1->links, safe_create_link(farm, ft_strjoin("L", (char*)node_name2)));
+        safe_pushback(farm, node2->links, safe_create_link(farm, ft_strjoin("L", (char*)node_name1)));
     }
     return (1);
 }

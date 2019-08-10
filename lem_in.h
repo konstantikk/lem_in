@@ -20,12 +20,17 @@ typedef enum e_values
 	FALSE,
 	TRUE,
 	START,
-	END
+	END,
+	BOTH,
+	USED
 }			t_values;
+
+typedef struct	s_node t_node;
 
 typedef	struct	s_link
 {
-	int		index;
+	char	*name;
+	t_node	*ptr;
 	int 	capacity;
 	int 	flow;
 }				t_link;
@@ -50,6 +55,9 @@ typedef struct	s_node
 	t_pvec	*links;
 	int *flow;
 	int *capacity;
+	int	level;
+	struct s_node *parent;
+	int used:1;
 }				t_node;
 
 typedef struct	s_farm
@@ -59,9 +67,6 @@ typedef struct	s_farm
 	t_node  *start;
 	t_node  *end;
     t_ivec 	*loss;
-	int 	*levels;
-	int 	*used;
-	int 	*parents;
 	int		fixed;
 	int		ant_num;
 	int 	max_path;
@@ -70,9 +75,12 @@ typedef struct	s_farm
 
 t_farm	*parse(int fd);
 int 	bfs(t_farm *farm);
+int		ft_bfs(t_farm **farm_ptr);
+int		ft_dfs(t_farm **farm_ptr);
 int 	dfs(t_farm *farm);
+int		ft_dinic(t_farm **farm);
 int 	dinic(t_farm *farm);
-t_link	*create_link(int index);
+t_link	*create_link(char *name, t_ht *nodes);
 int     release_flow(t_farm *farm);
 t_vec    *get_flow(t_farm *farm);
 int 	*check_profit(t_farm *farm, t_vec *flow, int max);
@@ -87,6 +95,8 @@ int 	read_links(t_farm **farm, char *buff);
 int 	read_node(t_farm **farm, char *buff);
 void    free_memory(t_farm **farm);
 void    finish_him(t_farm **farm);
+void	nullify(t_ht *nodes, int level_or_used);
+t_link	*safe_create_link(t_farm **farm, char *name);
 
 
 #endif

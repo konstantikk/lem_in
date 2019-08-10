@@ -38,10 +38,14 @@ int     debug(t_farm *to_del)
         t_list *temp = table[to_del->nodes->loaded->data[i]];
         printf("index %d\n", to_del->nodes->loaded->data[i]);
         while (temp) {
-            printf("|%5s|->", ((t_node *) temp->content)->name);
+            printf("|%5s %5p|->", ((t_node *) temp->content)->name, ((t_node *) temp->content));
             printf("links: ");
             for (int j = 0; j < ((t_node *) temp->content)->links->length; j++)
-                printf("|%s| ", ((t_node *) temp->content)->links->data[j]);
+			{
+            	t_link *link = (((t_node *) temp->content)->links->data[j]);
+            	if (link->capacity == 1 && link->flow == 1)
+            	printf("|name: %s capacity: %d flow: %d ptr: %p| ", link->name, link->capacity, link->flow, link->ptr);
+			}
             printf("\n");
             temp = temp->next;
         }
@@ -56,8 +60,9 @@ int 	main(int argc, char **argv)
 	int *array;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
+	ft_dinic(&farm);
 	debug(farm);
-	free_memory(&farm);
+//	free_memory(&farm);
 //	debug(farm);
 //	bfs(farm);
 //	dfs(farm);
