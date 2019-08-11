@@ -156,7 +156,7 @@ t_pvec	*ft_get_flow(t_farm **farm_ptr)
 		if (link->flow == 1 && link->capacity == 1)
 			ft_recover_path(farm_ptr, link, &flow);
 	}
-///sort flow
+    sort_flow(flow, flow->length, flow->length - 1);
 	return (flow);
 }
 
