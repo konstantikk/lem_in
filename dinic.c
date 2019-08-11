@@ -156,7 +156,7 @@ t_pvec	*ft_get_flow(t_farm **farm_ptr)
 		if (link->flow == 1 && link->capacity == 1)
 			ft_recover_path(farm_ptr, link, &flow);
 	}
-
+    sort_flow(flow, flow->length, flow->length - 1);
 	return (flow);
 }
 
@@ -174,7 +174,6 @@ int 	ft_check_profit(t_farm *farm, t_vec *flow, t_ivec *ants_allocation)
 	{
 		ants_allocation->data[i] =
 	}
-
 
 }
 
