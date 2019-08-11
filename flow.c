@@ -55,28 +55,6 @@ int 	*check_profit(t_farm *farm, t_vec *flow, int max)
 	return (array);
 }
 
-t_path    *create_path()
-{
-    t_path *path;
-
-    path = (t_path*)malloc(sizeof(t_path));
-    path->path = ft_ptr_vec_init();
-    path->ants_onw = 0;
-    path->last_occupied = 0;
-    path->fixed_ant_num = 0;
-    return (path);
-}
-
-t_room  *create_room(int node_num)
-{
-    t_room *room;
-
-    room = (t_room*)malloc(sizeof(t_room));
-    room->temp_ant = -1;
-    room->node_num = node_num;
-    return (room);
-}
-
 t_vec    *get_flow(t_farm *farm)
 {
 	void **nodes = farm->nodes->data;

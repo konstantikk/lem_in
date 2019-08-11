@@ -33,17 +33,24 @@ void	nullify(t_ht *nodes, int level_or_used)
 	}
 }
 
-static void	bfs_mark_link(t_ht *nodes, t_pvec *q, t_node *check_elem, int i)
+static void	bfs_mark_link(t_farm **farm_ptr, t_pvec **q, t_node *check_elem, int i)
 {
-	t_node *mark_node;
+    t_node *mark_node;
+    t_farm  *farm;
 	const t_link	*link = check_elem->links->data[i];
 
-	mark_node = ht_find_node(nodes, link->name);
+	farm = *farm_ptr;
+	mark_node = ht_find_node(farm->nodes, link->name);
 	if (mark_node->used == FALSE && link->flow != 1)
 	{
 		mark_node->used = TRUE;
 		mark_node->level = check_elem->level + 1;
-		ft_ptr_vec_pushback(q, mark_node);
+		if (ft_ptr_vec_pushback(*q, mark_node) != 1)
+        {
+		    free((*q)->data);
+		    ft_memdel((void**)q);
+		    finish_him(farm_ptr);
+        }
 	}
 }
 
@@ -61,7 +68,8 @@ int		ft_bfs(t_farm **farm_ptr)
 		finish_him(farm_ptr);
 	if (ft_ptr_vec_pushback(q, farm->start) != 1)
 	{
-		//del vec
+	    free(q->data);
+	    ft_memdel((void**)&q);
 		finish_him(farm_ptr);
 	}
 	while (q->length)
@@ -69,8 +77,10 @@ int		ft_bfs(t_farm **farm_ptr)
 		check_elem = ft_ptr_vec_popfront(q);
 		i = -1;
 		while ((size_t)++i < check_elem->links->length)
-			bfs_mark_link(farm->nodes, q, check_elem, i);
+			bfs_mark_link(farm_ptr, &q, check_elem, i);
 	}
-	farm->fixed = farm->end->level; //mark line
+	farm->fixed = farm->end->level;
+    free(q->data);
+    ft_memdel((void**)&q);
 	return (farm->end->level != -1);
 }

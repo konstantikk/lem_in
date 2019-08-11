@@ -139,41 +139,9 @@ t_vec    *get_flow(t_farm *farm)
 	return (flow);
 }*/
 
-void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec *flow)
-{
-	t_path	*path;
-	register int i;
-	t_node *node;
-	t_farm *farm;
-	t_link *forward_link;
-
-	farm = *farm_ptr;
-	if (!(path = create_path()))
-		finish_him(farm_ptr);
-	node = link->ptr;
-	while (node != farm->end)
-	{
-		i = -1;
-		while ((size_t)++i < node->links->length)
-		{
-			forward_link = node->links->data[i];
-			if (forward_link->capacity == 1 && forward_link->flow == 1)
-			{
-				if (forward_link->name[0] == 'L')
-					ft_ptr_vec_pushback(path->path, create_room(node));
-				node = forward_link->ptr;
-				break ;
-			}
-		}
-	}
-	ft_ptr_vec_pushback(path->path, create_room((int)farm->end));
-	ft_ptr_vec_pushback(flow, path);
-}
-
 t_pvec	*ft_get_flow(t_farm **farm_ptr)
 {
 	register int i;
-	///
 	t_pvec	*flow;
 	t_farm *farm;
 	t_link	*link;
@@ -186,10 +154,9 @@ t_pvec	*ft_get_flow(t_farm **farm_ptr)
 	{
 		link = farm->start->links->data[i];
 		if (link->flow == 1 && link->capacity == 1)
-		{
-			ft_recover_path(farm_ptr, link, flow);
-		}
-	}///sort flow
+			ft_recover_path(farm_ptr, link, &flow);
+	}
+
 	return (flow);
 }
 

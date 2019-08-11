@@ -19,18 +19,6 @@ void    finish_him(t_farm **farm)
     exit(-1);
 }
 
-void    free_memory(t_farm **farm) {
-    t_farm *to_del;
-
-    to_del = *farm;
-    ft_memdel((void**)&to_del->levels);
-    ft_memdel((void**)&to_del->used);
-    ft_memdel((void**)&to_del->parents);
-    ft_int_vec_del(&to_del->loss);
-    ht_delete(&to_del->nodes);
-    ft_memdel((void**)farm);
-}
-
 int     debug(t_farm *to_del)
 {
     t_list **table = to_del->nodes->table;

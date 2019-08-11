@@ -45,8 +45,8 @@ typedef struct	s_path
 
 typedef struct  s_room
 {
-    int node_num;
-    int temp_ant;
+    char    *name;
+    int     temp_ant;
 }               t_room;
 
 typedef struct	s_node
@@ -62,7 +62,6 @@ typedef struct	s_node
 
 typedef struct	s_farm
 {
-	t_pvec	*stream;
 	t_ht    *nodes;
 	t_node  *start;
 	t_node  *end;
@@ -88,7 +87,6 @@ void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array);
 int     ht_insert_node(t_ht *hashtable, t_node *node);
 t_node	*create_node(char *name);
 int     ht_enlarge(t_ht *hashtable);
-void    ht_delete(t_ht **hashtable);
 t_node  *ht_find_node(t_ht *hashtable, char *name);
 int		read_start_end(t_farm **farm, int fd, char **buff, int start_end);
 int 	read_links(t_farm **farm, char *buff);
@@ -97,6 +95,12 @@ void    free_memory(t_farm **farm);
 void    finish_him(t_farm **farm);
 void	nullify(t_ht *nodes, int level_or_used);
 t_link	*safe_create_link(t_farm **farm, char *name);
-
+void    safe_pushback(t_farm **farm, t_pvec *links, void *elem);
+void    safe_insert(t_farm **farm, t_ht *nodes, t_node *node);
+t_path    *create_path(void);
+t_room  *create_room(char *name);
+void    del_path(void **elem);
+void    safe_room_adding(t_farm **farm_ptr, t_path **path_ptr, void *elem, t_pvec **flow);
+void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow);
 
 #endif

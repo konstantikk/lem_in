@@ -58,27 +58,51 @@ static void	ft_add_path(t_farm **farm_ptr)
 	}
 }
 
-static void	dfs_mark_link(t_farm *farm, t_pvec *q, t_node *check_elem, int i)
+static inline void	dfs_mark_link(t_farm **farm_ptr, t_pvec **q, t_node *check_elem, int i)
 {
 	t_node *mark_node;
+	t_farm  *farm;
 	const t_link *link = check_elem->links->data[i];
 
+	farm = *farm_ptr;
 	mark_node = ht_find_node(farm->nodes, link->name);
 	if (mark_node->used == FALSE && mark_node->level == check_elem->level + 1
 			&& link->flow != 1 && mark_node->level <= farm->fixed)
 	{
 		mark_node->used = TRUE;
 		mark_node->parent = check_elem;
-		ft_ptr_vec_pushback(q, mark_node);
+        if (ft_ptr_vec_pushback(*q, mark_node) != 1)
+        {
+            free((*q)->data);
+            ft_memdel((void**)q);
+            finish_him(farm_ptr);
+        }
 	}
+}
+
+static inline int cycle(t_farm **farm_ptr, t_pvec **q)
+{
+    t_node *check_elem;
+    t_farm *farm;
+    register int i;
+
+    farm = *farm_ptr;
+    check_elem = ft_ptr_vec_popfront(*q);
+    if (check_elem == farm->end)
+    {
+        ft_add_path(farm_ptr);
+        return (1);
+    }
+    i = -1;
+    while ((size_t)++i < check_elem->links->length)
+        dfs_mark_link(farm_ptr, q, check_elem, i);
+    return (0);
 }
 
 int		ft_dfs(t_farm **farm_ptr)
 {
 	t_pvec *q;
 	t_farm *farm;
-	t_node	*check_elem;
-	register int i;
 
 	farm = *farm_ptr;
 	nullify(farm->nodes, USED);
@@ -87,20 +111,14 @@ int		ft_dfs(t_farm **farm_ptr)
 		finish_him(farm_ptr);
 	if (ft_ptr_vec_pushback(q, farm->start) != 1)
 	{
-		//del
+		free(q->data);
+		ft_memdel((void**)&q);
 		finish_him(farm_ptr);
 	}
 	while (q->length)
-	{
-		check_elem = ft_ptr_vec_popfront(q);
-		if (check_elem == farm->end)
-		{
-			ft_add_path(farm_ptr);
-			return (1);
-		}
-		i = -1;
-		while ((size_t)++i < check_elem->links->length)
-			dfs_mark_link(farm, q, check_elem, i);
-	}
+	    if (cycle(farm_ptr, &q))
+	        return (1);
+    free(q->data);
+    ft_memdel((void**)&q);
 	return (0);
 }

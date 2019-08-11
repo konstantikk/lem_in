@@ -12,33 +12,6 @@
 
 #include "lem_in.h"
 
-void    safe_pushback(t_farm **farm, t_pvec *links, t_link *name)
-{
-    if (!name)
-        finish_him(farm);
-    if (ft_ptr_vec_pushback(links, name) != 1)
-        finish_him(farm);
-}
-
-void    safe_insert(t_farm **farm, t_ht *nodes, t_node *node)
-{
-    if (!node)
-        finish_him(farm);
-    if (!ht_insert_node(nodes, node))
-        finish_him(farm);
-}
-
-t_link	*safe_create_link(t_farm **farm, char *name)
-{
-	t_link *link;
-
-	if (!name)
-		finish_him(farm);
-	if (!(link = create_link(name, (*farm)->nodes)))
-		finish_him(farm);
-	return (link);
-}
-
 int 	read_node(t_farm **farm, char *buff)
 {
     t_node	*in_node;
