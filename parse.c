@@ -31,7 +31,7 @@ int		safe_atoi(const char *src, t_farm **farm)
         src++;
     if (*src == '+')
     {
-        *src++;
+        src++;
         sign *= 1;
     }
     while (*src >= '0' && *src <= '9')

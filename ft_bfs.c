@@ -15,7 +15,7 @@
 void	nullify(t_ht *nodes, int level_or_used)
 {
 	const int *data = nodes->loaded->data;
-	const size_t *len = nodes->loaded->length;
+	const size_t len = nodes->loaded->length;
 	register int i;
 	t_list		*temp;
 
