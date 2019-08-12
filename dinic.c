@@ -160,28 +160,76 @@ t_pvec	*ft_get_flow(t_farm **farm_ptr)
 	return (flow);
 }
 
-int 	ft_check_profit(t_farm *farm, t_vec *flow, t_ivec *ants_allocation)
+int 	ft_check_profit(t_farm *farm, t_pvec *flow, t_ivec *ants_allocation)
 {
 	int		sum;
 	int 	addition_ants;
 	int 	residual_ants;
-	int 	max_loss;//???
 	int 	i;
+	size_t	path_len;
+	const int 	max_path = (int)((t_path*)(flow->data[flow->length - 1]))->path->length;
+	int 	max_loss = 0;
 
 	sum = 0;
 	i = -1;
+	if (ants_allocation->length == 0)/// ants_allocation is null -> flow->lenth
+	{
+		while ((size_t)++i < flow->length)
+		{
+			path_len = max_path - ((t_path*)(flow->data[i]))->path->length  + 1;
+			ft_int_vec_pushback(ants_allocation, path_len);
+			sum += path_len;
+		}
+		if (farm->ant_num < sum)
+			return (0);
+		addition_ants = (farm->ant_num - sum) / flow->length;
+		residual_ants = (farm->ant_num - sum) % flow->length;
+
+	}
+	else
+	{
+		while ((size_t)++i < ants_allocation->length)
+		{
+			path_len = ants_allocation->data[ants_allocation->length]
+					- ((t_path *)(flow->data[i]))->path->length + 1;
+			ants_allocation->data[i] = path_len;
+			sum += path_len;
+		}
+		if (farm->ant_num < sum)
+			return (0);
+		addition_ants = (farm->ant_num - sum) / ants_allocation->length;
+		residual_ants = (farm->ant_num - sum) % ants_allocation->length;
+	}
+	 i = -1;
 	while ((size_t)++i < ants_allocation->length)
 	{
-		ants_allocation->data[i] =
+		ants_allocation->data[i] += addition_ants;
+		if (residual_ants-- > 0)
+			ants_allocation->data[i] += 1;
 	}
-
+/**	i = -1;
+	while ((size_t)++i < ants_allocation->length)
+	{
+		path_len = ((t_path*)(flow->data[i]))->path->length + ants_allocation->data[i] - 1;
+		printf("patch_len:%d\n", path_len);
+		if (max_loss < path_len)
+			max_loss = path_len;
+	}**/
+	ft_int_vec_pushback(farm->loss,((t_path*)(flow->data[0]))->path->length + ants_allocation->data[0] - 1);
+	return (1);
 }
 
 void	ft_decrease_flow_size(t_farm **farm_ptr, t_pvec *flow, t_ivec *ants_allocation)
 {
+	t_farm *farm = *farm_ptr;
 	while (!ft_check_profit(*farm_ptr, flow, ants_allocation))
 		ft_int_vec_popfront(ants_allocation);
-	let_the_flow_go(*farm_ptr, flow, ants_allocation);
+	printf("\nants_allocation:\n");
+	for (int i = 0; i < ants_allocation->length; i++)
+	{
+		printf("%d flow->len : %zu\n", ants_allocation->data[i], ((t_path *)(flow->data[i]))->path->length);
+	}
+	///let_the_flow_go(*farm_ptr, flow,(*farm_ptr)->ant_num, ants_allocation->data);
 }
 
 int 	ft_release_flow(t_farm **farm_ptr)
@@ -199,7 +247,7 @@ int 	ft_release_flow(t_farm **farm_ptr)
 	}
 	if (farm->ant_num == 1)
 	{
-		let_the_flow_go(farm, flow, farm->ant_num, NULL);
+		//let_the_flow_go(farm, flow, farm->ant_num, NULL);
 		return (0);
 	}
 	if (!(ants_allocation = ft_int_vec_init()))
@@ -207,7 +255,7 @@ int 	ft_release_flow(t_farm **farm_ptr)
 		//del flow
 		finish_him(farm_ptr);
 	}
-	if (!ft_check_profit())
+	if (!ft_check_profit(farm, flow, ants_allocation))
 	{
 		ft_decrease_flow_size(farm_ptr, flow, ants_allocation);
 		return (0);

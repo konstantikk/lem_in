@@ -44,12 +44,30 @@ int     debug(t_farm *to_del)
 int 	main(int argc, char **argv)
 {
 	t_farm *farm;
-	t_vec *flow;
-	int *array;
+	t_pvec *flow;
+	t_ivec 	*ants_allocation;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
-	ft_dinic(&farm);
-	debug(farm);
+	if (ft_dinic(&farm))
+	{
+		if (!(ants_allocation = ft_int_vec_init()))
+		{
+			//del flow
+			finish_him(&farm);
+		}
+		flow = ft_get_flow(&farm);
+		ft_check_profit(farm, flow,ants_allocation);
+		//let_the_flow_go()
+		printf("\nants_allocation:\n");
+		for (int i = 0; i < ants_allocation->length; i++)
+		{
+			printf("%d flow->len : %zu\n", ants_allocation->data[i], ((t_path *)(flow->data[i]))->path->length);
+		}
+
+	}
+	//for (int i = 0; i < farm->loss->length; i++)
+	//	printf("%d ", farm->loss->data[i]);
+//	debug(farm);
 //	free_memory(&farm);
 //	debug(farm);
 //	bfs(farm);

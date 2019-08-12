@@ -102,5 +102,7 @@ t_room  *create_room(char *name);
 void    del_path(void **elem);
 void    safe_room_adding(t_farm **farm_ptr, t_path **path_ptr, void *elem, t_pvec **flow);
 void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow);
-
+void    sort_flow(t_pvec *flow, size_t len, float step);
+t_pvec	*ft_get_flow(t_farm **farm_ptr);
+int 	ft_check_profit(t_farm *farm, t_pvec *flow, t_ivec *ants_allocation);
 #endif

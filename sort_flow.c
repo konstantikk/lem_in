@@ -31,7 +31,7 @@ void    sort_flow(t_pvec *flow, size_t len, float step)
     while ((int)step > 1)
     {
         i = -1;
-        while ((size_t)++i < len)
+        while ((size_t)++i + (int)step < len)
             if (((t_path*)flow->data[i])->path->length <
                     ((t_path*)flow->data[i + (int)step])->path->length)
                 swap_ptr(&flow->data[i], &flow->data[i + (int)step]);
@@ -43,10 +43,10 @@ void    sort_flow(t_pvec *flow, size_t len, float step)
         flag = 0;
         j = -1;
         while ((size_t)++j < len - i - 1)
-            if (((t_path*)flow->data[i])->path->length >
-                ((t_path*)flow->data[i + 1])->path->length)
+            if (((t_path*)flow->data[j])->path->length >
+                ((t_path*)flow->data[j + 1])->path->length)
             {
-                swap_ptr(&flow->data[i], &flow->data[i + 1]);
+                swap_ptr(&flow->data[j], &flow->data[j + 1]);
                 flag = 1;
             }
         if (!flag)
