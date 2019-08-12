@@ -24,7 +24,7 @@ t_ht    *ft_ht_init(void)
         ft_memdel((void**)&hashtable);
         return (NULL);
     }
-    if (!(hashtable->table = (t_list**)malloc(sizeof(t_list*) * START_CAP)))
+    if (!(hashtable->table = (t_list**)malloc(sizeof(t_list*) * HT_START_CAP)))
     {
         ft_int_vec_del(&hashtable->loaded);
         ft_memdel((void**)&hashtable);

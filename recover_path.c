@@ -45,7 +45,7 @@ void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow)
     node = link->ptr;
     while (node != farm->end)
        check_links(&node, &path, farm_ptr, flow);
-    safe_room_adding(farm_ptr, &path, create_room(farm->end->name), flow);
+    //safe_room_adding(farm_ptr, &path, create_room(farm->end->name), flow);
     if (ft_ptr_vec_pushback(*flow, path) != 1)
     {
         ft_ptr_vec_del(flow, del_path);
