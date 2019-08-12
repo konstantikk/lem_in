@@ -45,24 +45,21 @@ int 	main(int argc, char **argv)
 {
 	t_farm *farm;
 	t_pvec *flow;
-	t_ivec 	*ants_allocation;
+	int 	*ants_allocation;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
 	if (ft_dinic(&farm))
 	{
-		if (!(ants_allocation = ft_int_vec_init()))
+		if (!(ants_allocation = (int *)ft_memalloc(sizeof(int)*farm->len_flow)))
 		{
 			//del flow
 			finish_him(&farm);
 		}
 		flow = ft_get_flow(&farm);
-		ft_check_profit(farm, flow,ants_allocation);
-		//let_the_flow_go()
-		printf("\nants_allocation:\n");
-		for (int i = 0; i < ants_allocation->length; i++)
-		{
-			printf("%d flow->len : %zu\n", ants_allocation->data[i], ((t_path *)(flow->data[i]))->path->length);
-		}
+		if (!ft_check_profit(farm, flow, ants_allocation))
+			ft_decrease_flow_size(&farm, flow, ants_allocation);
+		let_the_flow_go(&farm, &flow, ants_allocation);
+
 
 	}
 	//for (int i = 0; i < farm->loss->length; i++)

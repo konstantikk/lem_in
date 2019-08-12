@@ -12,16 +12,16 @@
 
 #include "lem_in.h"
 
-void    put_ants_on_start(char *ants, int ant_num, t_pvec *flow, int *ants_allocation)
+void    put_ants_on_start(char *ants, t_farm *farm, t_pvec *flow, int *ants_allocation)
 {
     static int ant_index = 0;
     register int i;
-    const size_t len = flow->length;
+    const size_t len = farm->len_flow;
     t_room  *room;
     t_path  *path;
 
     i = -1;
-    while ((size_t)++i < len && ant_index < ant_num)
+    while ((size_t)++i < len && ant_index < farm->ant_num)
     {
         path = flow->data[i];
         if (ants_allocation)
@@ -45,7 +45,7 @@ void    one_step_towards_finish(char *ants, t_pvec *flow, int counter, t_farm *f
     int     flag;
 
     i = -1;
-    while ((size_t)++i < flow->length)
+    while ((size_t)++i < farm->len_flow)
     {
         path = flow->data[i];
         j = path->last_occupied + 1;
@@ -91,7 +91,7 @@ void    let_the_flow_go(t_farm **farm_ptr, t_pvec **flow, int *ants_allocation)
 
     while (farm->ants_check != farm->ant_num)
     {
-        put_ants_on_start(ants, farm->ant_num, *flow, ants_allocation);
+        put_ants_on_start(ants, farm, *flow, ants_allocation);
         printf("\n");
         one_step_towards_finish(ants, *flow, counter, farm);
     }
