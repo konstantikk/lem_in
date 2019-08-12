@@ -68,9 +68,9 @@ typedef struct	s_farm
     t_ivec 	*loss;
 	int		fixed;
 	int		ant_num;
-	int 	max_path;
-	int 	min_path;
+	size_t 	len_flow;
 	int     ants_check;
+
 }				t_farm;
 
 t_farm	*parse(int fd);
