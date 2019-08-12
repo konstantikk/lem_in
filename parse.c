@@ -47,6 +47,7 @@ t_farm	*parse(int fd)
 	if (!(farm = (t_farm*)ft_memalloc(sizeof(t_farm))))
 		return (NULL);
 	farm->nodes = ft_ht_init();
+	farm->ants_check = 0;
 	while (get_next_line(fd, &buff))
 	{
 		if (!farm->ant_num)
