@@ -68,9 +68,9 @@ typedef struct	s_farm
     t_ivec 	*loss;
 	int		fixed;
 	int		ant_num;
-	//int 	max_path;
-	///int 	min_path;
 	size_t 	len_flow;
+	int     ants_check;
+
 }				t_farm;
 
 t_farm	*parse(int fd);
@@ -84,7 +84,7 @@ t_link	*create_link(char *name, t_ht *nodes);
 int     release_flow(t_farm *farm);
 t_vec    *get_flow(t_farm *farm);
 int 	*check_profit(t_farm *farm, t_vec *flow, int max);
-void    let_the_flow_go(t_farm *farm, t_vec *flow, int ant_num, int *array);
+void    let_the_flow_go(t_farm **farm, t_pvec **flow, int *ants_allocation);
 int     ht_insert_node(t_ht *hashtable, t_node *node);
 t_node	*create_node(char *name);
 int     ht_enlarge(t_ht *hashtable);
