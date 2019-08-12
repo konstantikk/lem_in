@@ -57,12 +57,12 @@ int 	main(int argc, char **argv)
 		}
 		flow = ft_get_flow(&farm);
 		ft_check_profit(farm, flow,ants_allocation);
-		//let_the_flow_go()
-		printf("\nants_allocation:\n");
+		let_the_flow_go(&farm, &flow, ants_allocation->data);
+		/*printf("\nants_allocation:\n");
 		for (int i = 0; i < ants_allocation->length; i++)
 		{
 			printf("%d flow->len : %zu\n", ants_allocation->data[i], ((t_path *)(flow->data[i]))->path->length);
-		}
+		}*/
 
 	}
 	//for (int i = 0; i < farm->loss->length; i++)
