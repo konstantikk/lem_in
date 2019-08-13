@@ -17,10 +17,10 @@ void	ft_ptr_vec_del(t_pvec **vec, void (*del)(void**))
 	size_t i;
 
 	i = -1;
-	if (!(*vec)->data)
+	if (!(*vec)->start_data)
 		return ;
 	while (++i < (*vec)->length)
-		del(&((*vec)->data[i]));
-	free((*vec)->data);
+		del(&((*vec)->start_data[i]));
+	free((*vec)->start_data);
 	ft_memdel((void**)vec);
 }

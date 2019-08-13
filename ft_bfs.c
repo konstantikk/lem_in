@@ -80,7 +80,7 @@ int		ft_bfs(t_farm **farm_ptr)
 			bfs_mark_link(farm_ptr, &q, check_elem, i);
 	}
 	farm->fixed = farm->end->level;
-    free(q->data);
+    free(q->start_data);
     ft_memdel((void**)&q);
 	return (farm->end->level != -1);
 }

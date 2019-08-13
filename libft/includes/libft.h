@@ -40,6 +40,7 @@ typedef	struct		s_vec
 typedef struct      s_pvec
 {
     void			**data;
+    void            **start_data;
     size_t			length;
     size_t			capacity;
 }                   t_pvec;

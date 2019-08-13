@@ -118,7 +118,7 @@ int		ft_dfs(t_farm **farm_ptr)
 	while (q->length)
 	    if (cycle(farm_ptr, &q))
 	        return (1);
-    free(q->data);
+    free(q->start_data);
     ft_memdel((void**)&q);
 	return (0);
 }
