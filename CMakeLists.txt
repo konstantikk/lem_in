@@ -19,6 +19,6 @@ FILE(GLOB hashtable ./libft/hashtable/*.c)
 
 include_directories( ./libft/includes)
 
-add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} ${hashtable} ${lst_func} dinic.c flow.c let_the_flow_go.c insert_node.c enlarge_table.c find_node.c reading_data.c free_memory.c ft_bfs.c ft_dfs.c recover_path.c creations.c safe_creations.c sort_flow.c libft/vec_funcs/int_vec/ft_int_vec_popback.c libft/vec_funcs/ptr_vec/ft_ptr_vec_popback.c)
+add_executable(lem_in  main.c parse.c ${useful_func} ${ptr_vec_func} ${int_vec_func} ${str_func} ${hashtable} ${lst_func} dinic.c flow.c let_the_flow_go.c insert_node.c enlarge_table.c find_node.c reading_data.c free_memory.c ft_bfs.c ft_dfs.c recover_path.c creations.c safe_creations.c sort_flow.c libft/vec_funcs/int_vec/ft_int_vec_popback.c libft/vec_funcs/ptr_vec/ft_ptr_vec_popback.c libft/useful_funcs/gnl.c libft/vec_funcs/char_vec/ft_chr_vec_init.c libft/vec_funcs/char_vec/ft_chr_vec_pushback.c libft/vec_funcs/char_vec/ft_chr_vec_enlarge.c libft/vec_funcs/char_vec/ft_chr_vec_del.c)
 
 target_link_libraries(lem_in ~/lem_in/libft/libft.a)

@@ -98,7 +98,11 @@ RESOURCES = $(addprefix ./str_funcs/, ft_putchar.c \
 	ptr_vec/ft_ptr_vec_popback.c \
 	char_vec/ft_vec_enlarge.c \
 	char_vec/ft_vec_clear.c \
-	char_vec/ft_vec_init.c) \
+	char_vec/ft_vec_init.c \
+	char_vec/ft_chr_vec_pushback.c \
+	char_vec/ft_chr_vec_enlarge.c \
+	char_vec/ft_chr_vec_del.c \
+	char_vec/ft_chr_vec_init.c) \
 	$(addprefix ./ft_printf/, atoi_move.c \
 	clean_and_enlarge_vec.c \
 	extract_float_values.c \
