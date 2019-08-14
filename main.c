@@ -44,23 +44,19 @@ int     debug(t_farm *to_del)
 int 	main(int argc, char **argv)
 {
 	t_farm *farm;
-	t_pvec *flow;
-	int 	*ants_allocation;
+	t_flow *flow;
+
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
 	if (ft_dinic(&farm))
 	{
-		if (!(ants_allocation = (int *)ft_memalloc(sizeof(int)*farm->len_flow)))
-		{
-			//del flow
-			finish_him(&farm);
-		}
-		flow = ft_get_flow(&farm);
-		if (!ft_check_profit(farm, flow, ants_allocation))
-			ft_decrease_flow_size(&farm, flow, ants_allocation);
-		let_the_flow_go(&farm, &flow, ants_allocation);
-
-
+		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
+			flow = ft_return_previous_flow(farm);
+		else
+			flow = farm->all_flows->data[farm->all_flows->length - 1];//
+		//for (int i = 0; i < flow->len_flow; i++)
+		//	printf("%d ", flow->ants_allocation[i]);
+		let_the_flow_go(&farm, &flow, flow->ants_allocation);
 	}
 	//for (int i = 0; i < farm->loss->length; i++)
 	//	printf("%d ", farm->loss->data[i]);

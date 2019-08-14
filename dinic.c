@@ -139,12 +139,13 @@ t_vec    *get_flow(t_farm *farm)
 	return (flow);
 }*/
 
-t_pvec	*ft_get_flow(t_farm **farm_ptr)
+t_flow	*ft_get_flow(t_farm **farm_ptr)
 {
 	register int i;
 	t_pvec	*flow;
 	t_farm *farm;
 	t_link	*link;
+	t_flow	*temp_flow;
 
 	farm = *farm_ptr;
 	i = -1;
@@ -157,62 +158,72 @@ t_pvec	*ft_get_flow(t_farm **farm_ptr)
 			ft_recover_path(farm_ptr, link, &flow);
 	}
     sort_flow(flow, flow->length, flow->length - 1);
-	return (flow);
+	if (!(temp_flow = (t_flow *)malloc(sizeof(t_flow))))
+		finish_him(farm_ptr);
+	temp_flow->flow = flow;
+	temp_flow->len_flow = flow->length;
+	if (!(temp_flow->ants_allocation = (int *)ft_memalloc(sizeof(int) * flow->length)))
+	{
+		//del flow
+		finish_him(farm_ptr);
+	}
+	ft_ptr_vec_pushback(farm->all_flows, temp_flow);
+	return (temp_flow);
 }
 
-int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation)
+int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_flow)
 {
 	int		sum;
 	int 	addition_ants;
 	int 	residual_ants;
 	int 	i;
 	size_t	path_len;
-	const int 	max_path = (int)((t_path*)(flow->data[farm->len_flow - 1]))->path->length ;
+	const int 	max_path = (int)((t_path*)(flow->data[len_flow - 1]))->path->length ;
 
 	sum = 0;
 	i = -1;
-	while ((size_t)++i < farm->len_flow)
+	while ((size_t)++i < len_flow)
 	{
 		path_len = max_path - ((t_path*)(flow->data[i]))->path->length;
 		ants_allocation[i] = path_len;
 		sum += path_len;
+		if (farm->ant_num < sum)
+			return (0) ;
 	}
-	if (farm->ant_num < sum)
-		return (0);
-	addition_ants = (farm->ant_num - sum) / farm->len_flow;
-	residual_ants = (farm->ant_num - sum) % farm->len_flow;
-
+	//if (farm->ant_num < sum)
+		//return (0);
+	addition_ants = (farm->ant_num - sum) / len_flow;
+	residual_ants = (farm->ant_num - sum) % len_flow;
 	 i = -1;
-	while ((size_t)++i < farm->len_flow)
+	while ((size_t)++i < len_flow)
 	{
 		ants_allocation[i] += addition_ants;
 		if (residual_ants-- > 0)
-			ants_allocation[i] += 1;     ///speed ants
+			ants_allocation[i] += 1; ///speed ants
 	}
-
-	//printf("ants: %d sum: %d  %d\n", farm->ant_num, s, farm->ant_num - sum);
-	ft_int_vec_pushback(farm->loss, ((t_path*)(flow->data[0]))->path->length - 1 + ants_allocation[0] - 1) ;
+	ft_int_vec_pushback(farm->loss, ((t_path*)(flow->data[0]))->path->length - 1 + ants_allocation[0] - 1);
 	return (1);
 }
 
-void	ft_decrease_flow_size(t_farm **farm_ptr, t_pvec *flow, int *ants_allocation)
+t_flow		*ft_return_previous_flow(t_farm *farm)
 {
-	t_farm *farm = *farm_ptr;
-
-	while (!ft_check_profit(*farm_ptr, flow, ants_allocation))
+	const int 	len = (int)farm->all_flows->length;
+	//t_pvec	*all_f = farm->all_flows;
+	/**for (int i = 0; i < len; i++)
 	{
-		ft_memset(ants_allocation, 0, farm->len_flow);
-		farm->len_flow--;
-	}
+		int len_flow =  ((t_flow *)(all_f->data[i]))->len_flow;
+		printf("len: %d\n", len_flow);
+		for (int j = 0; j < len_flow; j++)
+			printf("%d ", ((t_flow *)(all_f->data[i]))->ants_allocation[j]);
+		printf("\n");
+	}**/
 
-	let_the_flow_go(farm_ptr, &flow, ants_allocation);
+	return (farm->all_flows->data[len - 2]);
 }
-
 int 	ft_release_flow(t_farm **farm_ptr)
 {
 	t_farm	*farm;
-	int 	*ants_allocation;
-	t_pvec	*flow;
+	t_flow	*flow;
 	t_ivec	*loss;
 
 	farm = *farm_ptr;
@@ -221,28 +232,52 @@ int 	ft_release_flow(t_farm **farm_ptr)
 	{    ///del flow
 		finish_him(farm_ptr);
 	}
-	farm->len_flow = flow->length;
 	if (farm->ant_num == 1)
 	{
-		let_the_flow_go(farm_ptr, &flow, NULL);
+		let_the_flow_go(farm_ptr, &(flow), NULL);
 		return (0);
 	}
-	if (!(ants_allocation = (int *)ft_memalloc(sizeof(int)*farm->len_flow)))
+	if (!ft_check_profit(farm, flow->flow, flow->ants_allocation, flow->len_flow))
 	{
-		//del flow
-		finish_him(farm_ptr);
-	}
-	if (!ft_check_profit(farm, flow, ants_allocation))
-	{
-		ft_decrease_flow_size(farm_ptr, flow, ants_allocation);
+		/*printf("now_flow:\n");
+		for (int i =0 ; i < flow->len_flow; i++)
+			printf("%-d\t", flow->ants_allocation[i]);
+		printf("\n");*/
+		flow = ft_return_previous_flow(farm);
+		/*printf("previous_flow:\n");
+		for (int i =0 ; i < flow->len_flow; i++)
+			printf("%+d\t", flow->ants_allocation[i]);
+		printf("\n");
+		 */
+	let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
-	if (loss->length > 1 && loss->data[loss->length - 2] < loss->data[loss->length - 1])
+	if (loss->length > 1 && loss->data[loss->length - 2] <= loss->data[loss->length - 1])
 	{
-		ft_decrease_flow_size(farm_ptr, flow, ants_allocation);
+		/*printf("now_flow:\n");
+		for (int i =0 ; i < flow->len_flow; i++)
+			printf("%-d\t", flow->ants_allocation[i]);
+		printf("\n");*/
+		flow = ft_return_previous_flow(farm);
+		/*printf("previous_flow:\n");
+		for (int i =0 ; i < flow->len_flow; i++)
+			printf("%+d\t", flow->ants_allocation[i]);
+		printf("\n");*/
+		let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
-	ft_memdel((void **)&ants_allocation);
+	/**t_pvec	*all_f = farm->all_flows;
+	const int 	len = (int)farm->all_flows->length;
+	for (int i = 0; i < len; i++)
+	{
+		int len_flow =  ((t_flow *)(all_f->data[i]))->len_flow;
+		t_flow *flow = (t_flow *)(all_f->data[i]);
+		//printf("len: %d\n", len_flow);
+		for (int j = 0; j < len_flow; j++)
+			printf("%zu (%d)\n", ((t_path*)(flow->flow->data[j]))->path->length , flow->ants_allocation[j]);
+		printf("\n");
+	}
+	printf("__________________________\n");**/
 	return (1);
 
 }

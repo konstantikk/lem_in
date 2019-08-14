@@ -12,18 +12,18 @@
 
 #include "lem_in.h"
 
-void    put_ants_on_start(char *ants, t_farm *farm, t_pvec *flow, int *ants_allocation)
+void    put_ants_on_start(char *ants, t_farm *farm, t_flow *flow_temp, int *ants_allocation)
 {
     static int ant_index = 0;
     register int i;
-    const size_t len = farm->len_flow;
+    const size_t len = flow_temp->len_flow;
     t_room  *room;
     t_path  *path;
 
     i = -1;
     while ((size_t)++i < len && ant_index < farm->ant_num)
     {
-        path = flow->data[i];
+        path = flow_temp->flow->data[i];
         if (ants_allocation)
             if (path->fixed_ant_num == ants_allocation[i])
                 continue ;
@@ -36,7 +36,7 @@ void    put_ants_on_start(char *ants, t_farm *farm, t_pvec *flow, int *ants_allo
     }
 }
 
-void    one_step_towards_finish(char *ants, t_pvec *flow, int counter, t_farm *farm)
+void    one_step_towards_finish(char *ants, t_flow *flow, int counter, t_farm *farm)
 {
     register int i;
     register int j;
@@ -45,9 +45,9 @@ void    one_step_towards_finish(char *ants, t_pvec *flow, int counter, t_farm *f
     int     flag;
 
     i = -1;
-    while ((size_t)++i < farm->len_flow)
+    while ((size_t)++i < flow->len_flow)
     {
-        path = flow->data[i];
+        path = flow->flow->data[i];
         j = path->last_occupied + 1;
         counter = path->ants_onw;
         flag = FALSE;
@@ -76,7 +76,7 @@ void    print_flow(t_pvec *flow)
 
 }
 
-void    let_the_flow_go(t_farm **farm_ptr, t_pvec **flow, int *ants_allocation)
+void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation)
 {
     char *ants;
     t_farm *farm;
@@ -85,7 +85,7 @@ void    let_the_flow_go(t_farm **farm_ptr, t_pvec **flow, int *ants_allocation)
     farm = *farm_ptr;
     if (!(ants = (char*)malloc(sizeof(char) * farm->ant_num)))
     {
-        ft_ptr_vec_del(flow, del_path);
+        ft_ptr_vec_del(&((*flow)->flow), del_path);
         finish_him(farm_ptr);
     }
 
