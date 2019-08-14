@@ -48,6 +48,7 @@ int 	main(int argc, char **argv)
 
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
+
 	if (ft_dinic(&farm))
 	{
 		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])

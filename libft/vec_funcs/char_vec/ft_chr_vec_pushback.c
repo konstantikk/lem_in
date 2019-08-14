@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ptr_vec_init.c                                  :+:      :+:    :+:   */
+/*   ft_chr_vec_pushback.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/18 18:00:37 by vlegros           #+#    #+#             */
-/*   Updated: 2019/05/18 18:00:37 by vlegros          ###   ########.fr       */
+/*   Created: 2019/08/13 23:47:58 by vlegros           #+#    #+#             */
+/*   Updated: 2019/08/13 23:47:58 by vlegros          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_pvec	*ft_ptr_vec_init(void)
+int		ft_chr_vec_pushback(t_cvec *vec, char *value)
 {
-	t_pvec *vec;
+    const size_t len = ft_strlen(value);
+    register size_t i;
 
-	vec = (t_pvec*)malloc(sizeof(t_pvec));
-	if (vec)
-	{
-		if (!(vec->data = (void**)malloc(sizeof(void*) * START_CAP)))
-		{
-			ft_memdel((void**)&vec);
-			return (NULL);
-		}
-        vec->start_data = vec->data;
-		vec->capacity = START_CAP;
-		vec->length = 0;
-	}
-	return (vec);
+    if (!vec || !value)
+        return (0);
+    if (ft_chr_vec_enlarge(vec, len))
+    {
+        i = -1;
+        while (++i < len)
+            vec->data[vec->length++] = value[i];
+        return (1);
+    }
+    return (0);
 }

@@ -16,7 +16,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 
-# define BUFF_SIZE 20
+# define BUFF_SIZE 5
 # define __DATA ((char*)v->data)
 # define DATA_TAIL ((char*)v->data_tail)
 

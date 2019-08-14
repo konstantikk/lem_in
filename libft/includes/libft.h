@@ -16,6 +16,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <gssapi.h>
 # include "get_next_line.h"
 # include "ft_printf.h"
 
@@ -40,9 +41,18 @@ typedef	struct		s_vec
 typedef struct      s_pvec
 {
     void			**data;
+    void            **start_data;
     size_t			length;
     size_t			capacity;
 }                   t_pvec;
+
+typedef struct      s_cvec
+{
+    char            *data;
+    char            *start_data;
+    size_t          length;
+    size_t          capacity;
+}                   t_cvec;
 
 typedef	struct		s_ivec
 {
@@ -141,6 +151,12 @@ void				*ft_ptr_vec_popfront(t_pvec *vec);
 void				ft_ptr_vec_del(t_pvec **vec, void (*del)(void**));
 void                *ft_ptr_vec_popback(t_pvec *vec);
 
+void                ft_chr_vec_del(t_cvec **vec_ptr);
+int                 ft_chr_vec_enlarge(t_cvec *vec, size_t len);
+t_cvec              *ft_chr_vec_init(void);
+int                 ft_chr_vec_pushback(t_cvec *vec, char *value);
+char                ft_chr_vec_popfront(t_cvec *vec);
+
 unsigned long       ft_hash(unsigned char *str, int capacity);
 t_ht                *ft_ht_init(void);
 
@@ -149,6 +165,7 @@ int					ft_vec_enlarge(t_vec *vec);
 void				ft_vec_clear(t_vec **vec);
 
 int					get_next_line(int fd, char **line);
+int				    gnl(int fd, char **line);
 int					ft_abs(int x);
 int					ft_atoi_base(const char *src, int src_base);
 void				ft_swap(int *x, int *y);

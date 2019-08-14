@@ -79,6 +79,7 @@ RESOURCES = $(addprefix ./str_funcs/, ft_putchar.c \
 	ft_find_word.c \
 	ft_del_twodem_arr.c \
 	ft_swap.c \
+	gnl.c \
 	get_next_line.c) \
 	$(addprefix ./vec_funcs/, int_vec/ft_int_vec_enlarge.c \
 	int_vec/ft_int_vec_pushback.c \
@@ -98,7 +99,12 @@ RESOURCES = $(addprefix ./str_funcs/, ft_putchar.c \
 	ptr_vec/ft_ptr_vec_popback.c \
 	char_vec/ft_vec_enlarge.c \
 	char_vec/ft_vec_clear.c \
-	char_vec/ft_vec_init.c) \
+	char_vec/ft_vec_init.c \
+	char_vec/ft_chr_vec_pushback.c \
+	char_vec/ft_chr_vec_enlarge.c \
+	char_vec/ft_chr_vec_del.c \
+	char_vec/ft_chr_vec_init.c \
+	char_vec/ft_chr_vec_popfront.c) \
 	$(addprefix ./ft_printf/, atoi_move.c \
 	clean_and_enlarge_vec.c \
 	extract_float_values.c \

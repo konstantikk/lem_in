@@ -48,7 +48,7 @@ t_farm	*parse(int fd)
 		return (NULL);
 	farm->nodes = ft_ht_init();
 	farm->ants_check = 0;
-	while (get_next_line(fd, &buff))
+	while (/*gnl(fd, &buff)*/get_next_line(fd, &buff))
 	{
 		if (!farm->ant_num)
 			farm->ant_num = safe_atoi(buff, &farm);
@@ -63,6 +63,7 @@ t_farm	*parse(int fd)
 		    read_links(&farm, buff);
 		else
 			read_node(&farm, buff);
+	    //printf("%s\n", buff);
 		ft_memdel((void**)&buff);
 	}
 	farm->loss = ft_int_vec_init();/// todo error

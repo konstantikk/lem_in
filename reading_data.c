@@ -55,7 +55,7 @@ int		read_start_end(t_farm **farm, int fd, char **buff, int start_end)
     t_node  *node;
     char    *name;
 
-    ft_memdel((void**)buff);
+    //ft_memdel((void**)buff);
     get_next_line(fd, buff);
     if (!(name = ft_find_word(*buff, 0, ' ')))
         finish_him(farm);
@@ -80,6 +80,10 @@ int 	read_links(t_farm **farm, char *buff)
     const t_node *node1 = node_name1 ? ht_find_node((*farm)->nodes, (char*)node_name1) : NULL;
     const t_node *node2 = node_name2 ? ht_find_node((*farm)->nodes, (char*)node_name2) : NULL;
 
+//    printf("node_name1: %s\n", node_name1);
+ //   printf("node_name2: %s\n", node_name1);
+  //  printf("node_ptr1: %s\n", node1);
+   // printf("node_ptr2: %s\n\n", node2);
     if (!node1 || !node2)
     {
         ft_memdel((void**)&node_name1);
