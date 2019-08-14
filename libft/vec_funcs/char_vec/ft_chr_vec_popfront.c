@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_chr_vec_popfront.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/04 20:06:02 by vlegros           #+#    #+#             */
-/*   Updated: 2018/12/22 16:41:10 by vlegros          ###   ########.fr       */
+/*   Created: 2019/08/14 17:28:46 by vlegros           #+#    #+#             */
+/*   Updated: 2019/08/14 17:28:46 by vlegros          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# include <fcntl.h>
-# include <unistd.h>
+char ft_chr_vec_popfront(t_cvec *vec)
+{
+    char ret_val;
 
-# define BUFF_SIZE 5
-# define __DATA ((char*)v->data)
-# define DATA_TAIL ((char*)v->data_tail)
-
-int		get_next_line(int fd, char **line);
-
-#endif
+    if (!vec)
+        return (-1);
+    if (!vec->length || !vec->data)
+        return (-1);
+    ret_val = vec->data[0];
+    vec->data++;
+    vec->length--;
+    vec->capacity--;
+    return (ret_val);
+}

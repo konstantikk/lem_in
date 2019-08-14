@@ -26,11 +26,11 @@ int		ft_chr_vec_enlarge(t_cvec *vec, size_t len)
             ft_memdel((void**)&vec->start_data);
             ft_memdel((void**)&vec);
             return (0);
-        }
-        vec->capacity *= 2;
-        ft_memcpy(vec->data, temp, sizeof(int) * vec->length);
-        ft_memdel((void**)&vec->start_data);
+        };
+        ft_memmove(vec->data, temp, sizeof(int) * vec->length);
+        //ft_memdel((void**)&vec->start_data);
         vec->start_data = vec->data;
+        vec->capacity *= 2;
     }
     return (1);
 }

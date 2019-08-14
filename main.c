@@ -48,6 +48,7 @@ int 	main(int argc, char **argv)
 	int 	*ants_allocation;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
+
 	if (ft_dinic(&farm))
 	{
 		if (!(ants_allocation = (int *)ft_memalloc(sizeof(int)*farm->len_flow)))
@@ -59,8 +60,6 @@ int 	main(int argc, char **argv)
 		if (!ft_check_profit(farm, flow, ants_allocation))
 			ft_decrease_flow_size(&farm, flow, ants_allocation);
 		let_the_flow_go(&farm, &flow, ants_allocation);
-
-
 	}
 	//for (int i = 0; i < farm->loss->length; i++)
 	//	printf("%d ", farm->loss->data[i]);

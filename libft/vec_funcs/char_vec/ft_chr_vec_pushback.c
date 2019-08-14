@@ -18,7 +18,7 @@ int		ft_chr_vec_pushback(t_cvec *vec, char *value)
     register size_t i;
 
     if (!vec || !value)
-        return (-1);
+        return (0);
     if (ft_chr_vec_enlarge(vec, len))
     {
         i = -1;
