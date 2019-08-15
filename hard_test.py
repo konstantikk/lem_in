@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 
 i = 0
 flags = ['-h', '--help', '--flow-one', '--flow-ten', '--flow-thousand', '--big', '--big-superposition']
@@ -11,4 +12,5 @@ test = 'lem_in_tests.py'
 while i <= 100:
     print ("\033[93m%s\033[0m" % i)
     os.system('python3 %s %s' % (test, flag))
+    time.sleep(2)
     i += 1
