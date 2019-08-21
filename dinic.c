@@ -11,133 +11,6 @@
 /* ************************************************************************** */
 
 #include "lem_in.h"
-/*
-int		release_flow(t_farm *farm)
-{
-	//void	**nodes = farm->nodes->data;
-	int		*array;
-	t_vec	*flow;
-
-	//printf("\nnew patch \n");
-	if (farm->ant_num == 1)
-	{
-		flow = get_flow(farm);
-		//let_the_flow_go(farm, flow, farm->ant_num);
-		///start ant race
-		return (0);
-	}
-
-	flow = get_flow(farm);
-	array = check_profit(farm, flow, farm->max_path);
-	if (!array)
-	{
-		///printf ("BBB\n");
-		array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
-		let_the_flow_go(farm, flow, farm->ant_num, array);
-		///start and race
-		return (0);
-	}
-	///printf("\n\n");
-	if (farm->loss->length == 1 || (farm->loss->length > 1 &&
-			farm->loss->data[farm->loss->length - 2] > farm->loss->data[farm->loss->length - 1]))
-	{
-		/// free array
-		//search continue
-		return (1);
-	}
-	else if (farm->loss->length > 1 &&
-			farm->loss->data[farm->loss->length - 2] < farm->loss->data[farm->loss->length - 1])
-	{
-		///free array
-		///	printf ("AAA\n");
-		array = check_profit(farm, flow,  find_previous_max(flow, farm->max_path));
-		let_the_flow_go(farm, flow, farm->ant_num, array);
-		///start and race
-		return (0);
-	}
-	return (1);
-}
-
-int 	*check_profit(t_farm *farm, t_vec *flow, int max)
-{
-	int *array;
-	long long sum = 0;
-	long long additional_ants;
-	int residual_ants;
-	int max_loss = 0;
-
-	///array = (int *)ft_memalloc(sizeof(int) * flow->length);
-	for (int i = 0; i < (int)flow->length; i++)
-	{
-		array[i] = max - (int) LENGTH(i) + 1;/// flow->max_patch = ants_allocation[0]
-		if (farm->max_path == LENGTH(i))
-			array[i] = 0;
-		sum += array[i];
-	}
-	if (farm->ant_num < sum)
-		return (0);
-	additional_ants = (farm->ant_num - sum) / flow->length;
-	residual_ants = (farm->ant_num - sum) % flow->length;
-	for (int i = 0; i < (int)flow->length; i++)
-	{
-		array[i] += additional_ants;
-		if (residual_ants > 0)
-		{
-			array[i] += 1;
-			residual_ants--;
-		}
-	}
-	for (int i = 0; i < (int)flow->length; i++)
-	{
-		if (max_loss < LENGTH(i) + array[i] - 1)
-			max_loss = LENGTH(i) + array[i] - 1;
-	}
-	ft_int_vec_pushback(farm->loss, max_loss); ///array[min]
-	return (array);
-}
-
-
-t_vec    *get_flow(t_farm *farm)
-{
-	void **nodes = farm->nodes->data;
-	int		i = -1;
-	int		j;
-	int 	v;
-	t_path *path;
-	t_vec *flow;
-
-
-	flow = ft_ptr_vec_init();
-	while (++i < (int) NODE(farm->start)->links->length)
-	{
-		if ((LINK(farm->start, i)->flow == 1 && LINK(farm->start, i)->capacity == 1))
-		{
-			path = create_path();
-			v = LINK(farm->start, i)->index;
-			while (v != farm->end)
-			{
-				j = -1;
-				while (++j < (int)NODE(v)->links->length)
-				{
-					if (LINK(v, j)->flow == 1 && LINK(v, j)->capacity == 1)
-					{
-						if (ft_strncmp(NODE(v)->name, "st_", 3))
-							ft_ptr_vec_pushback(path->path, create_room(v));
-						v = LINK(v, j)->index;
-						break ;
-					}
-				}
-			}
-			ft_ptr_vec_pushback(path->path, create_room((int)farm->end));
-			//if ((int)path->path->length > farm->max_path)
-			///	farm->max_path = (int)path->path->length;
-			///else if ((int)path->path->length < farm->min_path)
-			//	farm->min_path = (int)path->path->length;
-			ft_ptr_vec_pushback(flow, path);
-		}
-	}
-	return (flow);
-}*/
 
 t_flow	*ft_get_flow(t_farm **farm_ptr)
 {
@@ -208,15 +81,6 @@ int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_f
 t_flow		*ft_return_previous_flow(t_farm *farm)
 {
 	const int 	len = (int)farm->all_flows->length;
-	//t_pvec	*all_f = farm->all_flows;
-	/**for (int i = 0; i < len; i++)
-	{
-		int len_flow =  ((t_flow *)(all_f->data[i]))->len_flow;
-		printf("len: %d\n", len_flow);
-		for (int j = 0; j < len_flow; j++)
-			printf("%d ", ((t_flow *)(all_f->data[i]))->ants_allocation[j]);
-		printf("\n");
-	}**/
 
 	return (farm->all_flows->data[len - 2]);
 }
@@ -239,30 +103,13 @@ int 	ft_release_flow(t_farm **farm_ptr)
 	}
 	if (!ft_check_profit(farm, flow->flow, flow->ants_allocation, flow->len_flow))
 	{
-		/*printf("now_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%-d\t", flow->ants_allocation[i]);
-		printf("\n");*/
 		flow = ft_return_previous_flow(farm);
-		/*printf("previous_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%+d\t", flow->ants_allocation[i]);
-		printf("\n");
-		 */
 	let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
 	if (loss->length > 1 && loss->data[loss->length - 2] <= loss->data[loss->length - 1])
 	{
-		/*printf("now_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%-d\t", flow->ants_allocation[i]);
-		printf("\n");*/
 		flow = ft_return_previous_flow(farm);
-		/*printf("previous_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%+d\t", flow->ants_allocation[i]);
-		printf("\n");*/
 		let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
@@ -285,8 +132,11 @@ int 	ft_release_flow(t_farm **farm_ptr)
 int		ft_dinic(t_farm **farm)
 {
 	int flow;
-
-	while (ft_bfs(farm))
+	int i = 0;
+	printf("%d\n",i);
+	dijkstra(*farm);
+		//printf("%d\n",i++);
+/*	while (ft_bfs(farm))///dejkstra
 	{
 		flow = ft_dfs(farm);
 		while (flow)
@@ -294,5 +144,5 @@ int		ft_dinic(t_farm **farm)
 		if (!ft_release_flow(farm))
 			return (0);
 	}
-	return (1);
+	return (1);*/
 }

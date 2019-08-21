@@ -26,7 +26,10 @@ void	nullify(t_ht *nodes, int level_or_used)
 		while (temp)
 		{
 			if (level_or_used == BOTH)
-				((t_node*)(temp->content))->level = -1;
+			{
+				///((t_node*)(temp->content))->level = -1; //bfs
+				((t_node*)(temp->content))->level = 1000000; //for dijkstra
+			}
 			((t_node*)(temp->content))->used = FALSE;
 			temp = temp->next;
 		}
