@@ -26,7 +26,7 @@ t_node	*create_node(char *name)
     }
     node->flow = NULL;
     node->capacity = NULL;
-    node->level = -1;
+    node->level = 1000000;//-1
     node->used = FALSE;
     return (node);
 }
@@ -41,6 +41,7 @@ t_link	*create_link(char *name, t_ht *nodes)
     link->flow = 0;
     link->ptr = ht_find_node(nodes, name);
     link->capacity = 1;
+    link->weight = 1;//add for dijkstra
     return (link);
 }
 

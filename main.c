@@ -46,34 +46,21 @@ int 	main(int argc, char **argv)
 	t_farm *farm;
 	t_flow *flow;
 
-	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
 
 	if (ft_dinic(&farm))
-	{
-		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
+	{;}
+	/*	if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
 			flow = ft_return_previous_flow(farm);
 		else
-			flow = farm->all_flows->data[farm->all_flows->length - 1];//
-		//for (int i = 0; i < flow->len_flow; i++)
-		//	printf("%d ", flow->ants_allocation[i]);
+			flow = farm->all_flows->data[farm->all_flows->length - 1];
 		let_the_flow_go(&farm, &flow, flow->ants_allocation);
-	}
-	//for (int i = 0; i < farm->loss->length; i++)
-	//	printf("%d ", farm->loss->data[i]);
+	}*/
+
 //	debug(farm);
 //	free_memory(&farm);
 //	debug(farm);
-//	bfs(farm);
-//	dfs(farm);
-/*	if (dinic(farm) > 0)
-	{
-		//printf("AAA\n");
-		flow = get_flow(farm);
-		array = check_profit(farm, flow, farm->max_path);
-		let_the_flow_go(farm, flow, farm->ant_num, array);
-		//start
-	}*/
-//	close(fd);
+
+
 	return (0);
 }

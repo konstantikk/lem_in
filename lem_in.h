@@ -33,6 +33,7 @@ typedef	struct	s_link
 	t_node	*ptr;
 	int 	capacity;
 	int 	flow;
+	int		weight;
 }				t_link;
 
 typedef struct	s_path
@@ -57,7 +58,7 @@ typedef struct	s_node
 	int *capacity;
 	int	level;
 	struct s_node *parent;
-	int used:1;
+	int used;///
 }				t_node;
 
 typedef	struct	s_flow
@@ -81,16 +82,10 @@ typedef struct	s_farm
 }				t_farm;
 
 t_farm	*parse(int fd);
-int 	bfs(t_farm *farm);
 int		ft_bfs(t_farm **farm_ptr);
 int		ft_dfs(t_farm **farm_ptr);
-int 	dfs(t_farm *farm);
 int		ft_dinic(t_farm **farm);
-int 	dinic(t_farm *farm);
 t_link	*create_link(char *name, t_ht *nodes);
-int     release_flow(t_farm *farm);
-t_vec    *get_flow(t_farm *farm);
-int 	*check_profit(t_farm *farm, t_vec *flow, int max);
 void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation);
 int     ht_insert_node(t_ht *hashtable, t_node *node);
 t_node	*create_node(char *name);
@@ -114,4 +109,5 @@ void    sort_flow(t_pvec *flow, size_t len, float step);
 t_flow	*ft_get_flow(t_farm **farm_ptr);
 int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_flow);
 t_flow	*ft_return_previous_flow(t_farm *farm);
+int		dijkstra(t_farm *farm);
 #endif
