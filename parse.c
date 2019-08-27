@@ -63,7 +63,6 @@ t_farm	*parse(int fd)
 		    read_links(&farm, buff);
 		else
 			read_node(&farm, buff);
-	    //printf("%s\n", buff);
 		ft_memdel((void**)&buff);
 	}
 	farm->loss = ft_int_vec_init();/// todo error
