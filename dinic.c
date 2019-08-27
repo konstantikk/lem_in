@@ -131,10 +131,19 @@ int 	ft_release_flow(t_farm **farm_ptr)
 
 int		ft_dinic(t_farm **farm)
 {
-	int flow;
-	int i = 0;
-	printf("%d\n",i);
-	dijkstra(*farm);
+    int flow;
+    int i = 0;
+    printf("%d\n", i);
+
+    while (dijkstra(*farm))
+    {     //t_node *node = (*farm)->end;
+        ft_add_path(farm);
+}
+	/*while (node != (*farm)->start)
+    {
+	    printf("%s->", node->name);
+	    node = node->parent;
+    }*/
 		//printf("%d\n",i++);
 /*	while (ft_bfs(farm))///dejkstra
 	{

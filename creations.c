@@ -28,6 +28,7 @@ t_node	*create_node(char *name)
     node->capacity = NULL;
     node->level = 1000000;//-1
     node->used = FALSE;
+    node->parent = NULL;
     return (node);
 }
 

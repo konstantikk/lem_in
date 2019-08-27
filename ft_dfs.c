@@ -25,7 +25,7 @@ static t_link	*find_link(t_pvec *links, t_node *name)
 	return (NULL);
 }
 
-static void	ft_add_path(t_farm **farm_ptr)
+void	ft_add_path(t_farm **farm_ptr)
 {
 	t_node *node;
 	t_link *parent_link;
@@ -36,6 +36,7 @@ static void	ft_add_path(t_farm **farm_ptr)
 	node = farm->end;
 	while (node != farm->start)
 	{
+	    printf("%s->", node->name);
 		parent_link = find_link(node->links, node->parent);
 		child_link = find_link(node->parent->links, node);
 		if (node->name[0] == 'L' || node == farm->end)
@@ -56,6 +57,7 @@ static void	ft_add_path(t_farm **farm_ptr)
 		}
 		node = node->parent;
 	}
+	printf("\n");
 }
 
 static inline void	dfs_mark_link(t_farm **farm_ptr, t_pvec **q, t_node *check_elem, int i)
