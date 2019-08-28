@@ -111,4 +111,5 @@ int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_f
 t_flow	*ft_return_previous_flow(t_farm *farm);
 int		dijkstra(t_farm *farm);
 void	ft_add_path(t_farm **farm_ptr);
+void	dijkstra_potentials(t_farm *farm);
 #endif

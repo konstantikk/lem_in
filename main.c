@@ -49,13 +49,13 @@ int 	main(int argc, char **argv)
 	farm = parse(0);
 
 	if (ft_dinic(&farm))
-	{;}
-	/*	if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
+	{
+		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
 			flow = ft_return_previous_flow(farm);
 		else
-			flow = farm->all_flows->data[farm->all_flows->length - 1];
-		let_the_flow_go(&farm, &flow, flow->ants_allocation);
-	}*/
+			flow = farm->all_flows->data[farm->all_flows->length - 2];
+		//let_the_flow_go(&farm, &flow, flow->ants_allocation);
+	}
 
 //	debug(farm);
 //	free_memory(&farm);

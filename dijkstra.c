@@ -19,11 +19,41 @@ static void dijkstra_mark_link(t_farm *farm, t_node *check_elem, int i, int min)
 	const t_link	*link = check_elem->links->data[i];
 
 	mark_node = ht_find_node(farm->nodes, link->name);
-	if (link->flow != 1 && mark_node->level > link->weight + min)
+	if (link->flow != 1 && mark_node->level >= link->weight + min)
 	{
 		mark_node->level = link->weight + min;
 		mark_node->parent = check_elem;
 	}
+}
+
+void	dijkstra_potentials(t_farm *farm)
+{
+	const int *data = farm->nodes->loaded->data;
+	const size_t len = farm->nodes->loaded->length;
+	t_list		*temp;
+	register int i;
+
+	i = -1;
+	while ((size_t)++i < len)
+	{
+		temp = farm->nodes->table[data[i]];
+		while (temp)
+		{
+
+			int node_u = ((t_node*)(temp->content))->level;
+			for (int j = 0; j < ((t_node*)(temp->content))->links->length; j++)
+			{
+				t_link	*link = ((t_node*)(temp->content))->links->data[j];
+				t_node *node_v = ht_find_node(farm->nodes, link->name);
+				//printf("weight: %d\n", link->weight);
+				if (node_u < 1000000 && node_v->level < 1000000)
+					link->weight = link->weight + node_u - node_v->level + 1;
+			}
+			temp = temp->next;
+		}
+	}
+
+	//printf("len path:%d\n", farm->end->level);
 }
 
 int		dijkstra(t_farm *farm)

@@ -82,7 +82,7 @@ t_flow		*ft_return_previous_flow(t_farm *farm)
 {
 	const int 	len = (int)farm->all_flows->length;
 
-	return (farm->all_flows->data[len - 2]);
+	return (farm->all_flows->data[len - 2]);///////len -2
 }
 int 	ft_release_flow(t_farm **farm_ptr)
 {
@@ -104,16 +104,17 @@ int 	ft_release_flow(t_farm **farm_ptr)
 	if (!ft_check_profit(farm, flow->flow, flow->ants_allocation, flow->len_flow))
 	{
 		flow = ft_return_previous_flow(farm);
-	let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
+		//let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
 	if (loss->length > 1 && loss->data[loss->length - 2] <= loss->data[loss->length - 1])
 	{
 		flow = ft_return_previous_flow(farm);
-		let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
+		//let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
-	/**t_pvec	*all_f = farm->all_flows;
+
+	t_pvec	*all_f = farm->all_flows;
 	const int 	len = (int)farm->all_flows->length;
 	for (int i = 0; i < len; i++)
 	{
@@ -124,7 +125,8 @@ int 	ft_release_flow(t_farm **farm_ptr)
 			printf("%zu (%d)\n", ((t_path*)(flow->flow->data[j]))->path->length , flow->ants_allocation[j]);
 		printf("\n");
 	}
-	printf("__________________________\n");**/
+	printf("__________________________\n");
+
 	return (1);
 
 }
@@ -133,12 +135,18 @@ int		ft_dinic(t_farm **farm)
 {
     int flow;
     int i = 0;
-    printf("%d\n", i);
+    //printf("%d\n", i);
 
     while (dijkstra(*farm))
     {     //t_node *node = (*farm)->end;
         ft_add_path(farm);
-}
+		dijkstra_potentials(*farm);
+		if (!ft_release_flow(farm))
+			return (0);
+		//dijkstra_potentials(*farm);
+
+	}
+    return (1);
 	/*while (node != (*farm)->start)
     {
 	    printf("%s->", node->name);
