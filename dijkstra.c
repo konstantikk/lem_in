@@ -35,7 +35,7 @@ int		dijkstra(t_farm *farm)
 	t_node	*min_node;
 	int     min;
 
-	nullify(farm->nodes, USED);
+	nullify(farm->nodes, BOTH);
 	farm->start->level = 0;
 	for (int j = 0; j < len; j++)
     {
@@ -69,7 +69,7 @@ int		dijkstra(t_farm *farm)
 	        dijkstra_mark_link(farm, min_node, i, min);
         }
 	    if (min_node != farm->start)
-	     printf("child name: %s parent name: %s\n", min_node->name,  min_node->parent ? min_node->parent->name : NULL);
+	    /// printf("child name: %s parent name: %s\n", min_node->name,  min_node->parent ? min_node->parent->name : NULL);
         if (min_node == farm->end)
             return (1);
         else if (min == 100000)
