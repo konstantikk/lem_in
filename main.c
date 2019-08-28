@@ -51,9 +51,16 @@ int 	main(int argc, char **argv)
 	if (ft_dinic(&farm))
 	{
 		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
+		{
+			//printf("%d %d\n", farm->loss->data[farm->loss->length - 2], farm->loss->data[farm->loss->length - 1]);
 			flow = ft_return_previous_flow(farm);
+			//printf("previous\n");
+		}
 		else
-			flow = farm->all_flows->data[farm->all_flows->length - 2];
+		{
+			flow = farm->all_flows->data[farm->all_flows->length - 1];
+			///printf("last\n");
+		}
 		//let_the_flow_go(&farm, &flow, flow->ants_allocation);
 	}
 

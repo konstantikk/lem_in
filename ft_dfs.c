@@ -47,6 +47,7 @@ void	ft_add_path(t_farm **farm_ptr)
 				parent_link = node->links->data[node->links->length - 1];
 				parent_link->capacity = 0;
 				parent_link->flow = -1;
+				parent_link->weight = -1;
 			}
 			child_link->flow = 1;
 		}

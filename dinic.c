@@ -104,13 +104,16 @@ int 	ft_release_flow(t_farm **farm_ptr)
 	if (!ft_check_profit(farm, flow->flow, flow->ants_allocation, flow->len_flow))
 	{
 		flow = ft_return_previous_flow(farm);
-		//let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
+		//printf("profit previous\n");
+		///let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
 	if (loss->length > 1 && loss->data[loss->length - 2] <= loss->data[loss->length - 1])
 	{
+		///printf("%d %d\n", loss->data[loss->length - 2], loss->data[loss->length - 1]);
 		flow = ft_return_previous_flow(farm);
-		//let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
+		//printf("!previous\n");
+		///let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
 		return (0);
 	}
 
