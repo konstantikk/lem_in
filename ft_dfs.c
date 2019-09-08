@@ -40,25 +40,20 @@ static void	ft_add_path(t_farm **farm_ptr)
 		parent_link_to_child = find_link(node->parent->links, node);
 		if (node == farm->end)
 		{
-		//	if (!child_link_to_parent)
-		//	{
 				ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, node->parent->name));
 				child_link_to_parent = node->links->data[node->links->length - 1];
-				child_link_to_parent->capacity = 0;
-				child_link_to_parent->flow = -1;
-		//	}
+				child_link_to_parent->flow = 0;
 		}
 		else if (!child_link_to_parent)
         {
             ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, node->parent->name));
             child_link_to_parent = node->links->data[node->links->length - 1];
-            //child_link_to_parent->capacity = 0;
-            child_link_to_parent->flow = -1;
+            child_link_to_parent->flow = 0;
         }
 		else
-			child_link_to_parent->flow = -1;
+			child_link_to_parent->flow = 0;
         parent_link_to_child->flow = 1;
-        parent_link_to_child->capacity = 1;
+        parent_link_to_child->direction = 1;
 		node = node->parent;
 	}
 }
@@ -71,7 +66,7 @@ static inline void	dfs_mark_link(t_farm **farm_ptr, t_pvec **q, t_node *check_el
 
 	farm = *farm_ptr;
 	mark_node = ht_find_node(farm->nodes, link->name);
-	if (mark_node->used == FALSE && mark_node->level == check_elem->level + 1
+	if (mark_node->used == FALSE && (mark_node->level == check_elem->level || mark_node->level == check_elem->level + 1)
 			&& link->flow != 1 && mark_node->level <= farm->fixed)
 	{
 		mark_node->used = TRUE;
@@ -102,6 +97,53 @@ static inline int cycle(t_farm **farm_ptr, t_pvec **q)
     while ((size_t)++i < check_elem->links->length)
         dfs_mark_link(farm_ptr, q, check_elem, i);
     return (0);
+}
+
+int     marking_direction_dfs(t_farm **farm_ptr)
+{
+    t_pvec *q;
+    t_farm *farm;
+    t_link *link;
+    t_node *check_elem;
+
+    farm = *farm_ptr;
+    nullify(farm->nodes, USED);
+    farm->start->used = TRUE;
+    if (!(q = ft_ptr_vec_init()))
+        finish_him(farm_ptr);
+    if (ft_ptr_vec_pushfront(q, farm->start) != 1)
+    {
+        free(q->data);
+        ft_memdel((void**)&q);
+        finish_him(farm_ptr);
+    }
+    while (q->length)
+    {
+        check_elem = ft_ptr_vec_popfront(q);
+        if (check_elem == farm->end)
+        {
+            t_node *node = check_elem;
+            t_link *check_link;
+            while (node != farm->start)
+            {
+            //    if (node != farm->start)
+                check_link = find_link(node->parent->links, node);
+                check_link->direction = 1;
+                node = node->parent;
+            }
+        }
+        for (int i = 0; (size_t)i < check_elem->links->length; i++)
+        {
+            link = check_elem->links->data[i];
+            if (link->ptr->used == FALSE || link->ptr == farm->end)
+            {
+                link->ptr->used = TRUE;
+                link->ptr->parent = check_elem;
+                ft_ptr_vec_pushfront(q, link->ptr);
+            }
+        }
+    }
+    return (1);
 }
 
 int		ft_dfs(t_farm **farm_ptr)

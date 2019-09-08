@@ -24,8 +24,6 @@ t_node	*create_node(char *name)
         ft_memdel((void**)&node);
         return (NULL);
     }
-    node->flow = NULL;
-    node->capacity = NULL;
     node->level = -1;
     node->used = FALSE;
     return (node);
@@ -40,7 +38,7 @@ t_link	*create_link(char *name, t_ht *nodes)
     link->name = name;
     link->flow = 0;
     link->ptr = ht_find_node(nodes, name);
-    link->capacity = 0;
+    link->direction = 0;
     return (link);
 }
 

@@ -88,3 +88,43 @@ int		ft_bfs(t_farm **farm_ptr)
     ft_memdel((void**)&q);
 	return (farm->end->level != -1);
 }
+
+int     zero_one_bfs(t_farm *farm)
+{
+    t_pvec *q;
+    t_node *check_elem;
+    t_link *link;
+    int     flag = 0;
+
+    if (farm->start->level == -1)
+        flag = 1;
+    nullify(farm->nodes, BOTH);
+    farm->start->level = 0;
+    q = ft_ptr_vec_init();
+    ft_ptr_vec_pushback(q, farm->start);
+    while (q->length)
+    {
+        check_elem = ft_ptr_vec_popfront(q);
+        for (int i = 0; (size_t)i < check_elem->links->length; i++)
+        {
+            link = check_elem->links->data[i];
+            if (flag) {
+                if (link->ptr->level > check_elem->level + 1) {
+                    link->ptr->level = check_elem->level + 1;
+                    link->ptr->prev_level = link->ptr->level;
+                    //  link->ptr->used = TRUE;
+                    ft_ptr_vec_pushback(q, link->ptr);
+                }
+            }
+            else if (!link->flow && link->ptr->level > check_elem->level + (link->ptr->prev_level < check_elem->level))
+            {
+                link->ptr->prev_level < check_elem->level ?
+                    ft_ptr_vec_pushfront(q, link->ptr) : ft_ptr_vec_pushback(q, link->ptr);
+                link->ptr->level = check_elem->level + (link->ptr->prev_level > check_elem->level);
+                link->ptr->prev_level = link->ptr->level;
+            }
+        }
+    }
+    farm->fixed = farm->end->level;
+    return (farm->end->level != INF);
+}

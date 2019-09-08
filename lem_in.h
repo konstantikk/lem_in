@@ -17,7 +17,7 @@
 
 typedef enum e_values
 {
-	FALSE,
+	FALSE = 0,
 	TRUE,
 	START,
 	END,
@@ -31,7 +31,7 @@ typedef	struct	s_link
 {
 	char	*name;
 	t_node	*ptr;
-	int 	capacity;
+	int 	direction;
 	int 	flow;
 }				t_link;
 
@@ -53,9 +53,8 @@ typedef struct	s_node
 {
 	char	*name;
 	t_pvec	*links;
-	int *flow;
-	int *capacity;
 	int	level;
+	int prev_level;
 	struct s_node *parent;
 	int used:1;
 }				t_node;
@@ -114,4 +113,7 @@ void    sort_flow(t_pvec *flow, size_t len, float step);
 t_flow	*ft_get_flow(t_farm **farm_ptr);
 int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_flow);
 t_flow	*ft_return_previous_flow(t_farm *farm);
+int     zero_one_bfs(t_farm *farm);
+int     marking_direction_dfs(t_farm **farm_ptr);
+
 #endif

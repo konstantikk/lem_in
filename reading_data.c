@@ -47,7 +47,7 @@ int 	read_node(t_farm **farm, char *buff)
     safe_insert(farm, (*farm)->nodes, out_node);
 	safe_pushback(farm, in_node->links, safe_create_link(farm ,ft_strdup(out_node->name)));
 	safe_pushback(farm, out_node->links, safe_create_link(farm, ft_strdup(in_node->name)));
-    ((t_link*)(in_node->links->data[0]))->capacity = 1;
+    ((t_link*)(in_node->links->data[0]))->direction = 1;
     return (1);
 }
 
