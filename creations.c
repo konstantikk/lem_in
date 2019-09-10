@@ -25,6 +25,7 @@ t_node	*create_node(char *name)
         return (NULL);
     }
     node->level = -1;
+    node->potential = 0;
     node->used = FALSE;
     return (node);
 }
@@ -38,7 +39,7 @@ t_link	*create_link(char *name, t_ht *nodes)
     link->name = name;
     link->flow = 0;
     link->ptr = ht_find_node(nodes, name);
-    link->direction = 0;
+    link->direction = 1;
     return (link);
 }
 

@@ -26,7 +26,7 @@ int     debug(t_farm *to_del)
         t_list *temp = table[to_del->nodes->loaded->data[i]];
         printf("index %d\n", to_del->nodes->loaded->data[i]);
         while (temp) {
-            printf("|%5s level: %d|->", ((t_node *) temp->content)->name, ((t_node *) temp->content)->level);
+            printf("|%5s level: %d p: %d|->", ((t_node *) temp->content)->name, ((t_node *) temp->content)->level,((t_node *) temp->content)->potential);
             printf("links: ");
             for (int j = 0; j < ((t_node *) temp->content)->links->length; j++)
 			{
@@ -49,7 +49,13 @@ int k;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
 
-	if ((k = ft_dinic(&farm)))
+	/*dijkstra(farm);
+	recalculate_potentials(farm->nodes);
+	ft_add_path(&farm);
+	dijkstra(farm);
+    ft_add_path(&farm);
+	recalculate_potentials(farm->nodes);*/
+	if (/*ft_dinic(&farm)*/new_alg(&farm))
 	{
 	    //printf("max flow: %d\n", k);
 		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
@@ -60,6 +66,7 @@ int k;
 		//	printf("%d ", flow->ants_allocation[i]);
 		let_the_flow_go(&farm, &flow, flow->ants_allocation);
 	}
+	printf("\n");
  //   debug(farm);
 	return (0);
 }

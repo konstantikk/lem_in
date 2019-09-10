@@ -15,6 +15,8 @@
 
 #include "./libft/includes/libft.h"
 
+
+#define INF 1000000
 typedef enum e_values
 {
 	FALSE = 0,
@@ -54,7 +56,7 @@ typedef struct	s_node
 	char	*name;
 	t_pvec	*links;
 	int	level;
-	int prev_level;
+	int potential;
 	struct s_node *parent;
 	int used:1;
 }				t_node;
@@ -115,5 +117,9 @@ int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_f
 t_flow	*ft_return_previous_flow(t_farm *farm);
 int     zero_one_bfs(t_farm *farm);
 int     marking_direction_dfs(t_farm **farm_ptr);
+void        dijkstra(t_farm *farm);
+void	ft_add_path(t_farm **farm_ptr);
+void    recalculate_potentials(t_ht *nodes);
+int     new_alg(t_farm **farm_ptr);
 
 #endif

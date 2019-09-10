@@ -25,7 +25,7 @@ static t_link	*find_link(t_pvec *links, t_node *name)
 	return (NULL);
 }
 
-static void	ft_add_path(t_farm **farm_ptr)
+void	ft_add_path(t_farm **farm_ptr)
 {
 	t_node *node;
 	t_link *child_link_to_parent;
@@ -42,16 +42,18 @@ static void	ft_add_path(t_farm **farm_ptr)
 		{
 				ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, node->parent->name));
 				child_link_to_parent = node->links->data[node->links->length - 1];
-				child_link_to_parent->flow = 0;
+				child_link_to_parent->flow = -1;
+            child_link_to_parent->direction = -1;
 		}
 		else if (!child_link_to_parent)
         {
             ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, node->parent->name));
             child_link_to_parent = node->links->data[node->links->length - 1];
-            child_link_to_parent->flow = 0;
+            child_link_to_parent->flow = -1;
+            child_link_to_parent->direction = -1;
         }
 		else
-			child_link_to_parent->flow = 0;
+			child_link_to_parent->flow = -1;
         parent_link_to_child->flow = 1;
         parent_link_to_child->direction = 1;
 		node = node->parent;

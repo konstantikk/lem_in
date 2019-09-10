@@ -12,8 +12,6 @@
 
 #include "lem_in.h"
 
-#define INF 1000000
-
 void	nullify(t_ht *nodes, int level_or_used)
 {
 	const int *data = nodes->loaded->data;
@@ -88,7 +86,7 @@ int		ft_bfs(t_farm **farm_ptr)
     ft_memdel((void**)&q);
 	return (farm->end->level != -1);
 }
-
+/*
 int     zero_one_bfs(t_farm *farm)
 {
     t_pvec *q;
@@ -127,4 +125,4 @@ int     zero_one_bfs(t_farm *farm)
     }
     farm->fixed = farm->end->level;
     return (farm->end->level != INF);
-}
+}*/

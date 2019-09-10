@@ -173,11 +173,40 @@ int		ft_dinic(t_farm **farm)
             return (max_flow);
         }
 	}
-  //  marking_direction_dfs(farm);
-    /*zero_one_bfs(*farm);
-    ft_dfs(farm);
-    zero_one_bfs(*farm);
-    ft_dfs(farm);
-    zero_one_bfs(*farm);*/
 	return (max_flow);
+}
+
+void    recalculate_potentials(t_ht *nodes)
+{
+    const int *data = nodes->loaded->data;
+    const size_t len = nodes->loaded->length;
+    register int i;
+    t_list		*temp;
+
+    i = -1;
+    while ((size_t)++i < len)
+    {
+        temp = nodes->table[data[i]];
+        while (temp)
+        {
+            ((t_node*)(temp->content))->potential += ((t_node*)(temp->content))->level;
+            temp = temp->next;
+        }
+    }
+}
+
+int     new_alg(t_farm **farm_ptr)
+{
+    t_farm *farm = *farm_ptr;
+
+    dijkstra(farm);
+    while (farm->end->level != INF)
+    {
+        recalculate_potentials(farm->nodes);
+        ft_add_path(farm_ptr);
+        if (!ft_release_flow(farm_ptr))
+            return (0);
+        dijkstra(farm);
+    }
+    return (1);
 }
