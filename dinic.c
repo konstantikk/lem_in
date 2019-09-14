@@ -6,7 +6,7 @@
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/28 16:30:17 by vlegros           #+#    #+#             */
-/*   Updated: 2019/07/28 16:30:17 by vlegros          ###   ########.fr       */
+/*   Updated: 2019/09/14 22:24:00 by jziemann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 t_flow	*ft_get_flow(t_farm **farm_ptr)
 {
-	register int i;
-	t_pvec	*flow;
-	t_farm *farm;
-	t_link	*link;
-	t_flow	*temp_flow;
+	register int	i;
+	t_pvec			*flow;
+	t_farm			*farm;
+	t_link			*link;
+	t_flow			*temp_flow;
 
 	farm = *farm_ptr;
 	i = -1;
@@ -30,7 +30,7 @@ t_flow	*ft_get_flow(t_farm **farm_ptr)
 		if (link->flow == 1 && link->direction == 1)
 			ft_recover_path(farm_ptr, link, &flow);
 	}
-    sort_flow(flow, flow->length, flow->length - 1);
+	sort_flow(flow, flow->length, flow->length - 1);
 	if (!(temp_flow = (t_flow *)malloc(sizeof(t_flow))))
 		finish_him(farm_ptr);
 	temp_flow->flow = flow;
@@ -44,171 +44,38 @@ t_flow	*ft_get_flow(t_farm **farm_ptr)
 	return (temp_flow);
 }
 
-int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_flow)
+void	recalculate_potentials(t_ht *nodes)
 {
-	int		sum;
-	int 	addition_ants;
-	int 	residual_ants;
-	int 	i;
-	size_t	path_len;
-	const int 	max_path = (int)((t_path*)(flow->data[len_flow - 1]))->path->length ;
+	const int		*data = nodes->loaded->data;
+	const size_t	len = nodes->loaded->length;
+	register int	i;
+	t_list			*temp;
 
-	sum = 0;
 	i = -1;
-	while ((size_t)++i < len_flow)
+	while ((size_t)++i < len)
 	{
-		path_len = max_path - ((t_path*)(flow->data[i]))->path->length;
-		ants_allocation[i] = path_len;
-		sum += path_len;
-		if (farm->ant_num < sum)
-			return (0) ;
+		temp = nodes->table[data[i]];
+		while (temp)
+		{
+			((t_node*)(temp->content))->potential += ((t_node*)(temp->content))->level;
+			temp = temp->next;
+		}
 	}
-	//if (farm->ant_num < sum)
-		//return (0);
-	addition_ants = (farm->ant_num - sum) / len_flow;
-	residual_ants = (farm->ant_num - sum) % len_flow;
-	 i = -1;
-	while ((size_t)++i < len_flow)
-	{
-		ants_allocation[i] += addition_ants;
-		if (residual_ants-- > 0)
-			ants_allocation[i] += 1; ///speed ants
-	}
-	ft_int_vec_pushback(farm->loss, ((t_path*)(flow->data[0]))->path->length - 1 + ants_allocation[0] - 1);
-	return (1);
 }
 
-t_flow		*ft_return_previous_flow(t_farm *farm)
+int		new_alg(t_farm **farm_ptr)
 {
-	const int 	len = (int)farm->all_flows->length;
-	//t_pvec	*all_f = farm->all_flows;
-	/**for (int i = 0; i < len; i++)
-	{
-		int len_flow =  ((t_flow *)(all_f->data[i]))->len_flow;
-		printf("len: %d\n", len_flow);
-		for (int j = 0; j < len_flow; j++)
-			printf("%d ", ((t_flow *)(all_f->data[i]))->ants_allocation[j]);
-		printf("\n");
-	}**/
-
-	return (farm->all_flows->data[len - 2]);
-}
-int 	ft_release_flow(t_farm **farm_ptr)
-{
-	t_farm	*farm;
-	t_flow	*flow;
-	t_ivec	*loss;
+	t_farm *farm;
 
 	farm = *farm_ptr;
-	loss = farm->loss;
-	if (!(flow = ft_get_flow(farm_ptr)))
-	{    ///del flow
-		finish_him(farm_ptr);
-	}
-	if (farm->ant_num == 1)
+	dijkstra(farm);
+	while (farm->end->level != INF)
 	{
-		let_the_flow_go(farm_ptr, &(flow), NULL);
-		return (0);
+		recalculate_potentials(farm->nodes);
+		ft_add_path(farm_ptr);
+		if (!ft_release_flow(farm_ptr))
+			return (0);
+		dijkstra(farm);
 	}
-	if (!ft_check_profit(farm, flow->flow, flow->ants_allocation, flow->len_flow))
-	{
-		/*printf("now_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%-d\t", flow->ants_allocation[i]);
-		printf("\n");*/
-		flow = ft_return_previous_flow(farm);
-		/*printf("previous_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%+d\t", flow->ants_allocation[i]);
-		printf("\n");
-		 */
-	    let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
-		return (0);
-	}
-	if (loss->length > 1 && loss->data[loss->length - 2] < loss->data[loss->length - 1])
-	{
-		/*printf("now_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%-d\t", flow->ants_allocation[i]);
-		printf("\n");*/
-		flow = ft_return_previous_flow(farm);
-		/*printf("previous_flow:\n");
-		for (int i =0 ; i < flow->len_flow; i++)
-			printf("%+d\t", flow->ants_allocation[i]);
-		rintf("\n");*/
-		let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
-		return (0);
-	}
-	/*
-	t_pvec	*all_f = farm->all_flows;
-	const int 	len = (int)farm->all_flows->length;
-	for (int i = 0; i < len; i++)
-	{
-		int len_flow =  ((t_flow *)(all_f->data[i]))->len_flow;
-		t_flow *flow = (t_flow *)(all_f->data[i]);
-		//printf("len: %d\n", len_flow);
-		for (int j = 0; j < len_flow; j++)
-			printf("%d: %zu (%d)\n", j + 1, ((t_path*)(flow->flow->data[j]))->path->length , flow->ants_allocation[j]);
-		printf("\n");
-	}
-	printf("__________________________\n");
-	 */
 	return (1);
-
-}
-
-int		ft_dinic(t_farm **farm)
-{
-	int flow;
-	int max_flow = 0;
-
-	while (ft_bfs(farm))
-	{
-		flow = ft_dfs(farm);
-		while (flow)
-        {
-		    max_flow += flow;
-		    flow = ft_dfs(farm);
-        }
-		if (!ft_release_flow(farm))
-        {
-            return (max_flow);
-        }
-	}
-	return (max_flow);
-}
-
-void    recalculate_potentials(t_ht *nodes)
-{
-    const int *data = nodes->loaded->data;
-    const size_t len = nodes->loaded->length;
-    register int i;
-    t_list		*temp;
-
-    i = -1;
-    while ((size_t)++i < len)
-    {
-        temp = nodes->table[data[i]];
-        while (temp)
-        {
-            ((t_node*)(temp->content))->potential += ((t_node*)(temp->content))->level;
-            temp = temp->next;
-        }
-    }
-}
-
-int     new_alg(t_farm **farm_ptr)
-{
-    t_farm *farm = *farm_ptr;
-
-    dijkstra(farm);
-    while (farm->end->level != INF)
-    {
-        recalculate_potentials(farm->nodes);
-        ft_add_path(farm_ptr);
-        if (!ft_release_flow(farm_ptr))
-            return (0);
-        dijkstra(farm);
-    }
-    return (1);
 }
