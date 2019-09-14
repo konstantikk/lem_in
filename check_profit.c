@@ -35,7 +35,7 @@ static	int		ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, in
 	int			sum;
 	int			i;
 	size_t		path_len;
-	const int	cmax_path = (int)((t_path*)(flow->data[len_flow - 1]))->path->length;
+	const int	max_path = (int)((t_path*)(flow->data[len_flow - 1]))->path->length;
 	const int	length = ((t_path*)(flow->data[0]))->path->length - 1;
 
 	sum = 0;

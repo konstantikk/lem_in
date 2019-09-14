@@ -113,8 +113,6 @@ void    safe_room_adding(t_farm **farm_ptr, t_path **path_ptr, void *elem, t_pve
 void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow);
 void    sort_flow(t_pvec *flow, size_t len, float step);
 t_flow	*ft_get_flow(t_farm **farm_ptr);
-int 	ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_flow);
-t_flow	*ft_return_previous_flow(t_farm *farm);
 int     zero_one_bfs(t_farm *farm);
 int     marking_direction_dfs(t_farm **farm_ptr);
 void        dijkstra(t_farm *farm);
