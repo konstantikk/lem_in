@@ -64,6 +64,8 @@ t_farm	*parse(int fd)
 		    read_links(&farm, buff);
 		else
 			read_node(&farm, buff);
+		if (buff[0] == '#' && buff[1] && buff[1] != '#')
+			continue ;
 	    ft_chr_vec_pushback(farm->output, buff);
 	    ft_chr_vec_pushback(farm->output, "\n");
 	}
