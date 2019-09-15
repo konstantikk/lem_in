@@ -98,11 +98,12 @@ void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation)
     }
     ft_chr_vec_pushback(farm->output, ft_itoa(farm->ant_num));
     ft_chr_vec_pushback(farm->output, "\n");
-    while (farm->ants_check != farm->ant_num)
+    push_nodes(farm_ptr, flow);
+  /*  while (farm->ants_check != farm->ant_num)
     {
         put_ants_on_start(ants, farm, *flow, ants_allocation);
         ft_chr_vec_pushback(farm->output, "\n");
         one_step_towards_finish(ants, *flow, counter, farm);
-    }
+    }*/
 
 }

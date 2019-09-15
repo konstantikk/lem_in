@@ -122,5 +122,6 @@ void	ft_add_path(t_farm **farm_ptr);
 void    recalculate_potentials(t_ht *nodes);
 int     new_alg(t_farm **farm_ptr);
 int				ft_release_flow(t_farm **farm_ptr);
+void    push_nodes(t_farm **farm_ptr, t_flow **flow_ptr);
 
 #endif

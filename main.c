@@ -45,8 +45,7 @@ int 	main(int argc, char **argv)
 {
 	t_farm *farm;
 	t_flow *flow;
-int k;
-	int fd = open(argv[1], O_RDONLY);
+
 	farm = parse(0);
 
 	if (new_alg(&farm))
@@ -57,6 +56,7 @@ int k;
 			flow = farm->all_flows->data[farm->all_flows->length - 1];
 		let_the_flow_go(&farm, &flow, flow->ants_allocation);
 	}
-	printf("\n");
+	ft_chr_vec_pushback(farm->output, "\n");
+	write(1, farm->output->data, farm->output->length);
 	return (0);
 }

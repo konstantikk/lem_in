@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-void    push_one_node(t_cvec *output, t_node *node)
+static void    push_one_node(t_cvec *output, t_node *node)
 {
     ft_chr_vec_pushback(output, node->print_line);
     ft_chr_vec_pushback(output, "\n");
