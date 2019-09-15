@@ -31,13 +31,13 @@ int 	read_node(t_farm **farm, char *buff)
         ft_memdel((void**)&name);
         finish_him(farm);
     }
-    if (!(in_node = create_node(sup_name)))
+    if (!(in_node = create_node(sup_name, buff)))
     {
         ft_memdel((void**)&name);
         ft_memdel((void**)&sup_name);
         finish_him(farm);
     }
-    if (!(out_node = create_node(name)))
+    if (!(out_node = create_node(name, buff)))
     {
         ft_memdel((void**)&name);
         ft_memdel((void**)&sup_name);
@@ -65,7 +65,7 @@ int		read_start_end(t_farm **farm, int fd, char **buff, int start_end)
         ft_memdel((void**)&name);
         finish_him(farm);
     }
-    safe_insert(farm, (*farm)->nodes, create_node(name));
+    safe_insert(farm, (*farm)->nodes, create_node(name, *buff));
     if (start_end == START)
         (*farm)->start = ht_find_node((*farm)->nodes, name);
     else if (start_end == END)

@@ -26,7 +26,7 @@ static void    check_links(t_node **node_ptr, t_path **path, t_farm **farm_ptr, 
         if (forward_link->direction == 1 && forward_link->flow == 1)
         {
             if (forward_link->name[0] != 'L')
-                safe_room_adding(farm_ptr, path, create_room(forward_link->name), flow);
+                safe_room_adding(farm_ptr, path, create_room(forward_link->name, forward_link->ptr), flow);
             *node_ptr = forward_link->ptr;
             break ;
         }

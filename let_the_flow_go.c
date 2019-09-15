@@ -78,29 +78,6 @@ void    one_step_towards_finish(char *ants, t_flow *flow, int counter, t_farm *f
     }
 }
 
-void    push_nodes(t_cvec **output_ptr, t_flow **flow_ptr)
-{
-    t_flow *flow;
-    t_cvec *output;
-    register size_t i;
-    register size_t j;
-    t_path  *path;
-
-    flow = *flow_ptr;
-    output = *output_ptr;
-    i = -1;
-    while (++i < flow->len_flow)
-    {
-        j = -1;
-        path = flow->flow->data[i];
-        while(++j < path->path->length)
-        {
-            ft_chr_vec_pushback(output, (t_)path->path->data[j])
-        }
-    }
-
-}
-
 void    push_links(t_cvec *output, t_flow **flow_ptr)
 {
 

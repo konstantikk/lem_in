@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-t_node		*create_node(char *name)
+t_node		*create_node(char *name, char *buff)
 {
 	t_node *node;
 
@@ -24,6 +24,7 @@ t_node		*create_node(char *name)
 		ft_memdel((void**)&node);
 		return (NULL);
 	}
+	node->print_line = buff;
 	node->level = -1;
 	node->potential = 0;
 	node->used = FALSE;
@@ -59,7 +60,7 @@ t_path		*create_path(void)
 	return (path);
 }
 
-t_room		*create_room(char *name)
+t_room		*create_room(char *name, t_node *node_ptr)
 {
 	t_room *room;
 
@@ -67,5 +68,6 @@ t_room		*create_room(char *name)
 		return (NULL);
 	room->temp_ant = -1;
 	room->name = name;
+	room->ptr = node_ptr;
 	return (room);
 }

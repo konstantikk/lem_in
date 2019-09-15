@@ -53,7 +53,7 @@ static	int		ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, in
 	return (1);
 }
 
-static	void	ft_return_previous_flow(t_farm **farm_ptr)
+void	ft_return_previous_flow(t_farm **farm_ptr)
 {
 	t_farm	*farm;
 	t_flow	*flow;
