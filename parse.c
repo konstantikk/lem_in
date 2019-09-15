@@ -47,7 +47,7 @@ t_farm	*parse(int fd)
 	if (!(farm = (t_farm*)ft_memalloc(sizeof(t_farm))))
 		return (NULL);
 	farm->nodes = ft_ht_init();
-	farm->output = ft_chr_vec_init();
+	farm->output = ft_chr_vec_init(CAPACITY);
 	farm->ants_check = 0;
 	while (get_next_line(fd, &buff))
 	{
@@ -61,16 +61,20 @@ t_farm	*parse(int fd)
                 read_start_end(&farm, fd, &buff, END);
 		}
 		else if (ft_strchr(buff, '-'))
-		    read_links(&farm, buff);
+			read_links(&farm, buff);
 		else
 			read_node(&farm, buff);
-		if (buff[0] == '#' && buff[1] && buff[1] != '#')
-			continue ;
+
+		if (buff[0] == '#' && buff[1] && buff[1] != '#') {
+			ft_memdel((void **) &buff);
+			continue;
+		}
 	    ft_chr_vec_pushback(farm->output, buff);
+		ft_memdel((void **) &buff);
 	    ft_chr_vec_pushback(farm->output, "\n");
 	}
 	ft_chr_vec_pushback(farm->output, "\n");
 	farm->loss = ft_int_vec_init();/// todo error
-	farm->all_flows = ft_ptr_vec_init();/// todo error
+	farm->all_flows = ft_ptr_vec_init()  ;/// todo error
 	return (farm);
 }

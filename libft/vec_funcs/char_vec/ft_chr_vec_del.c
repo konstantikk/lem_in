@@ -18,5 +18,5 @@ void    ft_chr_vec_del(t_cvec **vec_ptr)
 
     vec = *vec_ptr;
     ft_memdel((void**)&vec->start_data);
-    ft_memdel((void**)&vec_ptr);
+    ft_memdel((void**)vec_ptr);
 }

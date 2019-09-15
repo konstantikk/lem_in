@@ -89,4 +89,6 @@ void        dijkstra(t_farm *farm)
              }
         }
     }
+    free(q->start_data);
+    ft_memdel((void**)&q);
 }

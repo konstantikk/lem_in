@@ -15,8 +15,9 @@
 
 #include "./libft/includes/libft.h"
 
+#define INF 10000000
+#define CAPACITY 7000
 
-#define INF 1000000
 typedef enum e_values
 {
 	FALSE = 0,
@@ -37,24 +38,8 @@ typedef	struct	s_link
 	int 	flow;
 }				t_link;
 
-typedef struct	s_path
-{
-	t_pvec	*path;
-	int 	ants_onw;
-	int     fixed_ant_num;
-	int     last_occupied;
-}				t_path;
-
-typedef struct  s_room
-{
-    char    *name;
-    t_node	*ptr;
-    int     temp_ant;
-}               t_room;
-
 typedef struct	s_node
 {
-	char	*print_line;
 	char	*name;
 	t_pvec	*links;
 	int	level;
@@ -62,6 +47,21 @@ typedef struct	s_node
 	struct s_node *parent;
 	int used:1;
 }				t_node;
+
+typedef struct  s_room
+{
+	char    *name;
+	t_node	*ptr;
+	int     temp_ant;
+}               t_room;
+
+typedef struct	s_path
+{
+	t_pvec	*path;
+	int 	ants_onw;
+	int     fixed_ant_num;
+	int     last_occupied;
+}				t_path;
 
 typedef	struct	s_flow
 {
@@ -83,6 +83,14 @@ typedef struct	s_farm
 
 }				t_farm;
 
+typedef	struct s_parse_link
+{
+	char *node_name1;
+	char *node_name2;
+	t_node	*node1;
+	t_node	*node2;
+}				t_parse_link;
+
 t_farm	*parse(int fd);
 int 	bfs(t_farm *farm);
 int		ft_bfs(t_farm **farm_ptr);
@@ -96,7 +104,7 @@ t_vec    *get_flow(t_farm *farm);
 int 	*check_profit(t_farm *farm, t_vec *flow, int max);
 void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation);
 int     ht_insert_node(t_ht *hashtable, t_node *node);
-t_node	*create_node(char *name, char *buff);
+t_node	*create_node(char *name);
 int     ht_enlarge(t_ht *hashtable);
 t_node  *ht_find_node(t_ht *hashtable, char *name);
 int		read_start_end(t_farm **farm, int fd, char **buff, int start_end);
@@ -123,5 +131,7 @@ void    recalculate_potentials(t_ht *nodes);
 int     new_alg(t_farm **farm_ptr);
 int				ft_release_flow(t_farm **farm_ptr);
 void    push_nodes(t_farm **farm_ptr, t_flow **flow_ptr);
+void	delete_all_flows(t_pvec **all_flows);
+void	delete_parse_link_struct(t_parse_link **pl_ptr);
 
 #endif

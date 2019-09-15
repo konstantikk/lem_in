@@ -104,5 +104,5 @@ void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation)
         ft_chr_vec_pushback(farm->output, "\n");
         one_step_towards_finish(ants, *flow, counter, farm);
     }
-
+	ft_memdel((void**)&ants);
 }

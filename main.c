@@ -27,12 +27,12 @@ int     debug(t_farm *to_del)
         printf("index %d\n", to_del->nodes->loaded->data[i]);
         while (temp) {
             printf("|%5s level: %d p: %d|->", ((t_node *) temp->content)->name, ((t_node *) temp->content)->level,((t_node *) temp->content)->potential);
-            printf("links: ");
+            printf("links %zu: ",  ((t_node *) temp->content)->links->length);
             for (int j = 0; j < ((t_node *) temp->content)->links->length; j++)
 			{
             	t_link *link = (((t_node *) temp->content)->links->data[j]);
             	/*if (link->capacity == 1 && link->flow == 1)*/
-            	printf("|name: %s destination: %d flow: %d| ", link->name, link->direction, link->flow);
+            	printf("|name: %s destination: %d flow: %d| ", link->ptr->name, link->direction, link->flow);
 			}
             printf("\n");
             temp = temp->next;
@@ -57,6 +57,8 @@ int 	main(int argc, char **argv)
 		let_the_flow_go(&farm, &flow, flow->ants_allocation);
 	}
 	ft_chr_vec_pushback(farm->output, "\n");
-	write(1, farm->output->data, farm->output->length);
+//	write(1, farm->output->data, farm->output->length);
+	//debug(farm);
+	free_memory(&farm);
 	return (0);
 }

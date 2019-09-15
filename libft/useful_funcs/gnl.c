@@ -50,7 +50,7 @@ int				gnl(int fd, char **line)
     char    *n_ptr;
 
     if (!vec)
-        vec = ft_chr_vec_init();
+        vec = ft_chr_vec_init(1);
     if (fd < 0 || !line)
         return (-1);
     if ((rd = read(fd, buff, BUFF_SIZE)) == -1)

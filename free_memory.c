@@ -29,6 +29,7 @@ static void		del_ht_elem(t_list **head)
 	while (temp)
 	{
 		*head = temp;
+		char *name = ((t_node*)(temp->content))->name;
 		ft_memdel((void**)&((t_node*)(temp->content))->name);
 		ft_ptr_vec_del(&(((t_node*)(temp->content))->links), del_link);
 		ft_memdel(&temp->content);
@@ -67,7 +68,9 @@ void			free_memory(t_farm **farm)
 	t_farm *to_del;
 
 	to_del = *farm;
+	delete_all_flows(&to_del->all_flows);
 	ft_int_vec_del(&to_del->loss);
+	ft_chr_vec_del(&to_del->output);
 	ht_delete(&to_del->nodes);
 	ft_memdel((void**)farm);
 }

@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-t_node		*create_node(char *name, char *buff)
+t_node		*create_node(char *name)
 {
 	t_node *node;
 
@@ -24,7 +24,6 @@ t_node		*create_node(char *name, char *buff)
 		ft_memdel((void**)&node);
 		return (NULL);
 	}
-	node->print_line = buff;
 	node->level = -1;
 	node->potential = 0;
 	node->used = FALSE;

@@ -40,14 +40,14 @@ void	ft_add_path(t_farm **farm_ptr)
 		parent_link_to_child = find_link(node->parent->links, node);
 		if (node == farm->end)
 		{
-			ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, node->parent->name));
+			ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, ft_strdup(node->parent->name)));
 			child_link_to_parent = node->links->data[node->links->length - 1];
 			child_link_to_parent->flow = -1;
 			child_link_to_parent->direction = -1;
 		}
 		else if (!child_link_to_parent)
 		{
-			ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, node->parent->name));
+			ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, ft_strdup(node->parent->name)));
 			child_link_to_parent = node->links->data[node->links->length - 1];
 			child_link_to_parent->flow = -1;
 			child_link_to_parent->direction = -1;

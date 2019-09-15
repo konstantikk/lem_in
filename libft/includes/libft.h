@@ -153,7 +153,7 @@ void                *ft_ptr_vec_popback(t_pvec *vec);
 
 void                ft_chr_vec_del(t_cvec **vec_ptr);
 int                 ft_chr_vec_enlarge(t_cvec *vec, size_t len);
-t_cvec              *ft_chr_vec_init(void);
+t_cvec              *ft_chr_vec_init(size_t size);
 int                 ft_chr_vec_pushback(t_cvec *vec, char *value);
 char                ft_chr_vec_popfront(t_cvec *vec);
 
