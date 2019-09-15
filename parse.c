@@ -47,8 +47,9 @@ t_farm	*parse(int fd)
 	if (!(farm = (t_farm*)ft_memalloc(sizeof(t_farm))))
 		return (NULL);
 	farm->nodes = ft_ht_init();
+	farm->output = ft_chr_vec_init();
 	farm->ants_check = 0;
-	while (/*gnl(fd, &buff)*/get_next_line(fd, &buff))
+	while (get_next_line(fd, &buff))
 	{
 		if (!farm->ant_num)
 			farm->ant_num = safe_atoi(buff, &farm);
@@ -63,10 +64,10 @@ t_farm	*parse(int fd)
 		    read_links(&farm, buff);
 		else
 			read_node(&farm, buff);
-	    //printf("%s\n", buff);
-		//ft_memdel((void**)&buff);
+	    ft_chr_vec_pushback(farm->output, buff);
+	    ft_chr_vec_pushback(farm->output, "\n");
 	}
-	farm->output = ft_chr_vec_init();
+	ft_chr_vec_pushback(farm->output, "\n");
 	farm->loss = ft_int_vec_init();/// todo error
 	farm->all_flows = ft_ptr_vec_init();/// todo error
 	return (farm);

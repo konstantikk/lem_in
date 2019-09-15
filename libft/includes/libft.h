@@ -20,7 +20,7 @@
 # include "get_next_line.h"
 # include "ft_printf.h"
 
-# define START_CAP 20
+# define START_CAP 1000
 # define HT_START_CAP 1000
 # define USE_GC 	  0
 

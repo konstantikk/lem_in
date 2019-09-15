@@ -56,7 +56,8 @@ int		read_start_end(t_farm **farm, int fd, char **buff, int start_end)
     t_node  *node;
     char    *name;
 
-    //ft_memdel((void**)buff);
+    ft_chr_vec_pushback((*farm)->output, *buff);
+	ft_chr_vec_pushback((*farm)->output, "\n");
     get_next_line(fd, buff);
     if (!(name = ft_find_word(*buff, 0, ' ')))
         finish_him(farm);
