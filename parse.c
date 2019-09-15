@@ -66,6 +66,7 @@ t_farm	*parse(int fd)
 	    //printf("%s\n", buff);
 		ft_memdel((void**)&buff);
 	}
+	farm->output = ft_chr_vec_init();
 	farm->loss = ft_int_vec_init();/// todo error
 	farm->all_flows = ft_ptr_vec_init();/// todo error
 	return (farm);

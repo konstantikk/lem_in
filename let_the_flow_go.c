@@ -31,7 +31,11 @@ void    put_ants_on_start(char *ants, t_farm *farm, t_flow *flow_temp, int *ants
         room =((t_room*)(path->path->data[0]));
         room->temp_ant = ant_index;
         path->ants_onw++;
-        printf("L%d-%s ", ant_index++ + 1, room->name);
+        ft_chr_vec_pushback(farm->output, "L");
+        ft_chr_vec_pushback(farm->output, ft_itoa(ant_index++ + 1));
+        ft_chr_vec_pushback(farm->output, "-");
+        ft_chr_vec_pushback(farm->output, room->name);
+        ft_chr_vec_pushback(farm->output, " ");
         path->fixed_ant_num++;
     }
 }
@@ -56,13 +60,16 @@ void    one_step_towards_finish(char *ants, t_flow *flow, int counter, t_farm *f
             room = path->path->data[j];
             if (ht_find_node(farm->nodes,room->name) == farm->end)
             {
-                ants[room->temp_ant] = 1;
+                ants[room->temp_ant] = (char)1;
                 flag = TRUE;
                 path->ants_onw--;
                 farm->ants_check++;
             }
-            room->temp_ant = ((t_room*)(path->path->data[j - 1]))->temp_ant;
-            printf("L%d-%s ", room->temp_ant + 1, room->name);
+            room->temp_ant = ((t_room*)(path->path->data[j - 1]))->temp_ant;            ft_chr_vec_pushback(farm->output, "L");
+           ft_chr_vec_pushback(farm->output, ft_itoa(room->temp_ant + 1));
+           ft_chr_vec_pushback(farm->output, "-");
+           ft_chr_vec_pushback(farm->output, room->name);
+           ft_chr_vec_pushback(farm->output, " ");
             j--;
         }
         if (flag != TRUE) {
@@ -71,7 +78,30 @@ void    one_step_towards_finish(char *ants, t_flow *flow, int counter, t_farm *f
     }
 }
 
-void    print_flow(t_pvec *flow)
+void    push_nodes(t_cvec **output_ptr, t_flow **flow_ptr)
+{
+    t_flow *flow;
+    t_cvec *output;
+    register size_t i;
+    register size_t j;
+    t_path  *path;
+
+    flow = *flow_ptr;
+    output = *output_ptr;
+    i = -1;
+    while (++i < flow->len_flow)
+    {
+        j = -1;
+        path = flow->flow->data[i];
+        while(++j < path->path->length)
+        {
+            ft_chr_vec_pushback(output, (t_)path->path->data[j])
+        }
+    }
+
+}
+
+void    push_links(t_cvec *output, t_flow **flow_ptr)
 {
 
 }
@@ -82,17 +112,20 @@ void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation)
     t_farm *farm;
     int counter;
 
+    counter = 0;
     farm = *farm_ptr;
     if (!(ants = (char*)malloc(sizeof(char) * farm->ant_num)))
     {
         ft_ptr_vec_del(&((*flow)->flow), del_path);
         finish_him(farm_ptr);
     }
-
+    ft_chr_vec_pushback(farm->output, ft_itoa(farm->ant_num));
+    ft_chr_vec_pushback(farm->output, "\n");
     while (farm->ants_check != farm->ant_num)
     {
         put_ants_on_start(ants, farm, *flow, ants_allocation);
-        printf("\n");
+        ft_chr_vec_pushback(farm->output, "\n");
         one_step_towards_finish(ants, *flow, counter, farm);
     }
+
 }
