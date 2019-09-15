@@ -57,7 +57,7 @@ int 	main(int argc, char **argv)
 		let_the_flow_go(&farm, &flow, flow->ants_allocation);
 	}
 	ft_chr_vec_pushback(farm->output, "\n");
-//	write(1, farm->output->data, farm->output->length);
+	write(1, farm->output->data, farm->output->length);
 	//debug(farm);
 	free_memory(&farm);
 	return (0);
