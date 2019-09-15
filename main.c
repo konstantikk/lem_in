@@ -49,24 +49,14 @@ int k;
 	int fd = open(argv[1], O_RDONLY);
 	farm = parse(0);
 
-	/*dijkstra(farm);
-	recalculate_potentials(farm->nodes);
-	ft_add_path(&farm);
-	dijkstra(farm);
-    ft_add_path(&farm);
-	recalculate_potentials(farm->nodes);*/
-	if (/*ft_dinic(&farm)*/new_alg(&farm))
+	if (new_alg(&farm))
 	{
-	    //printf("max flow: %d\n", k);
 		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
-			flow = ft_return_previous_flow(farm);
+			flow = farm->all_flows->data[farm->all_flows->length - 2];
 		else
-			flow = farm->all_flows->data[farm->all_flows->length - 1];//
-		//for (int i = 0; i < flow->len_flow; i++)
-		//	printf("%d ", flow->ants_allocation[i]);
+			flow = farm->all_flows->data[farm->all_flows->length - 1];
 		let_the_flow_go(&farm, &flow, flow->ants_allocation);
 	}
 	printf("\n");
- //   debug(farm);
 	return (0);
 }

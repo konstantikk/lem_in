@@ -6,17 +6,17 @@
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/11 18:05:31 by vlegros           #+#    #+#             */
-/*   Updated: 2019/08/11 18:05:31 by vlegros          ###   ########.fr       */
+/*   Updated: 2019/09/14 22:21:38 by jziemann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static void    check_links(t_node **node_ptr, t_path **path, t_farm **farm_ptr, t_pvec **flow)
+static void		check_links(t_node **node_ptr, t_path **path, t_farm **farm_ptr, t_pvec **flow)
 {
-    register int i;
-    t_link  *forward_link;
-    t_node  *node;
+	register int	i;
+	t_link			*forward_link;
+	t_node			*node;
 
     i = -1;
     node = *node_ptr;
@@ -33,22 +33,22 @@ static void    check_links(t_node **node_ptr, t_path **path, t_farm **farm_ptr, 
     }
 }
 
-void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow)
+void			ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow)
 {
-    t_path	*path;
-    t_node *node;
-    t_farm *farm;
+	t_path	*path;
+	t_node	*node;
+	t_farm	*farm;
 
-    farm = *farm_ptr;
-    if (!(path = create_path()))
-        finish_him(farm_ptr);
-    node = link->ptr;
-    while (node != farm->end)
-       check_links(&node, &path, farm_ptr, flow);
-    //safe_room_adding(farm_ptr, &path, create_room(farm->end->name), flow);
-    if (ft_ptr_vec_pushback(*flow, path) != 1)
-    {
-        ft_ptr_vec_del(flow, del_path);
-        finish_him(farm_ptr);
-    }
+	farm = *farm_ptr;
+	if (!(path = create_path()))
+		finish_him(farm_ptr);
+	node = link->ptr;
+	while (node != farm->end)
+		check_links(&node, &path, farm_ptr, flow);
+	//safe_room_adding(farm_ptr, &path, create_room(farm->end->name), flow);
+	if (ft_ptr_vec_pushback(*flow, path) != 1)
+	{
+		ft_ptr_vec_del(flow, del_path);
+		finish_him(farm_ptr);
+	}
 }
