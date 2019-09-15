@@ -58,6 +58,8 @@ typedef struct	s_node
 	int	level;
 	int potential;
 	struct s_node *parent;
+	int x;
+	int y;
 	int used:1;
 }				t_node;
 
@@ -75,7 +77,7 @@ typedef struct	s_farm
 	t_node  *end;
     t_ivec 	*loss;
     t_pvec	*all_flows;
-	int		fixed;
+    t_cvec  *output;
 	int		ant_num;
 	int     ants_check;
 
