@@ -21,6 +21,7 @@ def  test_one_map(flag):
     with open(test_file, 'r') as f:
         inp = f.read().split('\n')
 
+    len_map = len(inp)
     ants_count, steps_count, graph = int(inp[0]), int(inp[1].partition(': ')[2]), [i for i in inp[2:] if i.count('#') != 1 and i != ""]
     nodes = [line.split(' ')[0] for line in graph if '-' not in line]
     start = nodes[nodes.index('##start') + 1]
@@ -45,7 +46,9 @@ def  test_one_map(flag):
         print('\033[91m%s\033[0m' % "Error. no \\n at the end of output.")
     else:
         inp = inp[:-1]
-
+    node_index = [i for i, item in enumerate(inp) if item.startswith('L')][0]
+    if len(inp) > len_map:
+        inp = inp[node_index:]
     for index_line, line in enumerate(inp):
         for index_step, step in enumerate(line.split()):
             ant, next_node = step.partition('-')[::2]
@@ -98,15 +101,20 @@ if len(sys.argv) >= 3:
         test_one_map(flag)
         time.sleep(1)
         i += 1
+    k = 0
     if error_time:
         print("\033[91m%s %s in %s tests\033[0m" % ("ERROR time", error_time, count))
+        k = 1
     if error_step:
         print("\033[91m%s %s in %s tests\033[0m" % ("ERROR step", error_step, count))
+        k = 1
     if error_link:
         print("\033[91m%s %s in %s tests\033[0m" % ("ERROR incorrect links", error_link, count))
+        k = 1
     if error_node_overflow:
         print("\033[91m%s %s in %s tests\033[0m" % ("ERROR node overflow", error_node_overflow, count))
-    else:
+        k = 1
+    if not k:
         print("\033[92m%s\033[0m" % "SUCCESS")
 else:
     test_one_map(flag)
