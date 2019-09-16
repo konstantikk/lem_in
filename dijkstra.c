@@ -44,7 +44,7 @@ void    sift_down(void **data, int length, int i)
         j = left;
         if (right < length && ((t_node*)(data[left]))->level > ((t_node*)(data[right]))->level)
             j = right;
-        if (((t_node*)(data[i]))->level >= ((t_node*)(data[j]))->level)
+        if (((t_node*)(data[j]))->level >= ((t_node*)(data[i]))->level)
             break ;
         bin_heap_swap(&data[i], &data[j]);
         i = j;
@@ -53,30 +53,41 @@ void    sift_down(void **data, int length, int i)
 
 t_node *pop_min(t_pvec *vec)
 {
-    t_node *min_node = ft_ptr_vec_popfront(vec);
+    //t_node *min_node = ft_ptr_vec_popfront(vec);
+    t_node *min_node = vec->data[0];
+  //  if (vec->length)
+  //  {
 
-    if (vec->length)
-    {
-        vec->data[0] = vec->data[vec->length - 1];
-        if(vec->length != 1)
+        bin_heap_swap(&vec->data[0] , &vec->data[vec->length - 1]);
+        vec->length--;
+        if(vec->length > 1)
             sift_down(vec->data, vec->length, 0);
-    }
+   // }
     return (min_node);
 }
 
-void        dijkstra(t_farm *farm)
+void        dijkstra(t_farm **farm_ptr)
 {
     t_node *node;
     t_link *link;
-    t_pvec *q = ft_ptr_vec_init();
+    t_pvec *q;
+    t_farm *farm;
 
+    farm = *farm_ptr;
+    if (!(q = ft_ptr_vec_init()))
+    	finish_him(farm_ptr);
     nullify(farm->nodes, BOTH);
-    ft_ptr_vec_pushfront(q, farm->start);
+    if (ft_ptr_vec_pushback(q, farm->start) != 1)
+	{
+		free(q->start_data);
+		ft_memdel((void**)&q);
+		finish_him(farm_ptr);
+	}
     farm->start->level = 0;
     while (q->length)
     {
-        node = ft_ptr_vec_popfront(q);
-        //node = pop_min(q);
+       // node = ft_ptr_vec_popfront(q);
+        node = pop_min(q);
         for (int i = 0; (size_t)i < node->links->length; i++)
         {
              link = node->links->data[i];
@@ -84,8 +95,13 @@ void        dijkstra(t_farm *farm)
              {
                  link->ptr->level =  node->level + (link->direction + node->potential - link->ptr->potential);
                  link->ptr->parent = node;
-                 ft_ptr_vec_pushback(q, link->ptr);
-          //       sift_up(q->data, q->length - 1);
+                 if (ft_ptr_vec_pushback(q, link->ptr) != 1)
+				 {
+					 free(q->start_data);
+					 ft_memdel((void**)&q);
+					 finish_him(farm_ptr);
+				 }
+          	     sift_up(q->data, q->length - 1);
              }
         }
     }

@@ -85,7 +85,7 @@ void    one_step_towards_finish(char *ants, t_flow *flow, int counter, t_farm *f
     }
 }
 
-void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation)
+void    let_the_flow_go(t_farm **farm_ptr, t_flow *flow, int *ants_allocation)
 {
     char *ants;
     t_farm *farm;
@@ -94,15 +94,12 @@ void    let_the_flow_go(t_farm **farm_ptr, t_flow **flow, int *ants_allocation)
     counter = 0;
     farm = *farm_ptr;
     if (!(ants = (char*)malloc(sizeof(char) * farm->ant_num)))
-    {
-        ft_ptr_vec_del(&((*flow)->flow), del_path);
         finish_him(farm_ptr);
-    }
     while (farm->ants_check != farm->ant_num)
     {
-        put_ants_on_start(ants, farm, *flow, ants_allocation);
+        put_ants_on_start(ants, farm, flow, ants_allocation);
         ft_chr_vec_pushback(farm->output, "\n");
-        one_step_towards_finish(ants, *flow, counter, farm);
+        one_step_towards_finish(ants, flow, counter, farm);
     }
 	ft_memdel((void**)&ants);
 }

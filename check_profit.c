@@ -62,7 +62,7 @@ void	ft_return_previous_flow(t_farm **farm_ptr)
 	farm = *farm_ptr;
 	len = (int)farm->all_flows->length;
 	flow = farm->all_flows->data[len - 2];
-	let_the_flow_go(farm_ptr, &flow, flow->ants_allocation);
+	let_the_flow_go(farm_ptr, flow, flow->ants_allocation);
 }
 
 static	int		check_benefits(t_farm **farm_ptr, t_ivec *loss, t_flow *flow)
@@ -72,7 +72,7 @@ static	int		check_benefits(t_farm **farm_ptr, t_ivec *loss, t_flow *flow)
 	farm = *farm_ptr;
 	if (farm->ant_num == 1)
 	{
-		let_the_flow_go(farm_ptr, &(flow), NULL);
+		let_the_flow_go(farm_ptr, flow, NULL);
 		return (0);
 	}
 	if (!ft_check_profit(farm, flow->flow, flow->ants_allocation,

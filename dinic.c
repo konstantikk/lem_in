@@ -68,14 +68,14 @@ int		new_alg(t_farm **farm_ptr)
 	t_farm *farm;
 
 	farm = *farm_ptr;
-	dijkstra(farm);
+	dijkstra(farm_ptr);
 	while (farm->end->level != INF)
 	{
 		recalculate_potentials(farm->nodes);
 		ft_add_path(farm_ptr);
 		if (!ft_release_flow(farm_ptr))
 			return (0);
-		dijkstra(farm);
+		dijkstra(farm_ptr);
 	}
 	return (1);
 }

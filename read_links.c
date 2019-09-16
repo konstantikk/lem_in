@@ -56,9 +56,10 @@ void	link_with_typ_nodes(t_farm **farm_ptr, t_parse_link **pl_ptr)
 
 	farm = *farm_ptr;
 	pl = *pl_ptr;
-	safe_pushback(farm_ptr, pl->node1->links, safe_create_link(farm_ptr, ft_strjoin("L", pl->node_name2)));
-	safe_pushback(farm_ptr, pl->node2->links, safe_create_link(farm_ptr, ft_strjoin("L", pl->node_name1)));
-
+	safe_pushback(farm_ptr, pl->node1->links,
+			safe_create_link(farm_ptr, ft_strjoin("L", pl->node_name2)));
+	safe_pushback(farm_ptr, pl->node2->links,
+			safe_create_link(farm_ptr, ft_strjoin("L", pl->node_name1)));
 	delete_parse_link_struct(pl_ptr);
 }
 
