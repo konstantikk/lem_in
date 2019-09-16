@@ -82,8 +82,6 @@ void	bin_heap_test(void)
 	output(vec);
 	sift_up(vec->data, vec->length - 1);
 	output(vec);
-
-
 	while (vec->length)
 		ft_ptr_vec_pushback(new_vec, pop_min(vec));
 	printf("new_vec\n");
@@ -95,6 +93,7 @@ int 	main(int argc, char **argv)
 	t_farm *farm;
 	t_flow *flow;
 
+	flow = NULL;
 	farm = parse(0);
 	if (new_alg(&farm))
 	{
@@ -106,6 +105,7 @@ int 	main(int argc, char **argv)
 	}
 	ft_chr_vec_pushback(farm->output, "\n");
 	write(1, farm->output->data, farm->output->length);
+//	debug(farm);
 	free_memory(&farm);
 	return (0);
 }

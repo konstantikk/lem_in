@@ -16,16 +16,36 @@ void	link_with_start(t_farm **farm_ptr, t_parse_link **pl_ptr)
 {
 	t_farm *farm;
 	t_parse_link *pl;
+	int		node1_flag;
+	int 	node2_flag;
 
 	farm = *farm_ptr;
 	pl = *pl_ptr;
+	node1_flag = FALSE;
+	node2_flag = FALSE;
 	if (pl->node1 == farm->start)
+	{
+		if (pl->node2 == farm->end)
+			node2_flag = TRUE;
 		safe_pushback(farm_ptr, pl->node1->links,
-				safe_create_link(farm_ptr, ft_strjoin("L", pl->node_name2)));
+					  safe_create_link(farm_ptr, pl->node2 != farm->end ?
+					  ft_strjoin("L", pl->node_name2) : pl->node_name2));
+	}
 	else
+	{
+		if (pl->node1 == farm->end)
+			node1_flag = TRUE;
 		safe_pushback(farm_ptr, pl->node2->links,
-				safe_create_link(farm_ptr, ft_strjoin("L", pl->node_name1)));
-	delete_parse_link_struct(pl_ptr);
+					  safe_create_link(farm_ptr, pl->node1 != farm->end ?
+					  ft_strjoin("L", pl->node_name1) : pl->node_name1));
+	}
+	if (!node1_flag && !node2_flag)
+		delete_parse_link_struct(pl_ptr);
+	else if (node1_flag || node2_flag)
+	{
+		node1_flag ? ft_memdel((void**)&pl->node_name2) : ft_memdel((void**)&pl->node_name1);
+		ft_memdel((void**)pl_ptr);
+	}
 }
 
 void	link_with_end(t_farm **farm_ptr, t_parse_link **pl_ptr)
@@ -62,12 +82,6 @@ void	link_with_typ_nodes(t_farm **farm_ptr, t_parse_link **pl_ptr)
 			safe_create_link(farm_ptr, ft_strjoin("L", pl->node_name1)));
 	delete_parse_link_struct(pl_ptr);
 }
-
-void	link_from_start_to_finish()
-{
-
-}
-
 
 int 	read_links(t_farm **farm_ptr, char *buff)
 {

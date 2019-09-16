@@ -64,7 +64,6 @@ t_farm	*parse(int fd)
 			read_links(&farm, buff);
 		else
 			read_node(&farm, buff);
-
 		if (buff[0] == '#' && buff[1] && buff[1] != '#') {
 			ft_memdel((void **) &buff);
 			continue;

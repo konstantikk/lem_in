@@ -68,7 +68,7 @@ void    one_step_towards_finish(char *ants, t_flow *flow, int counter, t_farm *f
         while (counter-- && j > 0)
         {
             room = path->path->data[j];
-            if (ht_find_node(farm->nodes,room->name) == farm->end)
+            if (room->ptr == farm->end)
             {
                 ants[room->temp_ant] = (char)1;
                 flag = TRUE;
