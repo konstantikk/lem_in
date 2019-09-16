@@ -132,4 +132,14 @@ else:
     test = 'lem_in_output.txt'
     test_file = 'lem_in_input.txt'
     os.system('./generator.dms %s > %s ' % (flag, test_file))
+    print("\033[5m      %s \033[0m" % 'lem-in ')
+    print("\033[5m%s \033[0m" % '~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     test_one_map(flag, test_file, test, 'lem-in')
+    time.sleep(1)
+    print("\033[5m      %s \033[0m" % 'lem-in gleb&alex')
+    print("\033[5m%s \033[0m" % '~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    test_one_map(flag, test_file, test, 'gleb')
+    time.sleep(1)
+    print("\033[5m      %s \033[0m" % 'lem-in bin_heap')
+    print("\033[5m%s \033[0m" % '~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    test_one_map(flag, test_file, test, 'lem-in2')
