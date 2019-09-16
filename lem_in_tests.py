@@ -6,17 +6,18 @@ error_step = 0
 error_time = 0
 error_node_overflow = 0
 error_link = 0
-def  test_one_map(flag):
+
+def  test_one_map(flag, test_file, test, bin):
     valid = True
     global error_step
     global error_time
     global error_link
     global error_node_overflow
-    test = 'lem_in_output.txt'
-    test_file = 'lem_in_input.txt'
-    os.system('./generator.dms %s > %s ' % (flag, test_file))
+    #test = 'lem_in_output.txt'
+   # test_file = 'lem_in_input.txt'
+   # os.system('./generator.dms %s > %s ' % (flag, test_file))
     timer = time.time()
-    os.system('./lem-in < %s > %s' % (test_file, test))
+    os.system('./%s < %s > %s' % (bin, test_file, test))
     timer = time.time() - timer
     with open(test_file, 'r') as f:
         inp = f.read().split('\n')
@@ -98,7 +99,18 @@ if len(sys.argv) >= 3:
     i = 0
     while i <= count:
         print("\033[93m%s\033[0m" % i)
-        test_one_map(flag)
+        test = 'lem_in_output.txt'
+        test_file = 'lem_in_input.txt'
+        os.system('./generator.dms %s > %s ' % (flag, test_file))
+        print("\033[5m      %s \033[0m" % 'lem-in ')
+        print("\033[5m%s \033[0m" % '~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        test_one_map(flag, test_file, test, 'lem-in')
+        print("\033[5m      %s \033[0m" % 'lem-in gleb&alex')
+        print("\033[5m%s \033[0m" % '~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        test_one_map(flag, test_file, test, 'gleb')
+        print("\033[5m      %s \033[0m" % 'lem-in bin_heap')
+        print("\033[5m%s \033[0m" % '~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        test_one_map(flag, test_file, test, 'lem-in2')
         time.sleep(1)
         i += 1
     k = 0
@@ -117,4 +129,7 @@ if len(sys.argv) >= 3:
     if not k:
         print("\033[92m%s\033[0m" % "SUCCESS")
 else:
-    test_one_map(flag)
+    test = 'lem_in_output.txt'
+    test_file = 'lem_in_input.txt'
+    os.system('./generator.dms %s > %s ' % (flag, test_file))
+    test_one_map(flag, test_file, test, 'lem-in')
