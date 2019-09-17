@@ -72,7 +72,6 @@ void        dijkstra(t_farm **farm_ptr)
     t_link *link;
     t_pvec *q;
     t_farm *farm;
-    int 	weight;
 
     farm = *farm_ptr;
     if (!(q = ft_ptr_vec_init()))
@@ -87,15 +86,14 @@ void        dijkstra(t_farm **farm_ptr)
     farm->start->level = 0;
     while (q->length)
     {
-        //node = ft_ptr_vec_popfront(q);
+       // node = ft_ptr_vec_popfront(q);
         node = pop_min(q);
         for (int i = 0; (size_t)i < node->links->length; i++)
         {
              link = node->links->data[i];
-             weight = node->level + (link->direction + node->potential - link->ptr->potential);
-             if (link->ptr->level > weight && link->flow != 1)
+             if (link->ptr->level > node->level + (link->direction + node->potential - link->ptr->potential) && link->flow != 1)
              {
-                 link->ptr->level = node->level + weight;
+                 link->ptr->level =  node->level + (link->direction + node->potential - link->ptr->potential);
                  link->ptr->parent = node;
                  if (ft_ptr_vec_pushback(q, link->ptr) != 1)
 				 {

@@ -80,7 +80,7 @@ typedef struct	s_farm
     t_cvec  *output;
 	int		ant_num;
 	int     ants_check;
-	int 	direct_path;
+
 }				t_farm;
 
 typedef	struct s_parse_link
@@ -136,7 +136,5 @@ void	delete_parse_link_struct(t_parse_link **pl_ptr);
 void    sift_down(void **data, int length, int i);
 void	sift_up(void **data, int index);
 t_node *pop_min(t_pvec *vec);
-void	delete_one_flow(void **flow_ptr);
-void	direct_path(t_farm **farm_ptr);
 
 #endif

@@ -26,17 +26,6 @@ void	push_room_with_ant(t_cvec **output_ptr, int ant_index, char *room_name)
 	ft_memdel((void**)&chr_ant_index);
 }
 
-void	direct_path(t_farm **farm_ptr)
-{
-	t_farm *farm;
-	register int i;
-
-	farm = *farm_ptr;
-	i = -1;
-	while (++i < farm->ant_num)
-		push_room_with_ant(&farm->output, i + 1, farm->end->name);
-}
-
 void    put_ants_on_start(char *ants, t_farm *farm, t_flow *flow_temp, int *ants_allocation)
 {
     static int ant_index = 0;
