@@ -99,9 +99,7 @@ int				ft_release_flow(t_farm **farm_ptr)
 	farm = *farm_ptr;
 	loss = farm->loss;
 	if (!(flow = ft_get_flow(farm_ptr)))
-	{
-		finish_him(farm_ptr); ///del flow
-	}
+		finish_him(farm_ptr);
 	if (!check_benefits(farm_ptr, loss, flow))
 		return (0);
 	return (1);

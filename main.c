@@ -14,7 +14,7 @@
 
 void    finish_him(t_farm **farm)
 {
-    write(2, "Error\n", 6);
+    write(2, "ERROR\n", 6);
     free_memory(farm);
     exit(-1);
 }
@@ -93,9 +93,8 @@ int 	main(int argc, char **argv)
 	t_farm *farm;
 	t_flow *flow;
 
-	flow = NULL;
 	farm = parse(0);
-	if (new_alg(&farm))
+	if (new_alg(&farm) == 1)
 	{
 		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
 			flow = farm->all_flows->data[farm->all_flows->length - 2];

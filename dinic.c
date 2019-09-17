@@ -37,7 +37,7 @@ t_flow	*ft_get_flow(t_farm **farm_ptr)
 	temp_flow->len_flow = flow->length;
 	if (!(temp_flow->ants_allocation = (int *)ft_memalloc(sizeof(int) * flow->length)))
 	{
-		//del flow
+		delete_one_flow((void**)&flow);
 		finish_him(farm_ptr);
 	}
 	ft_ptr_vec_pushback(farm->all_flows, temp_flow);
@@ -68,7 +68,14 @@ int		new_alg(t_farm **farm_ptr)
 	t_farm *farm;
 
 	farm = *farm_ptr;
+	if (farm->direct_path == TRUE)
+	{
+		direct_path(farm_ptr);
+		return (0);
+	}
 	dijkstra(farm_ptr);
+	if (farm->end->level == INF)
+		finish_him(farm_ptr);
 	while (farm->end->level != INF)
 	{
 		recalculate_potentials(farm->nodes);

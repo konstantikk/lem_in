@@ -48,11 +48,17 @@ t_farm	*parse(int fd)
 		return (NULL);
 	farm->nodes = ft_ht_init();
 	farm->output = ft_chr_vec_init(CAPACITY);
-	farm->ants_check = 0;
+	farm->loss = ft_int_vec_init();
+	farm->all_flows = ft_ptr_vec_init();
+	farm->ants_check = -1;
+	farm->direct_path = FALSE;
 	while (get_next_line(fd, &buff))
 	{
 		if (!farm->ant_num)
-			farm->ant_num = safe_atoi(buff, &farm);
+		{
+			if ((farm->ant_num = safe_atoi(buff, &farm)) <= 0)
+				finish_him(&farm);
+		}
 		else if (buff[0] == '#')
 		{
 			if (!ft_strcmp(buff, "##start"))
@@ -73,7 +79,5 @@ t_farm	*parse(int fd)
 	    ft_chr_vec_pushback(farm->output, "\n");
 	}
 	ft_chr_vec_pushback(farm->output, "\n");
-	farm->loss = ft_int_vec_init();/// todo error
-	farm->all_flows = ft_ptr_vec_init()  ;/// todo error
 	return (farm);
 }
