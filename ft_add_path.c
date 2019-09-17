@@ -14,9 +14,9 @@
 
 static t_link	*find_link(t_pvec *links, t_node *name)
 {
-	const size_t len = links->length;
-	const void **data = (const void**)links->data;
-	register int i;
+	const size_t	len = links->length;
+	const void		**data = (const void**)links->data;
+	register int	i;
 
 	i = -1;
 	while ((size_t)++i < len)
@@ -25,7 +25,17 @@ static t_link	*find_link(t_pvec *links, t_node *name)
 	return (NULL);
 }
 
-void	ft_add_path(t_farm **farm_ptr)
+static void		add_new_link(t_node *node, t_link *child_link_to_parent,
+		t_farm **farm_ptr)
+{
+	ft_ptr_vec_pushback(node->links,
+			safe_create_link(farm_ptr, ft_strdup(node->parent->name)));
+	child_link_to_parent = node->links->data[node->links->length - 1];
+	child_link_to_parent->flow = -1;
+	child_link_to_parent->direction = -1;
+}
+
+void			ft_add_path(t_farm **farm_ptr)
 {
 	t_node *node;
 	t_link *child_link_to_parent;
@@ -39,19 +49,9 @@ void	ft_add_path(t_farm **farm_ptr)
 		child_link_to_parent = find_link(node->links, node->parent);
 		parent_link_to_child = find_link(node->parent->links, node);
 		if (node == farm->end)
-		{
-			ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, ft_strdup(node->parent->name)));
-			child_link_to_parent = node->links->data[node->links->length - 1];
-			child_link_to_parent->flow = -1;
-			child_link_to_parent->direction = -1;
-		}
+			add_new_link(node, child_link_to_parent, farm_ptr);
 		else if (!child_link_to_parent)
-		{
-			ft_ptr_vec_pushback(node->links, safe_create_link(farm_ptr, ft_strdup(node->parent->name)));
-			child_link_to_parent = node->links->data[node->links->length - 1];
-			child_link_to_parent->flow = -1;
-			child_link_to_parent->direction = -1;
-		}
+			add_new_link(node, child_link_to_parent, farm_ptr);
 		else
 			child_link_to_parent->flow = -1;
 		parent_link_to_child->flow = 1;

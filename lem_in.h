@@ -94,16 +94,7 @@ typedef	struct s_parse_link
 }				t_parse_link;
 
 t_farm	*parse(int fd);
-int 	bfs(t_farm *farm);
-int		ft_bfs(t_farm **farm_ptr);
-int		ft_dfs(t_farm **farm_ptr);
-int 	dfs(t_farm *farm);
-int		ft_dinic(t_farm **farm);
-int 	dinic(t_farm *farm);
 t_link	*create_link(char *name, t_ht *nodes);
-int     release_flow(t_farm *farm);
-t_vec    *get_flow(t_farm *farm);
-int 	*check_profit(t_farm *farm, t_vec *flow, int max);
 void    let_the_flow_go(t_farm **farm_ptr, t_flow *flow, int *ants_allocation);
 int     ht_insert_node(t_ht *hashtable, t_node *node);
 t_node	*create_node(char *name);
@@ -125,19 +116,17 @@ void    safe_room_adding(t_farm **farm_ptr, t_path **path_ptr, void *elem, t_pve
 void	ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow);
 void    sort_flow(t_pvec *flow, size_t len, float step);
 t_flow	*ft_get_flow(t_farm **farm_ptr);
-int     zero_one_bfs(t_farm *farm);
-int     marking_direction_dfs(t_farm **farm_ptr);
-void        dijkstra(t_farm **farm);
+void        dijkstra(t_farm **farm_ptr);
 void	ft_add_path(t_farm **farm_ptr);
 void    recalculate_potentials(t_ht *nodes);
-int     new_alg(t_farm **farm_ptr);
 int				ft_release_flow(t_farm **farm_ptr);
-void    push_nodes(t_farm **farm_ptr, t_flow **flow_ptr);
 void	delete_all_flows(t_pvec **all_flows);
 void	delete_parse_link_struct(t_parse_link **pl_ptr);
 void    sift_down(void **data, int length, int i);
 void	sift_up(void **data, int index);
 t_node *pop_min(t_pvec *vec);
 void	direct_path(t_farm **farm_ptr);
+void	delete_one_flow(void **flow_ptr);
+int		get_optimal_flow(t_farm **farm_ptr);
 
 #endif

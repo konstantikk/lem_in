@@ -44,5 +44,4 @@ void	delete_parse_link_struct(t_parse_link **pl_ptr)
 	ft_memdel((void**)&pl->node_name1);
 	ft_memdel((void**)&pl->node_name2);
 	ft_memdel((void**)pl_ptr);
-
 }

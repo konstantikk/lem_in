@@ -12,12 +12,12 @@
 
 #include "lem_in.h"
 
-t_node		*ht_find_node(t_ht *hashtable, char *name)
+t_node		*ht_find_node(t_ht *ht, char *name)
 {
-	const unsigned long index = ft_hash((unsigned char*)name, hashtable->capacity);
+	const unsigned long index = ft_hash((unsigned char*)name, ht->capacity);
 	t_list				*temp;
 
-	temp = hashtable->table[index];
+	temp = ht->table[index];
 	while (temp)
 	{
 		if (!ft_strcmp(((t_node*)temp->content)->name, name))

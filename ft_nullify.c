@@ -14,10 +14,10 @@
 
 void	nullify(t_ht *nodes, int level_or_used)
 {
-	const int *data = nodes->loaded->data;
-	const size_t len = nodes->loaded->length;
-	register int i;
-	t_list		*temp;
+	const int		*data = nodes->loaded->data;
+	const size_t	len = nodes->loaded->length;
+	register int	i;
+	t_list			*temp;
 
 	i = -1;
 	while ((size_t)++i < len)

@@ -29,7 +29,6 @@ static void		del_ht_elem(t_list **head)
 	while (temp)
 	{
 		*head = temp;
-		char *name = ((t_node*)(temp->content))->name;
 		ft_memdel((void**)&((t_node*)(temp->content))->name);
 		ft_ptr_vec_del(&(((t_node*)(temp->content))->links), del_link);
 		ft_memdel(&temp->content);
