@@ -17,6 +17,7 @@
 
 #define INF 10000000
 #define CAPACITY 7000
+#define	PATH_LEN(i) ((t_path*)(flow->data[i]))->path->length
 
 typedef enum e_values
 {
@@ -80,6 +81,7 @@ typedef struct	s_farm
     t_cvec  *output;
 	int		ant_num;
 	int     ants_check;
+	int 	direct_path;
 
 }				t_farm;
 
@@ -136,5 +138,6 @@ void	delete_parse_link_struct(t_parse_link **pl_ptr);
 void    sift_down(void **data, int length, int i);
 void	sift_up(void **data, int index);
 t_node *pop_min(t_pvec *vec);
+void	direct_path(t_farm **farm_ptr);
 
 #endif

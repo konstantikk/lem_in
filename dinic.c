@@ -68,7 +68,14 @@ int		new_alg(t_farm **farm_ptr)
 	t_farm *farm;
 
 	farm = *farm_ptr;
+	if (farm->direct_path == TRUE)
+	{
+		direct_path(farm_ptr);
+		return (0);
+	}
 	dijkstra(farm_ptr);
+	if (farm->end->level == INF)
+		finish_him(farm_ptr);
 	while (farm->end->level != INF)
 	{
 		recalculate_potentials(farm->nodes);

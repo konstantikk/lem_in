@@ -23,6 +23,8 @@ void	link_with_start(t_farm **farm_ptr, t_parse_link **pl_ptr)
 	pl = *pl_ptr;
 	node1_flag = FALSE;
 	node2_flag = FALSE;
+	if (pl->node1 == farm->end || pl->node2 == farm->end)
+		farm->direct_path = TRUE;
 	if (pl->node1 == farm->start)
 	{
 		if (pl->node2 == farm->end)

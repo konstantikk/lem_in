@@ -12,7 +12,8 @@
 
 #include "lem_in.h"
 
-static	int		scatter_ants(t_farm *farm, int *ants_allocation, int len_flow, int sum)
+static	int		scatter_ants(t_farm *farm, int *ants_allocation, int len_flow,
+		int sum)
 {
 	int		addition_ants;
 	int		residual_ants;
@@ -30,19 +31,20 @@ static	int		scatter_ants(t_farm *farm, int *ants_allocation, int len_flow, int s
 	return (ants_allocation[0] - 1);
 }
 
-static	int		ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, int len_flow)
+static	int		ft_check_profit(t_farm *farm, t_pvec *flow,
+		int *ants_allocation, int len_flow)
 {
 	int			sum;
 	int			i;
 	size_t		path_len;
-	const int	max_path = (int)((t_path*)(flow->data[len_flow - 1]))->path->length;
-	const int	length = ((t_path*)(flow->data[0]))->path->length - 1;
+	const int	length = PATH_LEN(0) - 1;
+	const int	max_path = PATH_LEN(len_flow - 1);
 
 	sum = 0;
 	i = -1;
 	while ((size_t)++i < len_flow)
 	{
-		path_len = max_path - ((t_path*)(flow->data[i]))->path->length;
+		path_len = max_path - PATH_LEN(i);
 		ants_allocation[i] = path_len;
 		sum += path_len;
 		if (farm->ant_num < sum)
@@ -53,7 +55,7 @@ static	int		ft_check_profit(t_farm *farm, t_pvec *flow, int *ants_allocation, in
 	return (1);
 }
 
-void	ft_return_previous_flow(t_farm **farm_ptr)
+void			ft_return_previous_flow(t_farm **farm_ptr)
 {
 	t_farm	*farm;
 	t_flow	*flow;
@@ -99,9 +101,7 @@ int				ft_release_flow(t_farm **farm_ptr)
 	farm = *farm_ptr;
 	loss = farm->loss;
 	if (!(flow = ft_get_flow(farm_ptr)))
-	{
-		finish_him(farm_ptr); ///del flow
-	}
+		finish_him(farm_ptr);
 	if (!check_benefits(farm_ptr, loss, flow))
 		return (0);
 	return (1);

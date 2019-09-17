@@ -95,7 +95,7 @@ int 	main(int argc, char **argv)
 
 	flow = NULL;
 	farm = parse(0);
-	if (new_alg(&farm))
+	if (new_alg(&farm) == 1)
 	{
 		if (farm->loss->length > 1 && farm->loss->data[farm->loss->length - 2] <= farm->loss->data[farm->loss->length - 1])
 			flow = farm->all_flows->data[farm->all_flows->length - 2];

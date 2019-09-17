@@ -12,30 +12,46 @@
 
 #include "lem_in.h"
 
-void	push_room_with_ant(t_cvec **output_ptr, int ant_index, char *room_name)
+void	push_room_with_ant(t_farm **farm_ptr, int ant_index, char *room_name)
 {
-	t_cvec *output;
+	t_farm	*farm;
 	const char	*chr_ant_index = ft_itoa(ant_index);
 
-	output = *output_ptr;
-	ft_chr_vec_pushback(output, "L");
-	ft_chr_vec_pushback(output, (char*)chr_ant_index);
-	ft_chr_vec_pushback(output, "-");
-	ft_chr_vec_pushback(output, room_name);
-	ft_chr_vec_pushback(output, " ");
-	ft_memdel((void**)&chr_ant_index);
+	farm = *farm_ptr;
+	if (ft_chr_vec_pushback(farm->output, "L") != 1 ||
+	ft_chr_vec_pushback(farm->output, (char*)chr_ant_index) != 1 ||
+	ft_chr_vec_pushback(farm->output, "-") != 1 ||
+	ft_chr_vec_pushback(farm->output, room_name) != 1 ||
+	ft_chr_vec_pushback(farm->output, " ") != 1)
+	{
+		ft_memdel((void **) &chr_ant_index);
+		finish_him(farm_ptr);
+	}
+	ft_memdel((void **) &chr_ant_index);
 }
 
-void    put_ants_on_start(char *ants, t_farm *farm, t_flow *flow_temp, int *ants_allocation)
+void	direct_path(t_farm **farm_ptr)
+{
+	t_farm *farm;
+	register int i;
+
+	i = -1;
+	farm = *farm_ptr;
+	while (++i < farm->ant_num)
+		push_room_with_ant(farm_ptr, i + 1, farm->end->name);
+}
+
+static void    put_ants_on_start(char *ants, t_farm **farm_ptr, t_flow *flow_temp, int *ants_allocation)
 {
     static int ant_index = 0;
     register int i;
-    const size_t len = flow_temp->len_flow;
+    t_farm	*farm;
     t_room  *room;
     t_path  *path;
 
     i = -1;
-    while ((size_t)++i < len && ant_index < farm->ant_num)
+    farm = *farm_ptr;
+    while ((size_t)++i < flow_temp->len_flow && ant_index < farm->ant_num)
     {
         path = flow_temp->flow->data[i];
         if (ants_allocation)
@@ -45,43 +61,51 @@ void    put_ants_on_start(char *ants, t_farm *farm, t_flow *flow_temp, int *ants
         room =((t_room*)(path->path->data[0]));
         room->temp_ant = ant_index;
         path->ants_onw++;
-        push_room_with_ant(&farm->output, ant_index++ + 1, room->name);
+        push_room_with_ant(farm_ptr, ant_index++ + 1, room->name);
         path->fixed_ant_num++;
     }
 }
 
-void    one_step_towards_finish(char *ants, t_flow *flow, int counter, t_farm *farm)
+static inline void	one_step_on_one_path(char *ants, int *flag, t_farm **farm_ptr, t_path *path)
+{
+	t_farm *farm;
+	register int j;
+	t_room *room;
+	int 	counter;
+
+	farm = *farm_ptr;
+	j = path->last_occupied + 1;
+	counter = path->ants_onw;
+	while (counter-- && j > 0)
+	{
+		room = path->path->data[j];
+		if (room->ptr == farm->end)
+		{
+			ants[room->temp_ant] = (char)1;
+			(*flag) = TRUE;
+			path->ants_onw--;
+			farm->ants_check++;
+		}
+		room->temp_ant = ((t_room*)(path->path->data[j - 1]))->temp_ant;
+		push_room_with_ant(farm_ptr, room->temp_ant + 1, room->name);
+		j--;
+	}
+}
+
+static void    one_step_towards_finish(char *ants, t_farm **farm_ptr, t_flow *flow)
 {
     register int i;
-    register int j;
     t_path  *path;
-    t_room  *room;
     int     flag;
 
     i = -1;
     while ((size_t)++i < flow->len_flow)
     {
         path = flow->flow->data[i];
-        j = path->last_occupied + 1;
-        counter = path->ants_onw;
-        flag = FALSE;
-        while (counter-- && j > 0)
-        {
-            room = path->path->data[j];
-            if (room->ptr == farm->end)
-            {
-                ants[room->temp_ant] = (char)1;
-                flag = TRUE;
-                path->ants_onw--;
-                farm->ants_check++;
-            }
-            room->temp_ant = ((t_room*)(path->path->data[j - 1]))->temp_ant;
-            push_room_with_ant(&farm->output, room->temp_ant + 1, room->name);
-            j--;
-        }
-        if (flag != TRUE) {
+		flag = FALSE;
+		one_step_on_one_path(ants, &flag, farm_ptr, path);
+        if (flag != TRUE)
             path->last_occupied++;
-        }
     }
 }
 
@@ -97,9 +121,9 @@ void    let_the_flow_go(t_farm **farm_ptr, t_flow *flow, int *ants_allocation)
         finish_him(farm_ptr);
     while (farm->ants_check != farm->ant_num)
     {
-        put_ants_on_start(ants, farm, flow, ants_allocation);
+        put_ants_on_start(ants, farm_ptr, flow, ants_allocation);
         ft_chr_vec_pushback(farm->output, "\n");
-        one_step_towards_finish(ants, flow, counter, farm);
+        one_step_towards_finish(ants, farm_ptr, flow);
     }
 	ft_memdel((void**)&ants);
 }
