@@ -25,7 +25,8 @@ static void		del_elem(t_list **head)
 	}
 }
 
-static int		copy_element(t_list **dst, t_node *node, size_t capacity, t_ivec *loaded)
+static int		copy_element(t_list **dst, t_node *node,
+		size_t capacity, t_ivec *loaded)
 {
 	const unsigned long index = ft_hash((unsigned char*)node->name, capacity);
 	t_list				*temp;
@@ -49,19 +50,20 @@ static int		copy_element(t_list **dst, t_node *node, size_t capacity, t_ivec *lo
 	return (1);
 }
 
-static int		copy_table(t_ivec *loaded, t_list **dst, t_list **src, t_ht *hashtable)
+static int		copy_table(t_ivec *loaded, t_list **dst,
+		t_list **src, t_ht *ht)
 {
-	const size_t		length = hashtable->loaded->length;
+	const size_t		length = ht->loaded->length;
 	register int		i;
 	t_list				*temp;
 
 	i = -1;
 	while ((size_t)++i < length)
 	{
-		temp = src[hashtable->loaded->data[i]];
+		temp = src[ht->loaded->data[i]];
 		while (temp)
 		{
-			if (!copy_element(dst, temp->content, hashtable->capacity, loaded))
+			if (!copy_element(dst, temp->content, ht->capacity, loaded))
 				return (0);
 			temp = temp->next;
 		}
@@ -69,30 +71,30 @@ static int		copy_table(t_ivec *loaded, t_list **dst, t_list **src, t_ht *hashtab
 	return (length);
 }
 
-int				ht_enlarge(t_ht *hashtable)
+int				ht_enlarge(t_ht *ht)
 {
-	const float load_factor = (float)(hashtable->size + 1) / (float)hashtable->capacity;
+	const float load_factor = (float)(ht->size + 1) / (float)ht->capacity;
 	t_list		**resized;
 	int			i;
 	t_ivec		*new_loaded;
 
 	if (load_factor >= 0.75)
 	{
-		if (!(resized = (t_list**)malloc(sizeof(t_list*) * (hashtable->capacity * 2))))
+		if (!(resized = (t_list**)malloc(sizeof(t_list*) * (ht->capacity * 2))))
 			return (0);
 		i = -1;
 		new_loaded = ft_int_vec_init();
-		hashtable->capacity *= 2;
-		while ((size_t)++i < hashtable->capacity)
+		ht->capacity *= 2;
+		while ((size_t)++i < ht->capacity)
 			resized[i] = NULL;
-		if (!(i = copy_table(new_loaded, resized, hashtable->table, hashtable)))
+		if (!(i = copy_table(new_loaded, resized, ht->table, ht)))
 			return (0);
 		while (i--)
-			del_elem(&hashtable->table[ft_int_vec_popback(hashtable->loaded)]);
-		ft_int_vec_del(&hashtable->loaded);
-		ft_memdel((void**)&hashtable->table);
-		hashtable->table = resized;
-		hashtable->loaded = new_loaded;
+			del_elem(&ht->table[ft_int_vec_popback(ht->loaded)]);
+		ft_int_vec_del(&ht->loaded);
+		ft_memdel((void**)&ht->table);
+		ht->table = resized;
+		ht->loaded = new_loaded;
 	}
 	return (1);
 }
