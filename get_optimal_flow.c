@@ -12,38 +12,6 @@
 
 #include "lem_in.h"
 
-t_flow	*ft_get_flow(t_farm **farm_ptr)
-{
-	register int	i;
-	t_pvec			*flow;
-	t_farm			*farm;
-	t_link			*link;
-	t_flow			*temp_flow;
-
-	farm = *farm_ptr;
-	i = -1;
-	if (!(flow = ft_ptr_vec_init()))
-		finish_him(farm_ptr);
-	while ((size_t)++i < farm->start->links->length)
-	{
-		link = farm->start->links->data[i];
-		if (link->flow == 1 && link->direction == 1)
-			ft_recover_path(farm_ptr, link, &flow);
-	}
-	sort_flow(flow, flow->length, flow->length - 1);
-	if (!(temp_flow = (t_flow *)malloc(sizeof(t_flow))))
-		finish_him(farm_ptr);
-	temp_flow->flow = flow;
-	temp_flow->len_flow = flow->length;
-	if (!(temp_flow->ants_allocation = (int *)ft_memalloc(sizeof(int) * flow->length)))
-	{
-		//del flow
-		finish_him(farm_ptr);
-	}
-	ft_ptr_vec_pushback(farm->all_flows, temp_flow);
-	return (temp_flow);
-}
-
 void	recalculate_potentials(t_ht *nodes)
 {
 	const int		*data = nodes->loaded->data;
@@ -57,13 +25,14 @@ void	recalculate_potentials(t_ht *nodes)
 		temp = nodes->table[data[i]];
 		while (temp)
 		{
-			((t_node*)(temp->content))->potential += ((t_node*)(temp->content))->level;
+			((t_node*)(temp->content))->potential +=
+					((t_node*)(temp->content))->level;
 			temp = temp->next;
 		}
 	}
 }
 
-int		new_alg(t_farm **farm_ptr)
+int		get_optimal_flow(t_farm **farm_ptr)
 {
 	t_farm *farm;
 
