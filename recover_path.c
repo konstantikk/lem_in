@@ -26,7 +26,8 @@ static void		check_links(t_node **node_ptr, t_path **path, t_farm **farm_ptr, t_
         if (forward_link->direction == 1 && forward_link->flow == 1)
         {
             if (forward_link->name[0] != 'L')
-                safe_room_adding(farm_ptr, path, create_room(forward_link->name, forward_link->ptr), flow);
+                safe_room_adding(farm_ptr, path,
+                create_room(forward_link->name, forward_link->ptr), flow);
             *node_ptr = forward_link->ptr;
             break ;
         }
@@ -81,7 +82,8 @@ t_flow	*ft_get_flow(t_farm **farm_ptr)
 		finish_him(farm_ptr);
 	temp_flow->flow = flow;
 	temp_flow->len_flow = flow->length;
-	if (!(temp_flow->ants_allocation = (int *)ft_memalloc(sizeof(int) * flow->length)))
+	if (!(temp_flow->ants_allocation = (int *)ft_memalloc(sizeof(int) *
+			flow->length)))
 		error_management(&temp_flow, farm_ptr);
 	ft_ptr_vec_pushback(farm->all_flows, temp_flow);
 	return (temp_flow);
