@@ -12,40 +12,40 @@
 
 #include "lem_in.h"
 
-int     ht_help_insert_node(t_ht *hashtable, t_node *node, unsigned long index)
+int		ht_help_insert_node(t_ht *hashtable, t_node *node, unsigned long index)
 {
-    if (!(hashtable->table[index] = ft_lstnew(NULL, 0))) 
-        return (0); 
-    hashtable->table[index]->content = node; 
-    if (ft_int_vec_pushback(hashtable->loaded, (int) index) != 1) 
-        return (0);
-    return (1);
+	if (!(hashtable->table[index] = ft_lstnew(NULL, 0)))
+		return (0);
+	hashtable->table[index]->content = node;
+	if (ft_int_vec_pushback(hashtable->loaded, (int)index) != 1)
+		return (0);
+	return (1);
 }
 
-int     ht_insert_node(t_ht *hashtable, t_node *node)
+int		ht_insert_node(t_ht *hashtable, t_node *node)
 {
-    unsigned long		index;
-    t_list				*temp;
-    t_list				*new;
+	unsigned long		index;
+	t_list				*temp;
+	t_list				*new;
 
-    if (ht_enlarge(hashtable))
-    {
-        index = ft_hash((unsigned char*)node->name, hashtable->capacity);
-        temp = hashtable->table[index];
-        if (!temp)
-        {
-                if (!ht_help_insert_node(hashtable, node, index))
-                return (0);
-        }
-        else
-        {
-            if (!(new = ft_lstnew(NULL, 0)))
-                return (0);
-            new->content = node;
-            ft_lstadd(&hashtable->table[index], new);
-        }
-        hashtable->size++;
-        return (1);
-    }
-    return (0);
+	if (ht_enlarge(hashtable))
+	{
+		index = ft_hash((unsigned char*)node->name, hashtable->capacity);
+		temp = hashtable->table[index];
+		if (!temp)
+		{
+			if (!ht_help_insert_node(hashtable, node, index))
+				return (0);
+		}
+		else
+		{
+			if (!(new = ft_lstnew(NULL, 0)))
+				return (0);
+			new->content = node;
+			ft_lstadd(&hashtable->table[index], new);
+		}
+		hashtable->size++;
+		return (1);
+	}
+	return (0);
 }

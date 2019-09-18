@@ -32,6 +32,17 @@ void	recalculate_potentials(t_ht *nodes)
 	}
 }
 
+void	direct_path(t_farm **farm_ptr)
+{
+	t_farm			*farm;
+	register int	i;
+
+	i = -1;
+	farm = *farm_ptr;
+	while (++i < farm->ant_num)
+		push_room_with_ant(farm_ptr, i + 1, farm->end->name);
+}
+
 int		get_optimal_flow(t_farm **farm_ptr)
 {
 	t_farm *farm;

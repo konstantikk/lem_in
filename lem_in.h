@@ -128,5 +128,6 @@ t_node *pop_min(t_pvec *vec);
 void	direct_path(t_farm **farm_ptr);
 void	delete_one_flow(void **flow_ptr);
 int		get_optimal_flow(t_farm **farm_ptr);
+void	push_room_with_ant(t_farm **farm_ptr, int ant_index, char *room_name);
 
 #endif
