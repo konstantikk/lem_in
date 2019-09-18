@@ -101,7 +101,7 @@ int 	main(int argc, char **argv)
 			flow = farm->all_flows->data[farm->all_flows->length - 2];
 		else
 			flow = farm->all_flows->data[farm->all_flows->length - 1];
-		let_the_flow_go(&farm, flow, flow->ants_allocation);
+		let_the_flow_go(&farm, flow, flow->a_alloc);
 	}
 	ft_chr_vec_pushback(farm->output, "\n");
 	write(1, farm->output->data, farm->output->length);

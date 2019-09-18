@@ -68,7 +68,7 @@ typedef	struct	s_flow
 {
 	t_pvec	*flow;
 	size_t 	len_flow;
-	int 	*ants_allocation;
+	int 	*a_alloc;
 }				t_flow;
 
 typedef struct	s_farm
@@ -87,10 +87,12 @@ typedef struct	s_farm
 
 typedef	struct s_parse_link
 {
-	char *node_name1;
-	char *node_name2;
+	char *name1;
+	char *name2;
 	t_node	*node1;
 	t_node	*node2;
+	int 	node1_flag;
+	int 	node2_flag;
 }				t_parse_link;
 
 t_farm	*parse(int fd);

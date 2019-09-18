@@ -26,7 +26,7 @@ void	delete_one_flow(void **flow_ptr)
 	t_flow *flow;
 
 	flow = *flow_ptr;
-	ft_memdel((void**)&flow->ants_allocation);
+	ft_memdel((void**)&flow->a_alloc);
 	ft_ptr_vec_del(&flow->flow, delete_path);
 	ft_memdel(flow_ptr);
 }
@@ -41,7 +41,7 @@ void	delete_parse_link_struct(t_parse_link **pl_ptr)
 	t_parse_link *pl;
 
 	pl = *pl_ptr;
-	ft_memdel((void**)&pl->node_name1);
-	ft_memdel((void**)&pl->node_name2);
+	ft_memdel((void**)&pl->name1);
+	ft_memdel((void**)&pl->name2);
 	ft_memdel((void**)pl_ptr);
 }

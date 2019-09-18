@@ -21,12 +21,33 @@ static void		swap_ptr(void **ptr1, void **ptr2)
 	*ptr2 = temp;
 }
 
-void			sort_flow(t_pvec *flow, size_t len, float step)
+void			bubble_sort(t_pvec *flow, size_t len)
 {
-	const float coef = (float)1.247;
-	int         flag;
 	register int i;
 	register int j;
+	register int flag;
+
+	i = -1;
+	while ((size_t)++i < len - 1)
+	{
+		flag = 0;
+		j = -1;
+		while ((size_t)++j < len - i - 1)
+			if (((t_path*)flow->data[j])->path->length >
+				((t_path*)flow->data[j + 1])->path->length)
+			{
+				swap_ptr(&flow->data[j], &flow->data[j + 1]);
+				flag = 1;
+			}
+		if (!flag)
+			break ;
+	}
+}
+
+void			sort_flow(t_pvec *flow, size_t len, float step)
+{
+	const float		coef = (float)1.247;
+	register int	i;
 
 	while ((int)step > 1)
 	{
@@ -37,19 +58,5 @@ void			sort_flow(t_pvec *flow, size_t len, float step)
 				swap_ptr(&flow->data[i], &flow->data[i + (int)step]);
 		step /= coef;
 	}
-	i = -1;
-	while ((size_t)++i < len - 1)
-	{
-		flag = 0;
-		j = -1;
-		while ((size_t)++j < len - i - 1)
-			if (((t_path*)flow->data[j])->path->length >
-					((t_path*)flow->data[j + 1])->path->length)
-			{
-				swap_ptr(&flow->data[j], &flow->data[j + 1]);
-				flag = 1;
-			}
-		if (!flag)
-			break ;
-	}
+	bubble_sort(flow, len);
 }

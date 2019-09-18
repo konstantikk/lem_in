@@ -12,26 +12,27 @@
 
 #include "lem_in.h"
 
-static void		check_links(t_node **node_ptr, t_path **path, t_farm **farm_ptr, t_pvec **flow)
+static void		check_links(t_node **node_ptr, t_path **path,
+		t_farm **farm_ptr, t_pvec **flow)
 {
 	register int	i;
 	t_link			*forward_link;
 	t_node			*node;
 
-    i = -1;
-    node = *node_ptr;
-    while ((size_t)++i < node->links->length)
-    {
-        forward_link = node->links->data[i];
-        if (forward_link->direction == 1 && forward_link->flow == 1)
-        {
-            if (forward_link->name[0] != 'L')
-                safe_room_adding(farm_ptr, path,
-                create_room(forward_link->name, forward_link->ptr), flow);
-            *node_ptr = forward_link->ptr;
-            break ;
-        }
-    }
+	i = -1;
+	node = *node_ptr;
+	while ((size_t)++i < node->links->length)
+	{
+		forward_link = node->links->data[i];
+		if (forward_link->direction == 1 && forward_link->flow == 1)
+		{
+			if (forward_link->name[0] != 'L')
+				safe_room_adding(farm_ptr, path,
+					create_room(forward_link->name, forward_link->ptr), flow);
+			*node_ptr = forward_link->ptr;
+			break ;
+		}
+	}
 }
 
 void			ft_recover_path(t_farm **farm_ptr, t_link *link, t_pvec **flow)
@@ -59,7 +60,7 @@ static	void	error_management(t_flow **temp_flow, t_farm **farm_ptr)
 	finish_him(farm_ptr);
 }
 
-t_flow	*ft_get_flow(t_farm **farm_ptr)
+t_flow			*ft_get_flow(t_farm **farm_ptr)
 {
 	register int	i;
 	t_pvec			*flow;
@@ -82,8 +83,7 @@ t_flow	*ft_get_flow(t_farm **farm_ptr)
 		finish_him(farm_ptr);
 	temp_flow->flow = flow;
 	temp_flow->len_flow = flow->length;
-	if (!(temp_flow->ants_allocation = (int *)ft_memalloc(sizeof(int) *
-			flow->length)))
+	if (!(temp_flow->a_alloc = (int*)ft_memalloc(sizeof(int) * flow->length)))
 		error_management(&temp_flow, farm_ptr);
 	ft_ptr_vec_pushback(farm->all_flows, temp_flow);
 	return (temp_flow);
