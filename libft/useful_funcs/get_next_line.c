@@ -6,7 +6,7 @@
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 13:24:23 by vlegros           #+#    #+#             */
-/*   Updated: 2018/12/13 18:52:14 by vlegros          ###   ########.fr       */
+/*   Updated: 2019/09/18 22:53:48 by vlegros          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ static char		*ft_chr_vec_find(t_cvec *vec, char c)
 	return (NULL);
 }
 
-static char 	*ft_vec_popo(t_cvec *vec, char c)
+static char		*ft_chr_vec_pop(t_cvec *vec, char c)
 {
-	char *output;
-	char *temp_tail;
-	register size_t i;
+	char			*output;
+	char			*temp_tail;
+	register size_t	i;
 
 	if (!vec->length)
 		return (NULL);
@@ -68,7 +68,7 @@ int				get_next_line(int fd, char **line)
 		if (ft_chr_vec_find(vec, '\n'))
 			break ;
 	}
-	if ((*line = ft_vec_popo(vec,'\n')))
+	if ((*line = ft_chr_vec_pop(vec, '\n')))
 		return (1);
 	ft_chr_vec_del(&vec);
 	return (0);

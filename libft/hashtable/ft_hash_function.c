@@ -12,13 +12,13 @@
 
 #include "libft.h"
 
-unsigned long ft_hash(unsigned char *str, int capacity)
+unsigned long	ft_hash(unsigned char *str, int capacity)
 {
-    unsigned long hash;
-    int c;
+	unsigned long	hash;
+	int				c;
 
-    hash = 5381;
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c;
-    return hash % capacity;
+	hash = 5381;
+	while ((c = *str++))
+		hash = ((hash << 5) + hash) + c;
+	return (hash % capacity);
 }

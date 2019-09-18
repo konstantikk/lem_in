@@ -22,15 +22,15 @@ int		ft_ptr_vec_enlarge(t_pvec *vec)
 	{
 		temp = vec->data;
 		if (!(vec->data = (void**)malloc(sizeof(void*) * (vec->capacity * 2))))
-        {
-            free(vec->start_data);
-            ft_memdel((void**)&vec);
-            return (0);
-        }
-        ft_memmove(vec->data, temp, sizeof(void*) * vec->length);
-        free(vec->start_data);
-        vec->start_data = vec->data;
-        vec->capacity *= 2;
+		{
+			free(vec->start_data);
+			ft_memdel((void**)&vec);
+			return (0);
+		}
+		ft_memmove(vec->data, temp, sizeof(void*) * vec->length);
+		free(vec->start_data);
+		vec->start_data = vec->data;
+		vec->capacity *= 2;
 	}
 	return (1);
 }

@@ -24,7 +24,7 @@ t_pvec	*ft_ptr_vec_init(void)
 			ft_memdel((void**)&vec);
 			return (NULL);
 		}
-        vec->start_data = vec->data;
+		vec->start_data = vec->data;
 		vec->capacity = START_CAP;
 		vec->length = 0;
 	}
