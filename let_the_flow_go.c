@@ -14,7 +14,7 @@
 
 void	push_room_with_ant(t_farm **farm_ptr, int ant_index, char *room_name)
 {
-	t_farm	*farm;
+	t_farm		*farm;
 	const char	*chr_ant_index = ft_itoa(ant_index);
 
 	farm = *farm_ptr;
@@ -32,8 +32,8 @@ void	push_room_with_ant(t_farm **farm_ptr, int ant_index, char *room_name)
 
 void	direct_path(t_farm **farm_ptr)
 {
-	t_farm *farm;
-	register int i;
+	t_farm			*farm;
+	register int	i;
 
 	i = -1;
 	farm = *farm_ptr;
@@ -43,11 +43,11 @@ void	direct_path(t_farm **farm_ptr)
 
 static void    put_ants_on_start(char *ants, t_farm **farm_ptr, t_flow *flow_temp, int *ants_allocation)
 {
-    static int ant_index = 0;
-    register int i;
-    t_farm	*farm;
-    t_room  *room;
-    t_path  *path;
+    static int		ant_index = 0;
+    register int	i;
+    t_farm			*farm;
+    t_room			*room;
+    t_path			*path;
 
     i = -1;
     farm = *farm_ptr;
@@ -68,10 +68,10 @@ static void    put_ants_on_start(char *ants, t_farm **farm_ptr, t_flow *flow_tem
 
 static inline void	one_step_on_one_path(char *ants, int *flag, t_farm **farm_ptr, t_path *path)
 {
-	t_farm *farm;
-	register int j;
-	t_room *room;
-	int 	counter;
+	t_farm			*farm;
+	register int	j;
+	t_room			*room;
+	int				counter;
 
 	farm = *farm_ptr;
 	j = path->last_occupied + 1;
@@ -94,9 +94,9 @@ static inline void	one_step_on_one_path(char *ants, int *flag, t_farm **farm_ptr
 
 static void    one_step_towards_finish(char *ants, t_farm **farm_ptr, t_flow *flow)
 {
-    register int i;
-    t_path  *path;
-    int     flag;
+    register int	i;
+    t_path			*path;
+    int				flag;
 
     i = -1;
     while ((size_t)++i < flow->len_flow)
@@ -111,9 +111,9 @@ static void    one_step_towards_finish(char *ants, t_farm **farm_ptr, t_flow *fl
 
 void    let_the_flow_go(t_farm **farm_ptr, t_flow *flow, int *ants_allocation)
 {
-    char *ants;
-    t_farm *farm;
-    int counter;
+    char		*ants;
+    t_farm		*farm;
+    int			counter;
 
     counter = 0;
     farm = *farm_ptr;
