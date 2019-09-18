@@ -19,7 +19,7 @@ t_cvec  *ft_chr_vec_init(size_t size)
     vec = (t_cvec*)malloc(sizeof(t_cvec));
     if (vec)
     {
-        if (!(vec->data = (char*)malloc(sizeof(char) * size)))
+        if (!(vec->data = (char*)ft_memalloc(sizeof(char) * size)))
         {
             ft_memdel((void**)&vec);
             return (NULL);

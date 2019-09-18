@@ -18,8 +18,10 @@ char ft_chr_vec_popfront(t_cvec *vec)
 
     if (!vec)
         return (-1);
-    if (!vec->length || !vec->data)
-        return (-1);
+    if (!vec->data)
+        return (0);
+    if (!vec->capacity || !vec->length)
+    	return (0);
     ret_val = vec->data[0];
     vec->data++;
     vec->length--;
