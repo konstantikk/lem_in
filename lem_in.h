@@ -6,7 +6,7 @@
 /*   By: jziemann <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 19:07:10 by jziemann          #+#    #+#             */
-/*   Updated: 2019/09/19 19:07:10 by jziemann         ###   ########.fr       */
+/*   Updated: 2019/09/19 20:09:31 by jziemann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 
 # define INF 10000000
 # define CAPACITY 7000
-# define	PATH_LEN(i) ((t_path*)(flow->data[i]))->path->length
+# define PATH_LEN(i) ((t_path*)(flow->data[i]))->path->length
 
 typedef struct s_node	t_node;
 
-typedef enum			e_values
+enum			e_values
 {
 	FALSE = 0,
 	TRUE,
@@ -30,73 +30,73 @@ typedef enum			e_values
 	FULL,
 	ANTS_MOVE,
 	GRAPH
-}						t_values;
+}typedef				t_values;
 
-typedef struct			s_link
+struct			s_link
 {
 	char	*name;
 	t_node	*ptr;
 	int		direction;
 	int		flow;
-}						t_link;
+}typedef				t_link;
 
-typedef struct			s_node
+struct			s_node
 {
 	char	*name;
 	t_pvec	*links;
-	int	level;
-	int potential;
-	t_node *parent;
-}						t_node;
+	int		level;
+	int		potential;
+	t_node 	*parent;
+}typedef		t_node;
 
-typedef struct			s_room
+struct			s_room
 {
 	char	*name;
 	t_node	*ptr;
-	int	 temp_ant;
-}						t_room;
+	int		temp_ant;
+}typedef		t_room;
 
-typedef struct			s_path
+struct			s_path
 {
 	t_pvec	*path;
 	int		ants_onw;
-	int	 fixed_ant_num;
-	int	 last_occupied;
-}						t_path;
+	int		fixed_ant_num;
+	int		last_occupied;
+}typedef		t_path;
 
-typedef struct			s_flow
+struct			s_flow
 {
-	t_pvec	*flow;
+	t_pvec		*flow;
 	size_t		len_flow;
-	int		*a_alloc;
-}						t_flow;
+	int			*a_alloc;
+}typedef		t_flow;
 
-typedef struct			s_farm
+struct			s_farm
 {
 	t_ht	*nodes;
 	t_node  *start;
 	t_node  *end;
-	t_ivec		*loss;
+	t_ivec	*loss;
 	t_pvec	*all_flows;
 	t_cvec  *output;
 	int		ant_num;
-	int	 ants_check;
+	int	 	ants_check;
 	int		direct_path;
 	int		print;
 	int		fast;
 	int		fd;
 	int		num_of_lines;
-}						t_farm;
+}typedef		t_farm;
 
-typedef struct			s_parse_link
+struct			s_parse_link
 {
-	char *name1;
-	char *name2;
+	char	*name1;
+	char	*name2;
 	t_node	*node1;
 	t_node	*node2;
 	int		node1_flag;
 	int		node2_flag;
-}						t_parse_link;
+}typedef		t_parse_link;
 
 /*
 ** bin_heap.c
