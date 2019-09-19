@@ -40,7 +40,7 @@ void	get_fd(t_farm **farm_ptr, char *file_name)
 	farm->fd = fd;
 }
 
-void	help_parse_option(char argv, t_farm **farm_ptr)
+void	help_parse_option(char *argv, t_farm **farm_ptr)
 {
 	t_farm			*farm;
 

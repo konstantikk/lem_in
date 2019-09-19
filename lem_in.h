@@ -15,9 +15,9 @@
 # include "lem_in.h"
 # include "./libft/includes/libft.h"
 
-# efine INF 10000000
-# efine CAPACITY 7000
-# efine	PATH_LEN(i) ((t_path*)(flow->data[i]))->path->length
+# define INF 10000000
+# define CAPACITY 7000
+# define	PATH_LEN(i) ((t_path*)(flow->data[i]))->path->length
 
 typedef struct s_node	t_node;
 
@@ -120,8 +120,8 @@ t_room					*create_room(char *name, t_node *node_ptr);
 /*
 ** dijkstra.c
 */
-void					check_links(t_node *node, t_pvec **q_ptr,
-					t_farm **farm_ptr);
+//void					check_links(t_node *node, t_pvec **q_ptr,
+					//t_farm **farm_ptr);
 void					dijkstra(t_farm **farm_ptr);
 /*
 ** enlarge_table.c
@@ -179,7 +179,7 @@ void					finish_him(t_farm **farm);
 */
 void					help(t_farm **farm_ptr);
 void					get_fd(t_farm **farm_ptr, char *file_name);
-void					help_parse_option(char argv, t_farm **farm_ptr);
+void					help_parse_option(char *argv, t_farm **farm_ptr);
 void					parse_options(int argc, char **argv,
 					t_farm **farm_ptr);
 /*
