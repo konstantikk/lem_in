@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-void	nullify(t_ht *nodes, int level_or_used)
+void	nullify(t_ht *nodes)
 {
 	const int		*data = nodes->loaded->data;
 	const size_t	len = nodes->loaded->length;
@@ -25,9 +25,7 @@ void	nullify(t_ht *nodes, int level_or_used)
 		temp = nodes->table[data[i]];
 		while (temp)
 		{
-			if (level_or_used == BOTH)
-				((t_node*)(temp->content))->level = INF;
-			((t_node*)(temp->content))->used = FALSE;
+			((t_node*)(temp->content))->level = INF;
 			temp = temp->next;
 		}
 	}

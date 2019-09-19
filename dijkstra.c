@@ -49,7 +49,7 @@ void	dijkstra(t_farm **farm_ptr)
 	farm = *farm_ptr;
 	if (!(q = ft_ptr_vec_init()))
 		finish_him(farm_ptr);
-	nullify(farm->nodes, BOTH);
+	nullify(farm->nodes);
 	if (ft_ptr_vec_pushback(q, farm->start) != 1)
 	{
 		free(q->start_data);

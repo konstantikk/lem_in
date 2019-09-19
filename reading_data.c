@@ -40,25 +40,30 @@ int		read_node(t_farm **farm, char *buff)
 	return (1);
 }
 
-int		read_start_end(t_farm **farm, int fd, char **buff, int start_end)
+int		read_start_end(t_farm **farm_ptr, int fd, char **buff, int start_end)
 {
 	char	*name;
+	t_farm *farm;
 
-	ft_chr_vec_pushback((*farm)->output, *buff);
+	farm = *farm_ptr;
+	if (farm->fast == FALSE && (farm->print == FULL || farm->print == GRAPH))
+	{
+		ft_chr_vec_pushback(farm->output, *buff);
+		ft_chr_vec_pushback(farm->output, "\n");
+	}
 	ft_memdel((void**)buff);
-	ft_chr_vec_pushback((*farm)->output, "\n");
 	get_next_line(fd, buff);
 	if (!(name = ft_find_word(*buff, 0, ' ')))
-		finish_him(farm);
+		finish_him(farm_ptr);
 	if (name[0] == 'L' || ft_strchr(name, '-'))
 	{
 		ft_memdel((void**)&name);
-		finish_him(farm);
+		finish_him(farm_ptr);
 	}
-	safe_insert(farm, (*farm)->nodes, create_node(name));
+	safe_insert(farm_ptr, farm->nodes, create_node(name));
 	if (start_end == START)
-		(*farm)->start = ht_find_node((*farm)->nodes, name);
+		farm->start = ht_find_node(farm->nodes, name);
 	else if (start_end == END)
-		(*farm)->end = ht_find_node((*farm)->nodes, name);
+		farm->end = ht_find_node(farm->nodes, name);
 	return (1);
 }

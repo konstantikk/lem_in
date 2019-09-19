@@ -39,8 +39,9 @@ void	direct_path(t_farm **farm_ptr)
 
 	i = -1;
 	farm = *farm_ptr;
-	while (++i < farm->ant_num)
-		push_room_with_ant(farm_ptr, i + 1, farm->end->name);
+	if (farm->fast == FALSE)
+		while (++i < farm->ant_num)
+			push_room_with_ant(farm_ptr, i + 1, farm->end->name);
 }
 
 int		get_optimal_flow(t_farm **farm_ptr)
@@ -48,8 +49,12 @@ int		get_optimal_flow(t_farm **farm_ptr)
 	t_farm *farm;
 
 	farm = *farm_ptr;
+	if (!farm->nodes || !farm->start || !farm->end)
+		finish_him(farm_ptr);
 	if (farm->direct_path == TRUE)
 	{
+		if (farm->fast == TRUE)
+			farm->num_of_lines = 1;
 		direct_path(farm_ptr);
 		return (0);
 	}

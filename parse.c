@@ -55,6 +55,10 @@ t_farm		*variables_init(void)
 	farm->direct_path = FALSE;
 	farm->ants_check = 0;
 	farm->ant_num = 0;
+	farm->print = FULL;
+	farm->fast = FALSE;
+	farm->num_of_lines = 0;
+	farm->fd = 0;
 	return (farm);
 }
 
@@ -70,21 +74,22 @@ void		parse_helper(t_farm **farm_ptr, char **buff_ptr)
 		ft_memdel((void**)buff_ptr);
 		return ;
 	}
-	if (ft_chr_vec_pushback(farm->output, buff) != 1 ||
-	ft_chr_vec_pushback(farm->output, "\n") != 1)
-	{
-		ft_memdel((void**)buff_ptr);
-		finish_him(farm_ptr);
-	}
+	if (farm->fast == FALSE && (farm->print == FULL || farm->print == GRAPH))
+		if (ft_chr_vec_pushback(farm->output, buff) != 1 ||
+		ft_chr_vec_pushback(farm->output, "\n") != 1)
+		{
+			ft_memdel((void**)buff_ptr);
+			finish_him(farm_ptr);
+		}
 	ft_memdel((void**)buff_ptr);
 }
 
-t_farm		*parse(int fd)
+void		parse(int fd, t_farm **farm_ptr)
 {
 	t_farm	*farm;
 	char	*buff;
 
-	farm = variables_init();
+	farm = *farm_ptr;
 	while (get_next_line(fd, &buff) == 1)
 	{
 		if (!farm->ant_num)
@@ -92,16 +97,16 @@ t_farm		*parse(int fd)
 		else if (buff[0] == '#')
 		{
 			if (!ft_strcmp(buff, "##start"))
-				read_start_end(&farm, fd, &buff, START);
+				read_start_end(farm_ptr, fd, &buff, START);
 			else if (!ft_strcmp(buff, "##end"))
-				read_start_end(&farm, fd, &buff, END);
+				read_start_end(farm_ptr, fd, &buff, END);
 		}
 		else if (ft_strchr(buff, '-'))
-			read_links(&farm, buff);
+			read_links(farm_ptr, buff);
 		else
-			read_node(&farm, buff);
-		parse_helper(&farm, &buff);
+			read_node(farm_ptr, buff);
+		parse_helper(farm_ptr, &buff);
 	}
-	ft_chr_vec_pushback(farm->output, "\n");
-	return (farm);
+	if (farm->fast == FALSE && (farm->print == FULL || farm->print == GRAPH))
+		ft_chr_vec_pushback(farm->output, "\n");
 }

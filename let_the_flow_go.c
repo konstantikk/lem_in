@@ -19,15 +19,16 @@ void				push_room_with_ant(t_farm **farm_ptr,
 	const char	*chr_ant_index = ft_itoa(ant_index);
 
 	farm = *farm_ptr;
-	if (ft_chr_vec_pushback(farm->output, "L") != 1 ||
-	ft_chr_vec_pushback(farm->output, (char*)chr_ant_index) != 1 ||
-	ft_chr_vec_pushback(farm->output, "-") != 1 ||
-	ft_chr_vec_pushback(farm->output, room_name) != 1 ||
-	ft_chr_vec_pushback(farm->output, " ") != 1)
-	{
-		ft_memdel((void**)&chr_ant_index);
-		finish_him(farm_ptr);
-	}
+	if (farm->fast == FALSE && (farm->print == ANTS_MOVE || farm->print == FULL))
+		if (ft_chr_vec_pushback(farm->output, "L") != 1 ||
+		ft_chr_vec_pushback(farm->output, (char*)chr_ant_index) != 1 ||
+		ft_chr_vec_pushback(farm->output, "-") != 1 ||
+		ft_chr_vec_pushback(farm->output, room_name) != 1 ||
+		ft_chr_vec_pushback(farm->output, " ") != 1)
+		{
+			ft_memdel((void**)&chr_ant_index);
+			finish_him(farm_ptr);
+		}
 	ft_memdel((void**)&chr_ant_index);
 }
 
@@ -109,7 +110,11 @@ void				let_the_flow_go(t_farm **farm_ptr,
 	while (farm->ants_check != farm->ant_num)
 	{
 		put_ants_on_start(farm_ptr, flow, ants_allocation);
-		ft_chr_vec_pushback(farm->output, "\n");
+		if (farm->fast == FALSE && (farm->print == ANTS_MOVE || farm->print == FULL))
+			if (ft_chr_vec_pushback(farm->output, "\n") != 1)
+				finish_him(farm_ptr);
+		if (farm->fast == TRUE)
+			farm->num_of_lines++;
 		one_step_towards_finish(farm_ptr, flow);
 	}
 }

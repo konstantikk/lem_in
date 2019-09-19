@@ -26,7 +26,6 @@ t_node		*create_node(char *name)
 	}
 	node->level = -1;
 	node->potential = 0;
-	node->used = FALSE;
 	return (node);
 }
 

@@ -25,8 +25,9 @@ typedef enum e_values
 	TRUE,
 	START,
 	END,
-	BOTH,
-	USED
+	FULL,
+	ANTS_MOVE,
+	GRAPH
 }			t_values;
 
 typedef struct	s_node t_node;
@@ -45,8 +46,7 @@ typedef struct	s_node
 	t_pvec	*links;
 	int	level;
 	int potential;
-	struct s_node *parent;
-	int used:1;
+	t_node *parent;
 }				t_node;
 
 typedef struct  s_room
@@ -82,7 +82,10 @@ typedef struct	s_farm
 	int		ant_num;
 	int     ants_check;
 	int 	direct_path;
-
+	int 	print;
+	int 	fast;
+	int 	fd;
+	int 	num_of_lines;
 }				t_farm;
 
 typedef	struct s_parse_link
@@ -95,7 +98,7 @@ typedef	struct s_parse_link
 	int 	node2_flag;
 }				t_parse_link;
 
-t_farm	*parse(int fd);
+void	parse(int fd, t_farm **farm_ptr);
 t_link	*create_link(char *name, t_ht *nodes);
 void    let_the_flow_go(t_farm **farm_ptr, t_flow *flow, int *ants_allocation);
 int     ht_insert_node(t_ht *hashtable, t_node *node);
@@ -107,7 +110,7 @@ int 	read_links(t_farm **farm, char *buff);
 int 	read_node(t_farm **farm, char *buff);
 void    free_memory(t_farm **farm);
 void    finish_him(t_farm **farm);
-void	nullify(t_ht *nodes, int level_or_used);
+void	nullify(t_ht *nodes);
 t_link	*safe_create_link(t_farm **farm, char *name);
 void    safe_pushback(t_farm **farm, t_pvec *links, void *elem);
 void    safe_insert(t_farm **farm, t_ht *nodes, t_node *node);
@@ -131,5 +134,8 @@ void	direct_path(t_farm **farm_ptr);
 void	delete_one_flow(void **flow_ptr);
 int		get_optimal_flow(t_farm **farm_ptr);
 void	push_room_with_ant(t_farm **farm_ptr, int ant_index, char *room_name);
+void	parse_options(int argc, char **argv, t_farm **farm_ptr);
+t_farm		*variables_init(void);
+
 
 #endif

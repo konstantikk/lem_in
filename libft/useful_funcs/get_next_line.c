@@ -58,7 +58,7 @@ int				get_next_line(int fd, char **line)
 	if (fd < 0 || !line)
 		return (-1);
 	if (!vec)
-		vec = ft_chr_vec_init(1);
+		vec = ft_chr_vec_init(BUFF_SIZE + 1);
 	while ((rd = read(fd, buff, BUFF_SIZE)))
 	{
 		if (!vec || rd == -1)
