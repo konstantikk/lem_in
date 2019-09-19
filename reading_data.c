@@ -43,7 +43,7 @@ int		read_node(t_farm **farm, char *buff)
 int		read_start_end(t_farm **farm_ptr, int fd, char **buff, int start_end)
 {
 	char	*name;
-	t_farm *farm;
+	t_farm	*farm;
 
 	farm = *farm_ptr;
 	if (farm->fast == FALSE && (farm->print == FULL || farm->print == GRAPH))
