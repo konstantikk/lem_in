@@ -6,7 +6,7 @@
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 16:14:13 by vlegros           #+#    #+#             */
-/*   Updated: 2019/09/19 16:14:13 by vlegros          ###   ########.fr       */
+/*   Updated: 2019/09/19 20:23:57 by jziemann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,17 @@
 void	help(t_farm **farm_ptr)
 {
 	ft_printf("options:\n");
-	ft_printf("{BLUE}--help -h{GREY}         shows usage\n");
-	ft_printf("{BLUE}--fast -f{GREY}         show only number of lines\n");
-	ft_printf("{BLUE}--print={RED}full{GREY} shows full output doesnt work with"
-"{BLUE}--fast -f{GREY} option   \n");
+	ft_printf("{BLUE}--help -h{GREY}	  shows usage\n");
+	ft_printf("{BLUE}--fast -f{GREY}	  show only number of lines\n");
+	ft_printf("{BLUE}--print={RED}full      {GREY}shows full output "
+"doesnt work with""{BLUE}--fast -f{GREY} option   \n");
 	ft_printf("{BLUE}--print={RED}ants_move{GREY}");
 	ft_printf(" shows only ants movement doesnt work with {BLUE}--fast "
 	"-f{GREY} option\n");
-	ft_printf("{BLUE}--print={RED}graph{GREY} shows only graph doesnt work "
+	ft_printf("{BLUE}--print={RED}graph    {GREY} shows only graph doesnt work "
 	"with {BLUE}--fast -f{GREY} option   \n");
-	ft_printf("{BLUE}--file={RED}file_name{GREY} default reading from STDIN\n");
+	ft_printf("{BLUE}--file={RED}file_name{GREY}  "
+"default reading from STDIN\n");
 	free_memory(farm_ptr);
 	exit(1);
 }
