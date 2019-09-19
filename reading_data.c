@@ -12,32 +12,32 @@
 
 #include "lem_in.h"
 
-int		read_node(t_farm **farm, char *buff)
+int		read_node(t_farm **f, char *buff)
 {
-	t_node	*in_node;
-	t_node	*out_node;
+	t_node	*i_n;
+	t_node	*o_n;
 	char	*name;
-	char	*sup_name;
+	char	*s_n;
 
+	i_n = NULL;
+	o_n = NULL;
 	if (!(name = ft_find_word(buff, 0, ' ')))
-		finish_him(farm);
+		finish_him(f);
 	if (name[0] == 'L' || ft_strchr(name, '-') ||
-	ht_find_node((*farm)->nodes, name))
+	ht_find_node((*f)->nodes, name))
 	{
 		ft_memdel((void**)&name);
-		finish_him(farm);
+		finish_him(f);
 	}
-	if (!(sup_name = ft_strjoin("L", name)) ||
-		!(in_node = create_node(sup_name)) ||
-		!(out_node = create_node(name)))
-		finish_him(farm);
-	safe_insert(farm, (*farm)->nodes, in_node);
-	safe_insert(farm, (*farm)->nodes, out_node);
-	safe_pushback(farm, in_node->links,
-			safe_create_link(farm, ft_strdup(out_node->name)));
-	safe_pushback(farm, out_node->links,
-			safe_create_link(farm, ft_strdup(in_node->name)));
-	((t_link*)(out_node->links->data[0]))->direction = -1;
+	if (!(s_n = ft_strjoin("L", name)) ||
+	!(i_n = create_node(s_n)) ||
+	!(o_n = create_node(name)))
+		finish_him(f);
+	safe_insert(f, (*f)->nodes, i_n);
+	safe_insert(f, (*f)->nodes, o_n);
+	safe_pushback(f, i_n->links, safe_create_link(f, ft_strdup(o_n->name)));
+	safe_pushback(f, o_n->links, safe_create_link(f, ft_strdup(i_n->name)));
+	((t_link*)(o_n->links->data[0]))->direction = -1;
 	return (1);
 }
 
