@@ -21,7 +21,8 @@ int		read_node(t_farm **farm, char *buff)
 
 	if (!(name = ft_find_word(buff, 0, ' ')))
 		finish_him(farm);
-	if (name[0] == 'L' || ft_strchr(name, '-'))
+	if (name[0] == 'L' || ft_strchr(name, '-') ||
+	ht_find_node((*farm)->nodes, name))
 	{
 		ft_memdel((void**)&name);
 		finish_him(farm);
@@ -43,7 +44,7 @@ int		read_node(t_farm **farm, char *buff)
 int		read_start_end(t_farm **farm_ptr, int fd, char **buff, int start_end)
 {
 	char	*name;
-	t_farm *farm;
+	t_farm	*farm;
 
 	farm = *farm_ptr;
 	if (farm->fast == FALSE && (farm->print == FULL || farm->print == GRAPH))
