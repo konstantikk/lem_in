@@ -6,7 +6,7 @@
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 18:28:37 by vlegros           #+#    #+#             */
-/*   Updated: 2019/09/14 22:31:57 by jziemann         ###   ########.fr       */
+/*   Updated: 2019/09/19 20:02:04 by jziemann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void		ht_delete(t_ht **hashtable)
 
 	ht = *hashtable;
 	i = -1;
-	while (++i < length)
+	while (++i < (int)length)
 		del_ht_elem(&(ht->table[data[i]]));
 	free(ht->table);
 	ft_int_vec_del(&ht->loaded);

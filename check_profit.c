@@ -6,7 +6,7 @@
 /*   By: jziemann <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/14 21:20:31 by jziemann          #+#    #+#             */
-/*   Updated: 2019/09/14 21:20:31 by jziemann         ###   ########.fr       */
+/*   Updated: 2019/09/19 20:01:06 by jziemann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static	int		scatter_ants(t_farm *farm, int *ants_allocation, int len_flow,
 	i = -1;
 	addition_ants = (farm->ant_num - sum) / len_flow;
 	residual_ants = (farm->ant_num - sum) % len_flow;
-	while ((size_t)++i < len_flow)
+	while (++i < (int)len_flow)
 	{
 		ants_allocation[i] += addition_ants;
 		if (residual_ants-- > 0)
@@ -42,7 +42,7 @@ static	int		ft_check_profit(t_farm *farm, t_pvec *flow,
 
 	sum = 0;
 	i = -1;
-	while ((size_t)++i < len_flow)
+	while (++i < (int)len_flow)
 	{
 		path_len = max_path - PATH_LEN(i);
 		ants_allocation[i] = path_len;
