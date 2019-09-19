@@ -118,7 +118,6 @@ t_room			*create_room(char *name, t_node *node_ptr);
 /*
 ** dijkstra.c
 */
-void			check_links(t_node *node, t_pvec **q_ptr, t_farm **farm_ptr);
 void			dijkstra(t_farm **farm_ptr);
 /*
 ** enlarge_table.c
