@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_chr_vec_pushback.c                              :+:      :+:    :+:   */
+/*   insert_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/13 23:47:58 by vlegros           #+#    #+#             */
-/*   Updated: 2019/08/13 23:47:58 by vlegros          ###   ########.fr       */
+/*   Created: 2019/08/07 18:28:37 by vlegros           #+#    #+#             */
+/*   Updated: 2019/09/14 22:30:36 by jziemann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "lem_in.h"
 
-int		ft_chr_vec_pushback(t_cvec *vec, char *value)
+t_node		*ht_find_node(t_ht *ht, char *name)
 {
-	const size_t	len = ft_strlen(value);
-	register size_t	i;
+	const unsigned long index = ft_hash((unsigned char*)name, ht->capacity);
+	t_list				*temp;
 
-	if (!vec || !value)
-		return (0);
-	if (ft_chr_vec_enlarge(vec, len))
+	temp = ht->table[index];
+	while (temp)
 	{
-		i = -1;
-		while (++i < len)
-			vec->data[vec->length++] = value[i];
-		return (1);
+		if (!ft_strcmp(((t_node*)temp->content)->name, name))
+			return (temp->content);
+		temp = temp->next;
 	}
-	return (0);
+	return (NULL);
 }

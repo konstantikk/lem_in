@@ -12,11 +12,11 @@
 
 #include "libft.h"
 
-void    ft_chr_vec_del(t_cvec **vec_ptr)
+void	ft_chr_vec_del(t_cvec **vec_ptr)
 {
-    t_cvec  *vec;
+	t_cvec	*vec;
 
-    vec = *vec_ptr;
-    ft_memdel((void**)&vec->start_data);
-    ft_memdel((void**)&vec_ptr);
+	vec = *vec_ptr;
+	ft_memdel((void**)&vec->start_data);
+	ft_memdel((void**)vec_ptr);
 }

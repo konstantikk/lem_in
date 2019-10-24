@@ -12,14 +12,14 @@
 
 #include "libft.h"
 
-int     ft_int_vec_popback(t_ivec *vec)
+int		ft_int_vec_popback(t_ivec *vec)
 {
-    int     ret_val;
+	int	ret_val;
 
-    if (!vec)
-        return (-1);
-    if (!vec->length || !vec->data)
-        return (-1);
-    ret_val = vec->data[vec->length-- - 1];
-    return (ret_val);
+	if (!vec)
+		return (-1);
+	if (!vec->length || !vec->data)
+		return (-1);
+	ret_val = vec->data[vec->length-- - 1];
+	return (ret_val);
 }

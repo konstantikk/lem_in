@@ -14,23 +14,26 @@
 
 int		ft_chr_vec_enlarge(t_cvec *vec, size_t len)
 {
-    char *temp;
+	char *temp;
 
-    if (!vec)
-        return (0);
-    if (vec->length + len >= vec->capacity)
-    {
-        temp = vec->data;
-        if (!(vec->data = (char*)malloc(sizeof(char) * (vec->capacity * 2 + len))))
-        {
-            ft_memdel((void**)&vec->start_data);
-            ft_memdel((void**)&vec);
-            return (0);
-        };
-        ft_memmove(vec->data, temp, sizeof(int) * vec->length);
-        //ft_memdel((void**)&vec->start_data);
-        vec->start_data = vec->data;
-        vec->capacity *= 2;
-    }
-    return (1);
+	if (!vec)
+		return (0);
+	if (!vec->capacity)
+		vec->capacity = START_CAP;
+	if (vec->length + len >= vec->capacity)
+	{
+		temp = vec->data;
+		if (!(vec->data = (char*)ft_memalloc(sizeof(char) *
+				(vec->capacity * 2 + len))))
+		{
+			ft_memdel((void**)&vec->start_data);
+			ft_memdel((void**)&vec);
+			return (0);
+		}
+		ft_memmove(vec->data, temp, sizeof(char) * vec->length);
+		ft_memdel((void**)&vec->start_data);
+		vec->start_data = vec->data;
+		vec->capacity = vec->capacity * 2 + len;
+	}
+	return (1);
 }

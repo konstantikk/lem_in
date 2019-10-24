@@ -16,11 +16,10 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
-#include <gssapi.h>
 # include "get_next_line.h"
 # include "ft_printf.h"
 
-# define START_CAP 20
+# define START_CAP 1000
 # define HT_START_CAP 1000
 # define USE_GC 	  0
 
@@ -38,21 +37,21 @@ typedef	struct		s_vec
 	size_t			capacity;
 }					t_vec;
 
-typedef struct      s_pvec
+typedef struct		s_pvec
 {
-    void			**data;
-    void            **start_data;
-    size_t			length;
-    size_t			capacity;
-}                   t_pvec;
+	void			**data;
+	void			**start_data;
+	size_t			length;
+	size_t			capacity;
+}					t_pvec;
 
-typedef struct      s_cvec
+typedef struct		s_cvec
 {
-    char            *data;
-    char            *start_data;
-    size_t          length;
-    size_t          capacity;
-}                   t_cvec;
+	char			*data;
+	char			*start_data;
+	size_t			length;
+	size_t			capacity;
+}					t_cvec;
 
 typedef	struct		s_ivec
 {
@@ -61,13 +60,13 @@ typedef	struct		s_ivec
 	size_t			capacity;
 }					t_ivec;
 
-typedef struct      s_ht
+typedef struct		s_ht
 {
-    size_t          size;
-    size_t          capacity;
-    t_list          **table;
-    t_ivec          *loaded;
-}                   t_ht;
+	size_t			size;
+	size_t			capacity;
+	t_list			**table;
+	t_ivec			*loaded;
+}					t_ht;
 
 size_t				ft_strlen(const char *s);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
@@ -141,7 +140,7 @@ int					ft_int_vec_pushfront(t_ivec *vec, int value);
 int					ft_int_vec_popfront(t_ivec *vec);
 int					ft_int_vec_enlarge(t_ivec *vec);
 void				ft_int_vec_del(t_ivec **vec);
-int                 ft_int_vec_popback(t_ivec *vec);
+int					ft_int_vec_popback(t_ivec *vec);
 
 t_pvec				*ft_ptr_vec_init(void);
 int					ft_ptr_vec_enlarge(t_pvec *vec);
@@ -149,23 +148,22 @@ int					ft_ptr_vec_pushback(t_pvec *vec, void *value);
 int					ft_ptr_vec_pushfront(t_pvec *vec, void *value);
 void				*ft_ptr_vec_popfront(t_pvec *vec);
 void				ft_ptr_vec_del(t_pvec **vec, void (*del)(void**));
-void                *ft_ptr_vec_popback(t_pvec *vec);
+void				*ft_ptr_vec_popback(t_pvec *vec);
 
-void                ft_chr_vec_del(t_cvec **vec_ptr);
-int                 ft_chr_vec_enlarge(t_cvec *vec, size_t len);
-t_cvec              *ft_chr_vec_init(void);
-int                 ft_chr_vec_pushback(t_cvec *vec, char *value);
-char                ft_chr_vec_popfront(t_cvec *vec);
+void				ft_chr_vec_del(t_cvec **vec_ptr);
+int					ft_chr_vec_enlarge(t_cvec *vec, size_t len);
+t_cvec				*ft_chr_vec_init(size_t size);
+int					ft_chr_vec_pushback(t_cvec *vec, char *value);
+char				ft_chr_vec_popfront(t_cvec *vec);
 
-unsigned long       ft_hash(unsigned char *str, int capacity);
-t_ht                *ft_ht_init(void);
+unsigned long		ft_hash(unsigned char *str, int capacity);
+t_ht				*ft_ht_init(void);
 
 t_vec				*ft_vec_init(size_t size);
 int					ft_vec_enlarge(t_vec *vec);
 void				ft_vec_clear(t_vec **vec);
 
 int					get_next_line(int fd, char **line);
-int				    gnl(int fd, char **line);
 int					ft_abs(int x);
 int					ft_atoi_base(const char *src, int src_base);
 void				ft_swap(int *x, int *y);

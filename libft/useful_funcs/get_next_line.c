@@ -6,114 +6,70 @@
 /*   By: vlegros <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 13:24:23 by vlegros           #+#    #+#             */
-/*   Updated: 2018/12/13 18:52:14 by vlegros          ###   ########.fr       */
+/*   Updated: 2019/09/18 22:53:48 by vlegros          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "libft.h"
 
-static int		ft_vec_pushback(t_vec *v, char *buff)
+static char		*ft_chr_vec_find(t_cvec *vec, char c)
 {
-	char *temp;
+	register size_t i;
 
-	if (v->capacity >= ft_strlen(buff) + ft_strlen(((char*)v->data)) + 1)
-	{
-		ft_strcat(__DATA, buff);
-		return (1);
-	}
-	if ((temp = ft_strdup(__DATA)))
-	{
-		if (ft_vec_enlarge(v) != -1)
-		{
-			ft_strcpy(__DATA, temp);
-			ft_strcat(__DATA, buff);
-			ft_strdel(&temp);
-			return (1);
-		}
-		else
-			ft_strdel(&temp);
-	}
-	return (-1);
+	i = -1;
+	while (++i < vec->length)
+		if (vec->data[i] == c)
+			return (vec->data + i);
+	return (NULL);
 }
 
-static char		*ft_vec_pop(t_vec *v)
+static char		*ft_chr_vec_pop(t_cvec *vec, char c)
 {
-	char	*temp_tail;
-	char	*output;
+	char			*output;
+	char			*temp_tail;
+	register size_t	i;
 
-	output = NULL;
-	if (!(v->data))
+	if (!vec->length)
 		return (NULL);
-	temp_tail = ft_strchr(__DATA, '\n');
-	if (temp_tail)
+	if ((temp_tail = ft_chr_vec_find(vec, c)))
 	{
+		i = 0;
 		*temp_tail = '\0';
-		if (*(temp_tail + 1))
-			++temp_tail;
-		if ((output = ft_strdup(__DATA)))
-		{
-			ft_strclr(__DATA);
-			ft_memmove(v->data, temp_tail, ft_strlen(temp_tail) + 1);
-		}
+		output = (char*)malloc(sizeof(char*) * (temp_tail - vec->data + 1));
+		while (vec->data != temp_tail)
+			output[i++] = ft_chr_vec_popfront(vec);
+		output[i] = ft_chr_vec_popfront(vec);
+		return (output);
 	}
-	else	if (ft_strlen(__DATA) && (output = ft_strdup(__DATA)))
-	{
-		ft_strclr(__DATA);
-		ft_memdel(&(v->data));
-	}
+	output = ft_strnew(vec->length);
+	i = -1;
+	while (++i < vec->length)
+		output[i] = ft_chr_vec_popfront(vec);
 	return (output);
-}
-
-static t_list	*fd_finder(t_list **head, int fd, size_t size)
-{
-	t_list	*temp_lst;
-
-	if (!*head)
-	{
-		if ((*head = ft_lstnew(NULL, 0)))
-			if (((*head)->content = ft_vec_init(size)))
-			{
-				(*head)->content_size = fd;
-				return (*head);
-			}
-	}
-	temp_lst = *head;
-	while (temp_lst)
-	{
-		if ((int)temp_lst->content_size == fd)
-			return (temp_lst);
-		temp_lst = temp_lst->next;
-	}
-	if ((temp_lst = ft_lstnew(NULL, 0)))
-		if ((temp_lst->content = ft_vec_init(size)))
-		{
-			temp_lst->content_size = fd;
-			ft_lstadd(head, temp_lst);
-		}
-	return (temp_lst);
 }
 
 int				get_next_line(int fd, char **line)
 {
 	int				rd;
 	char			buff[BUFF_SIZE + 1];
-	static t_list	*lst = NULL;
-	t_list			*temp;
+	static t_cvec	*vec = NULL;
 
 	if (fd < 0 || !line)
 		return (-1);
+	if (!vec)
+		vec = ft_chr_vec_init(BUFF_SIZE + 1);
 	while ((rd = read(fd, buff, BUFF_SIZE)))
 	{
-		if (!(temp = fd_finder(&lst, fd, BUFF_SIZE + 1)) || rd == -1)
+		if (!vec || rd == -1)
 			return (-1);
 		buff[rd] = '\0';
-		if (ft_vec_pushback(((t_vec*)temp->content), buff) != -1)
-			if (ft_strchr(((t_vec*)temp->content)->data, '\n'))
-				break ;
+		ft_chr_vec_pushback(vec, buff);
+		if (ft_chr_vec_find(vec, '\n'))
+			break ;
 	}
-	if ((temp = fd_finder(&lst, fd, BUFF_SIZE + 1)))
-		if ((*line = ft_vec_pop(((t_vec*)temp->content))))
-			return (1);
+	if ((*line = ft_chr_vec_pop(vec, '\n')))
+		return (1);
+	ft_chr_vec_del(&vec);
 	return (0);
 }

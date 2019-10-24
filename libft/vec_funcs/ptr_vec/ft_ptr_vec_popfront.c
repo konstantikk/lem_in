@@ -15,7 +15,6 @@
 void	*ft_ptr_vec_popfront(t_pvec *vec)
 {
 	void	*ret_val;
-	//size_t	i;
 
 	if (!vec)
 		return (NULL);
@@ -24,9 +23,6 @@ void	*ft_ptr_vec_popfront(t_pvec *vec)
 	ret_val = vec->data[0];
 	vec->data++;
 	vec->capacity--;
-	/*i = -1;
-	while (++i < vec->length - 1)
-		vec->data[i] = vec->data[i + 1];*/
 	vec->length--;
 	return (ret_val);
 }

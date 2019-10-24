@@ -22,6 +22,7 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 	{
 		new_elem->content_size = 0;
 		new_elem->next = NULL;
+		new_elem->content = NULL;
 	}
 	else
 	{
